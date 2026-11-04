@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorem Ipsum — Arya Satya Andhika Akbar</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* dot-matrix background */
+.dot-bg {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, transparent 20%, black 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 20%, black 80%);
+}
+
+.project-detail {
+  position: fixed; inset: 28px; z-index: 10;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── TOP BAR ── */
+.detail-topbar {
+  height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+
+/* ── MAIN CONTENT AREA — 3 columns ── */
+.detail-body {
+  flex: 1; display: grid;
+  grid-template-columns: 280px 1fr 1fr;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease both;
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 36px;
+}
+.sidebar-title {
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem); font-weight: 300;
+  letter-spacing: -2px; text-transform: uppercase; line-height: 1;
+  margin-bottom: 32px; color: var(--white);
+}
+.sidebar-num {
+  font-size: 0.6rem; color: var(--muted); letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.detail-tags { display: flex; flex-direction: column; gap: 6px; }
+.detail-tag {
+  font-size: 0.6rem; color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.detail-tag:hover { border-color: rgba(255,255,255,0.32); color: var(--off-white); }
+.sidebar-visit {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white); font-size: 0.7rem;
+  letter-spacing: 0.1em; padding: 9px 18px; margin-top: 32px;
+  border: 1px solid rgba(255,255,255,0.2); width: fit-content;
+  transition: background 0.25s, border-color 0.25s;
+}
+.sidebar-visit:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.45); }
+
+/* MIDDLE PANEL — overview */
+.panel-mid {
+  border-right: 1px solid var(--border);
+  padding: 48px 44px; display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInUp 0.8s ease both 0.1s;
+}
+.panel-label {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 28px;
+}
+.detail-desc {
+  font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 2.1;
+  margin-bottom: 18px; font-weight: 300;
+}
+
+/* RIGHT PANEL — specs */
+.panel-right {
+  padding: 48px 44px; display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInUp 0.8s ease both 0.2s;
+}
+.spec-group { margin-bottom: 36px; }
+.spec-group-label {
+  font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.spec-row {
+  display: flex; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.spec-label {
+  font-size: 0.58rem; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.14em; width: 90px; flex-shrink: 0;
+}
+.spec-value { font-size: 0.74rem; color: var(--dim); }
+
+/* process steps */
+.process-list { display: flex; flex-direction: column; gap: 0; }
+.process-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.process-num {
+  font-size: 0.58rem; color: var(--muted); letter-spacing: 0.1em;
+  width: 24px; flex-shrink: 0;
+}
+.process-text { font-size: 0.74rem; color: var(--dim); letter-spacing: 0.03em; }
+
+/* ── BOTTOM BAR ── */
+.detail-bottombar {
+  height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a {
+  font-size: 0.68rem; color: var(--muted); text-decoration: none;
+  letter-spacing: 0.08em; transition: color 0.2s;
+}
+.project-nav a:hover { color: var(--white); }
+
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+body.theme-light .dot-bg {
+  background-image: radial-gradient(rgba(0,0,0,0.09) 1px, transparent 1px);
+}
+body.theme-light .spec-group-label { color: #888; border-bottom-color: rgba(0,0,0,0.1); }
+body.theme-light .process-num { color: #888; }
+
+</style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<div class="dot-bg"></div>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#uiux" class="detail-back">← Projects</a>
+    <span class="detail-page-id">02 | 06</span>
+  </div>
+
+  <div class="detail-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div>
+        <p class="sidebar-num">02 / 06</p>
+        <h1 class="sidebar-title">Lorem<br>Ipsum</h1>
+        <div class="detail-tags">
+          <span class="detail-tag">Lorem</span>
+          <span class="detail-tag">Ipsum Dolor</span>
+          <span class="detail-tag">Sit</span>
+          <span class="detail-tag">Amet</span>
+          <span class="detail-tag">Consectetur</span>
+        </div>
+        <a href="#" class="sidebar-visit">Adipiscing Elit Sed ↗</a>
+      </div>
+      <div style="font-size:0.62rem;color:var(--muted);letter-spacing:0.05em;">
+        2025 — Lorem Ipsum
+      </div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div class="panel-mid">
+      <p class="panel-label">Overview</p>
+      <p class="detail-desc">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <p class="detail-desc">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+
+      <div style="margin-top:32px;">
+        <p class="panel-label">Process</p>
+        <div class="process-list">
+          <div class="process-item"><span class="process-num">01</span><span class="process-text">Eiusmod Tempor Incididunt</span></div>
+          <div class="process-item"><span class="process-num">02</span><span class="process-text">Labore Dolore</span></div>
+          <div class="process-item"><span class="process-num">03</span><span class="process-text">Magna Aliqua</span></div>
+          <div class="process-item"><span class="process-num">04</span><span class="process-text">Enim Minim</span></div>
+          <div class="process-item"><span class="process-num">05</span><span class="process-text">Veniam Quis</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="panel-right">
+      <div class="spec-group">
+        <p class="spec-group-label">Project Details</p>
+        <div class="spec-row"><span class="spec-label">Role</span><span class="spec-value">Nostrud Lorem Ipsum</span></div>
+        <div class="spec-row"><span class="spec-label">Tools</span><span class="spec-value">Dolor Sit Amet</span></div>
+        <div class="spec-row"><span class="spec-label">Duration</span><span class="spec-value">Consectetur Adipiscing</span></div>
+        <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value">Elit</span></div>
+      </div>
+      <div class="spec-group">
+        <p class="spec-group-label">Focus Areas</p>
+        <div class="spec-row"><span class="spec-label">Primary</span><span class="spec-value">Sed Eiusmod</span></div>
+        <div class="spec-row"><span class="spec-label">Secondary</span><span class="spec-value">Tempor</span></div>
+        <div class="spec-row"><span class="spec-label">Platform</span><span class="spec-value">Incididunt Labore</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© 10129</span>
+    <nav class="project-nav">
+      <a href="project-portfolio.html">← Prev</a>
+      <a href="project-creative-code.html">Next →</a>
+    </nav>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+<script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

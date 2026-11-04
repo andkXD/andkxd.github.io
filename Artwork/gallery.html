@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Arya Satya Andhika Akbar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/showcase.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="../personal-website/pages/project-portfolio.html" class="site-nav-back">← Portfolio</a>
+    <a href="index.html">Top</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="works/index.html" >Works</a>
+    <a href="info.html">Info</a>
+  </nav>
+
+  <section class="sc-hero" id="hero"><div class="sc-glitch" id="glitch"></div></section>
+  <div class="sc-bar">
+    <h1>Gallery — a collage of selected works.<small id="now">—</small></h1>
+    <ul class="sc-filters" id="filters"></ul>
+  </div>
+  <section class="sc-grid sc-collage" id="grid"></section>
+  <a class="sc-all" href="works/index.html">All Works</a>
+  <footer><p>© 2025 Arya Satya Andhika Akbar</p><p>Information Systems · Class of 2024</p></footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/works-data.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/main.js"></script>
+  <script src="../personal-website/assets/js/audio.js"></script>
+  <script>
+    const hero = document.getElementById('hero'), glitch = document.getElementById('glitch'), now = document.getElementById('now');
+    const slides = WORKS.map((w, i) => { const d = document.createElement('div'); d.className = 'sc-vis'; workVisual(d, w, i); hero.insertBefore(d, glitch); return d; });
+    let cur = -1;
+    function burst() {   // TV-static / colour-bar glitch blocks, Infocus style
+      glitch.innerHTML = '';
+      for (let n = 0; n < 16; n++) {
+        const b = document.createElement('i'), w = 40 + Math.random() * 260;
+        b.className = 'wnb'[Math.floor(Math.random() * 3)];
+        b.style.cssText = `left:${Math.random() * 90}%;top:${Math.random() * 85}%;width:${w}px;height:${20 + Math.random() * 120}px;animation-delay:${Math.random() * .15}s`;
+        glitch.appendChild(b);
+      }
+    }
+    function show(i) {
+      burst(); if (window.glBurst) glBurst();
+      setTimeout(() => { slides.forEach((s, k) => s.classList.toggle('on', k === i)); if (window.glSet) glSet(i); }, 160);
+      cur = i; now.textContent = `${WORKS[i].num} / ${WORKS[i].title} — ${WORKS[i].category}`;
+    }
+    show(0); setInterval(() => show((cur + 1) % WORKS.length), 4200);
+    // ── WebGL glitch: reacts to mouse movement over the hero (three.js) ──
+    (function initGL() {
+      if (!window.THREE) return;                       // offline/CDN blocked → keep the plain DOM hero
+      try {
+        const R = new THREE.WebGLRenderer({ antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
+        const cv = R.domElement; cv.className = 'gl'; hero.insertBefore(cv, glitch);
+        const texs = slides.map(s => {
+          const el = s.querySelector('canvas') || s.querySelector('img'), isC = el.tagName === 'CANVAS';
+          const t = isC ? new THREE.CanvasTexture(el) : new THREE.Texture(el);
+          t.minFilter = THREE.LinearFilter; t.generateMipmaps = false;
+          if (!isC) { el.complete ? (t.needsUpdate = true) : el.addEventListener('load', () => { t.needsUpdate = true; setSize(cur); }); }
+          return { t, el, isC };
+        });
+        const U = { uTex: { value: texs[0].t }, uMouse: { value: new THREE.Vector2(.5, .5) }, uRes: { value: new THREE.Vector2(1, 1) },
+                    uTexSize: { value: new THREE.Vector2(800, 500) }, uVel: { value: 0 }, uBurst: { value: 0 }, uTime: { value: 0 }, uTile: { value: 1 } };
+        const mat = new THREE.ShaderMaterial({ uniforms: U,
+          vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }',
+          fragmentShader: `
+            uniform sampler2D uTex; uniform vec2 uMouse, uRes, uTexSize; uniform float uVel, uBurst, uTime, uTile; varying vec2 vUv;
+            float h(float n){ return fract(sin(n * 91.345) * 47453.5453); }
+            vec2 cover(vec2 uv){ float ra = (uRes.x / uTile) / uRes.y, ta = uTexSize.x / uTexSize.y;
+              vec2 s = ra > ta ? vec2(1., ta / ra) : vec2(ra / ta, 1.); return (uv - .5) * s + .5; }
+            void main(){
+              vec2 uv = vUv; vec2 d = uv - uMouse; d.x *= uRes.x / uRes.y;
+              float colIdx = floor(uv.x * uTile); uv.x = fract(uv.x * uTile);   // repeat the image in columns
+              float m = clamp(smoothstep(.45, 0., length(d)) * uVel * .7, 0., 1.);   // local to the cursor, scales with mouse speed
+              float amt = max(m, uBurst);
+              float r1 = h(floor(uv.y * 24.) + floor(uTime * 14.));                  // horizontal bands tear sideways
+              float slice = step(.8 - .35 * amt, r1) * amt;
+              uv.x += (r1 - .5) * .12 * slice;
+              vec2 dir = m > uBurst ? normalize(d + 1e-4) : vec2(1., 0.);
+              float sp = .012 * amt;                                                   // RGB split
+              vec3 c = vec3(texture2D(uTex, cover(uv + dir * sp)).r, texture2D(uTex, cover(uv)).g, texture2D(uTex, cover(uv - dir * sp)).b);
+              c += (h(dot(uv, vec2(127.1, 311.7)) + uTime) - .5) * .18 * amt;         // grain
+              c *= 1. - .08 * amt * step(.5, fract(uv.y * uRes.y * .25));             // scanlines
+              float k = mod(colIdx, 4.); float tt = clamp((uTile - 1.) / 3., 0., 1.);
+              vec3 pal = k < .5 ? vec3(.64, .27, .82) : k < 1.5 ? vec3(.1, 1., .6) : k < 2.5 ? vec3(.85, .2, .5) : vec3(.15, .75, 1.);
+              c = mix(c, c * pal * 1.5 + pal * .15, .55 * tt);                          // per-column colour tint
+              gl_FragColor = vec4(c, 1.);
+            }` });
+        const scene = new THREE.Scene(), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
+        function setSize(i) { const e = texs[i].el; U.uTexSize.value.set(e.width || e.naturalWidth || 800, e.height || e.naturalHeight || 500); }
+        new ResizeObserver(() => { const w = hero.clientWidth, h = hero.clientHeight; R.setSize(w, h, false); U.uRes.value.set(w, h); }).observe(hero);
+        let mx = .5, my = .5, tx = .5, ty = .5, vel = 0, burstV = 0, tileV = 1, vis = true, checked = false;
+        hero.addEventListener('mousemove', e => {
+          const r = hero.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width; ty = 1 - (e.clientY - r.top) / r.height;
+          vel = Math.min(1, Math.max(vel, Math.hypot(e.movementX, e.movementY) / 40));
+        });
+        new IntersectionObserver(en => { vis = en[0].isIntersecting; }).observe(hero);
+        window.glBurst = () => { burstV = .45; tileV = 4; };       // on slide change: 4 tinted columns → merge back
+        window.glSet = i => { U.uTex.value = texs[i].t; setSize(i); };
+        glSet(cur < 0 ? 0 : cur); hero.classList.add('gl');
+        (function loop() {
+          requestAnimationFrame(loop); if (!vis) return;
+          mx += (tx - mx) * .15; my += (ty - my) * .15; vel *= .93; burstV *= .9; tileV += (1 - tileV) * .09; if (tileV < 1.01) tileV = 1; U.uTile.value = tileV;
+          U.uMouse.value.set(mx, my); U.uVel.value = vel < .01 ? 0 : vel; U.uBurst.value = burstV < .02 ? 0 : burstV; U.uTime.value = performance.now() / 1000;
+          texs.forEach(x => { if (x.isC) x.t.needsUpdate = false; });
+          R.render(scene, cam);
+          if (!checked) { checked = true; const p = R.info.programs && R.info.programs[0];     // shader failed → fall back to DOM hero
+            if (p && p.diagnostics && !p.diagnostics.runnable) { cv.remove(); hero.classList.remove('gl'); window.glSet = window.glBurst = null; } }
+        })();
+      } catch (err) { console.warn('hero WebGL disabled:', err); }
+    })();
+
+
+    // ── Infocus-style mouse trail (works with or without WebGL) ──
+    (function boxTrail() {
+      let last = 0, lx = -99, ly = -99, live = 0;
+      hero.addEventListener('mousemove', e => {
+        const now = performance.now(), r = hero.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        if (now - last < 50 || Math.hypot(x - lx, y - ly) < 30 || live > 22) return; last = now; lx = x; ly = y;
+        for (let n = 0; n < 1 + (Math.random() < .5); n++) {
+          const b = document.createElement('div'), kind = ['num', 'num', 'noise', 'bars'][Math.random() * 4 | 0];
+          b.className = 'sc-bx ' + kind;
+          b.style.cssText = `left:${x + (Math.random() - .5) * 200}px;top:${y + (Math.random() - .5) * 200}px;width:${26 + Math.random() * 90}px;height:${16 + Math.random() * 52}px`;
+          if (kind !== 'bars') { const f = () => b.textContent = String(Math.random() * 9999 | 0).padStart(Math.random() < .5 ? 2 : 4, '0'); f(); const iv = setInterval(f, 90); setTimeout(() => clearInterval(iv), 750); }
+          hero.appendChild(b); live++; setTimeout(() => { b.remove(); live--; }, 760);
+        }
+      });
+    })();
+
+    // filters (with counts) + grid
+    const cats = ['All', ...new Set(WORKS.map(w => w.category))];
+    const fl = document.getElementById('filters'), grid = document.getElementById('grid');
+    cats.forEach((c, k) => {
+      const n = c === 'All' ? WORKS.length : WORKS.filter(w => w.category === c).length;
+      const li = document.createElement('li'); li.className = k ? '' : 'on'; li.innerHTML = `${c}<span>${n}</span>`;
+      li.onclick = () => { fl.querySelectorAll('li').forEach(x => x.classList.toggle('on', x === li)); grid.querySelectorAll('.sc-card').forEach((a, j) => a.classList.toggle('off', c !== 'All' && WORKS[j].category !== c)); };
+      fl.appendChild(li);
+    });
+    WORKS.forEach((w, i) => {
+      const a = document.createElement('a'); a.className = 'sc-card'; a.href = 'works/' + w.id + '.html';
+      a.innerHTML = '<div class="sc-vis"></div>' + `<h3>${w.title}</h3><p>${w.category} · ${w.year}</p>`;
+      workVisual(a.firstChild, w, i); grid.appendChild(a);
+    });
+  </script>
+</body>
+</html>

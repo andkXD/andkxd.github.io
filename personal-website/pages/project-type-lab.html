@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magna Aliqua — Arya Satya Andhika Akbar</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+.project-detail {
+  position: fixed; inset: 28px; z-index: 10;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+/* ── TOP BAR ── */
+.detail-topbar {
+  height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s;
+}
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+
+/* ── BODY: 3-row layout ── */
+.detail-body {
+  flex: 1; display: grid;
+  grid-template-rows: 1fr auto;
+  overflow: hidden;
+}
+
+/* UPPER: 2 panels */
+.detail-upper {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.detail-left {
+  border-right: 1px solid var(--border);
+  padding: 48px 52px 40px 48px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+  animation: fadeInUp 0.8s ease both;
+}
+/* big single letterform accent */
+.letter-accent {
+  position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+  font-size: 52vw; font-weight: 300; line-height: 1;
+  color: rgba(255,255,255,0.016); letter-spacing: -0.1em;
+  pointer-events: none; user-select: none;
+}
+
+.detail-category {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px; position: relative; z-index: 2;
+}
+.detail-category::before { content:''; width:20px; height:1px; background:var(--muted); display:block; }
+.detail-title {
+  font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 300;
+  letter-spacing: -4px; text-transform: uppercase; line-height: 0.88;
+  margin-bottom: 44px; color: var(--white); position: relative; z-index: 2;
+}
+.detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; position: relative; z-index: 2; }
+.detail-tag {
+  font-size: 0.6rem; color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.detail-tag:hover { border-color: rgba(255,255,255,0.32); color: var(--off-white); }
+.detail-visit {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white); font-size: 0.72rem;
+  letter-spacing: 0.1em; padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.2); width: fit-content;
+  transition: background 0.25s, border-color 0.25s; position: relative; z-index: 2;
+}
+.detail-visit:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.45); }
+
+/* RIGHT panel */
+.detail-right {
+  padding: 48px 48px 40px 52px; display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInUp 0.8s ease both 0.12s;
+}
+.detail-section-label {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.detail-desc { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 2.1; margin-bottom: 16px; font-weight: 300; }
+.detail-divider { width: 100%; height: 1px; background: var(--border); margin: 24px 0; }
+.spec-row { display: flex; align-items: baseline; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.055); }
+.spec-row:first-child { border-top: 1px solid rgba(255,255,255,0.055); }
+.spec-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; width: 96px; flex-shrink: 0; }
+.spec-value { font-size: 0.76rem; color: var(--dim); }
+
+/* LOWER: type specimen strip */
+.type-strip {
+  overflow: hidden; display: flex; align-items: center;
+  padding: 0 48px; gap: 0; position: relative;
+  animation: fadeInUp 0.8s ease both 0.2s;
+}
+.type-specimen {
+  white-space: nowrap; font-weight: 300; text-transform: uppercase;
+  color: rgba(255,255,255,0.07); letter-spacing: -2px; user-select: none;
+  font-size: clamp(2rem, 4vw, 3.2rem); padding-right: 48px;
+  animation: slideLeft 20s linear infinite;
+}
+.type-specimen span { color: rgba(255,255,255,0.22); }
+@keyframes slideLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── BOTTOM BAR ── */
+.detail-bottombar {
+  height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a { font-size: 0.68rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+.project-nav a:hover { color: var(--white); }
+
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+body.theme-light .letter-accent {
+  color: rgba(0,0,0,0.025);
+}
+
+</style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#type-lab" class="detail-back">← Projects</a>
+    <span class="detail-page-id">06 | 06</span>
+  </div>
+
+  <div class="detail-body">
+    <div class="detail-upper">
+      <!-- LEFT -->
+      <div class="detail-left">
+        <span class="letter-accent">M</span>
+        <p class="detail-category">Lorem Ipsum</p>
+        <h1 class="detail-title">Magna<br>Aliqua</h1>
+        <div class="detail-tags">
+          <span class="detail-tag">Dolor</span>
+          <span class="detail-tag">Sit Amet</span>
+          <span class="detail-tag">Consectetur</span>
+          <span class="detail-tag">Adipiscing Elit</span>
+        </div>
+        <a href="#" class="detail-visit">Sed Eiusmod Tempor ↗</a>
+      </div>
+      <!-- RIGHT -->
+      <div class="detail-right">
+        <p class="detail-section-label">Overview</p>
+        <p class="detail-desc">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <p class="detail-desc">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <div class="detail-divider"></div>
+        <div>
+          <div class="spec-row"><span class="spec-label">Role</span><span class="spec-value">Incididunt Labore Dolore</span></div>
+          <div class="spec-row"><span class="spec-label">Stack</span><span class="spec-value">Magna Aliqua Enim</span></div>
+          <div class="spec-row"><span class="spec-label">Pieces</span><span class="spec-value">Minim Veniam</span></div>
+          <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value">Quis Nostrud</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE SPECIMEN MARQUEE -->
+    <div class="type-strip">
+      <div class="type-specimen">
+        Aa Bb Cc Dd &nbsp;<span>Ee Ff</span>&nbsp; Gg Hh Ii Jj &nbsp;<span>Kk Ll</span>&nbsp; Mm Nn Oo Pp &nbsp;<span>Qq Rr</span>&nbsp; Ss Tt Uu Vv &nbsp;<span>Ww Xx Yy Zz</span>&nbsp;
+        Aa Bb Cc Dd &nbsp;<span>Ee Ff</span>&nbsp; Gg Hh Ii Jj &nbsp;<span>Kk Ll</span>&nbsp; Mm Nn Oo Pp &nbsp;<span>Qq Rr</span>&nbsp; Ss Tt Uu Vv &nbsp;<span>Ww Xx Yy Zz</span>&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© 10129</span>
+    <nav class="project-nav">
+      <a href="project-motion-study.html">← Prev</a>
+      <a href="project-portfolio.html">Next →</a>
+    </nav>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+<script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

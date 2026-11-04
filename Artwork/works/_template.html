@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Work — Portfolio</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="../../personal-website/pages/project-portfolio.html" class="site-nav-back">← Portfolio</a>
+    <a href="../index.html">Top</a>
+    <a href="../gallery.html">Gallery</a>
+    <a href="index.html">Works</a>
+    <a href="../info.html">Info</a>
+  </nav>
+
+  <a href="index.html" class="detail-back">← Works</a>
+
+  <div id="detailContent"></div>
+
+  <script src="../js/works-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../../personal-website/assets/js/audio.js"></script>
+  <script>
+    const slug = window.location.pathname.split('/').pop().replace('.html','');
+    const work = WORKS.find(w => w.id === slug);
+
+    if (!work) {
+      document.getElementById('detailContent').innerHTML =
+        '<p style="padding:200px 40px;color:var(--muted);font-size:.8rem;letter-spacing:.1em">Work not found.</p>';
+    } else {
+      document.title = work.title + ' — Portfolio';
+      const idx  = WORKS.indexOf(work);
+      const prev = WORKS[idx - 1] || null;
+      const next = WORKS[idx + 1] || null;
+
+      document.getElementById('detailContent').innerHTML = `
+        <div class="detail-hero">
+          ${work.img
+            ? `<img src="${work.img}" alt="${work.title}">`
+            : `<div class="detail-hero-ph"><span style="font-family:var(--serif);font-size:clamp(3rem,8vw,8rem);font-style:italic;color:rgba(255,255,255,.06);letter-spacing:-.04em">${work.num}</span></div>`}
+        </div>
+
+        <div class="detail-body">
+          <div class="detail-main">
+            <h1>${work.title}</h1>
+            <p class="detail-desc">${work.desc}</p>
+            ${work.link ? `<a class="detail-link" href="${work.link}" target="_blank">View Project ↗</a>` : ''}
+          </div>
+          <aside class="detail-specs">
+            <div class="spec-row"><div class="spec-label">Year</div><div class="spec-val">${work.year}</div></div>
+            <div class="spec-row"><div class="spec-label">Category</div><div class="spec-val">${work.category}</div></div>
+            <div class="spec-row"><div class="spec-label">Role</div><div class="spec-val">${work.role}</div></div>
+            <div class="spec-row"><div class="spec-label">Tools</div><div class="spec-val">${work.tools}</div></div>
+            <div class="spec-row"><div class="spec-label">Status</div><div class="spec-val">${work.status}</div></div>
+          </aside>
+        </div>
+
+        <div class="detail-nav">
+          ${prev ? `<a href="${prev.id}.html">← ${prev.title}</a>` : `<a href="index.html">← All Works</a>`}
+          ${next ? `<a href="${next.id}.html">${next.title} →</a>` : `<a href="index.html">All Works →</a>`}
+        </div>
+
+        <footer>
+          <p>© 2025 Arya Satya Andhika Akbar</p>
+          <p>Information Systems · Class of 2024</p>
+        </footer>
+      `;
+    }
+  </script>
+</body>
+</html>

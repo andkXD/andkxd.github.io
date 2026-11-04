@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dolor Sit — Arya Satya Andhika Akbar</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* subtle horizontal grid */
+.h-grid {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px,
+    transparent 1px, transparent 72px
+  );
+}
+
+.project-detail {
+  position: fixed; inset: 28px; z-index: 10;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── TOP BAR ── */
+.detail-topbar {
+  height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+
+/* ── BODY: 60/40 split ── */
+.detail-body {
+  flex: 1; display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  overflow: hidden;
+}
+
+/* LEFT — big title + accent number */
+.detail-left {
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 48px 56px 72px 48px;
+  position: relative; overflow: hidden;
+  animation: fadeInUp 0.8s ease both;
+}
+/* giant faded number */
+.bg-num {
+  position: absolute; top: 50%; left: 48px;
+  transform: translateY(-50%);
+  font-size: 32vw; font-weight: 300;
+  color: rgba(255,255,255,0.018);
+  letter-spacing: -0.08em; line-height: 1;
+  pointer-events: none; user-select: none;
+}
+
+.detail-category {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.detail-category::before { content:''; width:20px; height:1px; background:var(--muted); display:block; }
+
+.detail-title {
+  font-size: clamp(3.5rem, 7vw, 6.5rem); font-weight: 300;
+  letter-spacing: -5px; text-transform: uppercase; line-height: 0.85;
+  margin-bottom: 40px; color: var(--white);
+}
+
+.detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; }
+.detail-tag {
+  font-size: 0.6rem; color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.detail-tag:hover { border-color: rgba(255,255,255,0.32); color: var(--off-white); }
+
+.detail-visit {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white); font-size: 0.72rem;
+  letter-spacing: 0.1em; padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.2); width: fit-content;
+  transition: background 0.25s, border-color 0.25s;
+}
+.detail-visit:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.45); }
+
+/* RIGHT — terminal-style content */
+.detail-right {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 48px 48px 72px 56px;
+  animation: fadeInUp 0.8s ease both 0.14s;
+}
+
+.terminal-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 28px;
+}
+.terminal-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+}
+.terminal-label {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* code-block style overview */
+.code-block {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 24px 28px; margin-bottom: 28px;
+  position: relative;
+}
+.code-block::before {
+  content: attr(data-label);
+  position: absolute; top: -1px; left: 20px;
+  background: #000; padding: 0 8px;
+  font-size: 0.55rem; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+}
+.code-line {
+  font-size: 0.78rem; color: rgba(255,255,255,0.5);
+  line-height: 1.9; font-weight: 300;
+}
+.code-line .c-key { color: var(--muted); }
+.code-line .c-val { color: rgba(255,255,255,0.7); }
+.code-line .c-str { color: rgba(255,255,255,0.4); }
+
+.experiments-list { display: flex; flex-direction: column; gap: 0; }
+.exp-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+.exp-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+.exp-name { font-size: 0.74rem; color: var(--dim); letter-spacing: 0.03em; }
+.exp-tech { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; }
+
+/* ── BOTTOM BAR ── */
+.detail-bottombar {
+  height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a {
+  font-size: 0.68rem; color: var(--muted); text-decoration: none;
+  letter-spacing: 0.08em; transition: color 0.2s;
+}
+.project-nav a:hover { color: var(--white); }
+
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+body.theme-light .bg-num {
+  color: rgba(0,0,0,0.025);
+}
+body.theme-light .code-block::before {
+  background: #f2f0eb;
+  color: #888;
+}
+body.theme-light .code-block {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+}
+body.theme-light .code-line .c-key { color: #888; }
+body.theme-light .code-line .c-val { color: rgba(0,0,0,0.65); }
+body.theme-light .code-line .c-str { color: rgba(0,0,0,0.38); }
+body.theme-light .terminal-label { color: #888; }
+body.theme-light .terminal-dot { background: rgba(0,0,0,0.15); }
+body.theme-light .exp-tech { color: #888; }
+
+
+</style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<div class="h-grid"></div>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#creative-code" class="detail-back">← Projects</a>
+    <span class="detail-page-id">03 | 06</span>
+  </div>
+
+  <div class="detail-body">
+    <!-- LEFT -->
+    <div class="detail-left">
+      <span class="bg-num">03</span>
+      <p class="detail-category">Lorem Ipsum</p>
+      <h1 class="detail-title">Dolor<br>Sit</h1>
+      <div class="detail-tags">
+        <span class="detail-tag">Dolor</span>
+        <span class="detail-tag">Sit Amet</span>
+        <span class="detail-tag">Consectetur</span>
+        <span class="detail-tag">Adipiscing</span>
+        <span class="detail-tag">Elit</span>
+      </div>
+      <a href="#" class="detail-visit">Sed Eiusmod Tempor ↗</a>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="detail-right">
+      <div class="terminal-header">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span class="terminal-label">project.json</span>
+      </div>
+
+      <div class="code-block" data-label="description">
+        <p class="code-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        <p class="code-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        <p class="code-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        <p class="code-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        <p class="code-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+      </div>
+
+      <div class="code-block" data-label="specs" style="margin-bottom:24px;">
+        <p class="code-line"><span class="c-key">role</span>      <span class="c-val">Incididunt Labore</span></p>
+        <p class="code-line"><span class="c-key">stack</span>     <span class="c-val">Dolore Magna</span></p>
+        <p class="code-line"><span class="c-key">pieces</span>    <span class="c-val">Aliqua Enim</span></p>
+        <p class="code-line"><span class="c-key">year</span>      <span class="c-val">2024</span></p>
+        <p class="code-line"><span class="c-key">status</span>    <span class="c-str">Minim</span></p>
+      </div>
+
+      <p style="font-size:0.6rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px;">Experiments</p>
+      <div class="experiments-list">
+        <div class="exp-item"><span class="exp-name">Veniam Quis</span><span class="exp-tech">Nostrud Lorem</span></div>
+        <div class="exp-item"><span class="exp-name">Ipsum Dolor</span><span class="exp-tech">Sit Amet</span></div>
+        <div class="exp-item"><span class="exp-name">Consectetur Adipiscing</span><span class="exp-tech">Elit</span></div>
+        <div class="exp-item"><span class="exp-name">Sed Eiusmod</span><span class="exp-tech">Tempor</span></div>
+        <div class="exp-item"><span class="exp-name">Incididunt Labore</span><span class="exp-tech">Dolore Magna</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© 10129</span>
+    <nav class="project-nav">
+      <a href="project-uiux.html">← Prev</a>
+      <a href="project-web-experiment.html">Next →</a>
+    </nav>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+<script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tempor Ut — Arya Satya Andhika Akbar</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+.dash-bg {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 60px);
+}
+.project-detail {
+  position: fixed; inset: 28px; z-index: 10;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.detail-topbar {
+  height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s;
+}
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+.detail-body {
+  flex: 1; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden;
+}
+.detail-left {
+  border-right: 1px solid var(--border);
+  padding: 48px 52px 60px 48px;
+  display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInUp 0.8s ease both;
+}
+.detail-category {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.detail-category::before { content:''; width:20px; height:1px; background:var(--muted); display:block; }
+.detail-title {
+  font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 300;
+  letter-spacing: -4px; text-transform: uppercase; line-height: 0.88;
+  margin-bottom: 44px; color: var(--white);
+}
+.detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; }
+.detail-tag {
+  font-size: 0.6rem; color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.detail-tag:hover { border-color: rgba(255,255,255,0.32); color: var(--off-white); }
+.timeline { display: flex; flex-direction: column; gap: 0; margin-bottom: 40px; }
+.tl-item {
+  display: flex; align-items: center; gap: 14px; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.tl-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+.tl-bar { height: 1px; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+.tl-name { font-size: 0.72rem; color: var(--dim); flex: 1; }
+.tl-dur { font-size: 0.58rem; color: var(--muted); letter-spacing: 0.08em; white-space: nowrap; }
+.detail-visit {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white); font-size: 0.72rem;
+  letter-spacing: 0.1em; padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.2); width: fit-content;
+  transition: background 0.25s, border-color 0.25s;
+}
+.detail-visit:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.45); }
+.detail-right {
+  padding: 48px 48px 60px 52px; display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInUp 0.8s ease both 0.12s;
+}
+.detail-section-label {
+  font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.detail-desc { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 2.1; margin-bottom: 16px; font-weight: 300; }
+.detail-divider { width: 100%; height: 1px; background: var(--border); margin: 28px 0; }
+.spec-row { display: flex; align-items: baseline; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.055); }
+.spec-row:first-child { border-top: 1px solid rgba(255,255,255,0.055); }
+.spec-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; width: 96px; flex-shrink: 0; }
+.spec-value { font-size: 0.76rem; color: var(--dim); }
+.detail-bottombar {
+  height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a { font-size: 0.68rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+.project-nav a:hover { color: var(--white); }
+
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+body.theme-light .tl-bar {
+  background: rgba(0,0,0,0.25);
+}
+body.theme-light .tl-dur { color: #888; }
+
+</style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<div class="dash-bg"></div>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#motion-study" class="detail-back">← Projects</a>
+    <span class="detail-page-id">05 | 06</span>
+  </div>
+  <div class="detail-body">
+    <div class="detail-left">
+      <p class="detail-category">Lorem Ipsum</p>
+      <h1 class="detail-title">Tempor<br>Ut</h1>
+      <div class="detail-tags">
+        <span class="detail-tag">Dolor Sit</span>
+        <span class="detail-tag">Amet</span>
+        <span class="detail-tag">Consectetur Adipiscing</span>
+        <span class="detail-tag">Elit</span>
+      </div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-bar" style="width:44px"></div><span class="tl-name">Sed Eiusmod</span><span class="tl-dur">Tempor Incididunt</span></div>
+        <div class="tl-item"><div class="tl-bar" style="width:68px"></div><span class="tl-name">Labore</span><span class="tl-dur">Dolore Magna</span></div>
+        <div class="tl-item"><div class="tl-bar" style="width:32px"></div><span class="tl-name">Aliqua Enim</span><span class="tl-dur">Minim Veniam</span></div>
+        <div class="tl-item"><div class="tl-bar" style="width:56px"></div><span class="tl-name">Quis Nostrud</span><span class="tl-dur">Lorem Ipsum</span></div>
+        <div class="tl-item"><div class="tl-bar" style="width:80px"></div><span class="tl-name">Dolor Sit</span><span class="tl-dur">Amet Consectetur</span></div>
+      </div>
+      <a href="#" class="detail-visit">Adipiscing Elit Sed ↗</a>
+    </div>
+    <div class="detail-right">
+      <p class="detail-section-label">Overview</p>
+      <p class="detail-desc">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <p class="detail-desc">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <div class="detail-divider"></div>
+      <div>
+        <div class="spec-row"><span class="spec-label">Role</span><span class="spec-value">Eiusmod Tempor</span></div>
+        <div class="spec-row"><span class="spec-label">Stack</span><span class="spec-value">Incididunt Labore Dolore</span></div>
+        <div class="spec-row"><span class="spec-label">Pieces</span><span class="spec-value">Magna Aliqua</span></div>
+        <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value">Enim Minim</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© 10129</span>
+    <nav class="project-nav">
+      <a href="project-web-experiment.html">← Prev</a>
+      <a href="project-type-lab.html">Next →</a>
+    </nav>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+<script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Study — Arya Satya Andhika Akbar</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ── LAYOUT ─────────────────────────────── */
+    body { overflow: hidden; }
+
+    .aw-wrap {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      z-index: 10;
+    }
+
+    /* ── LEFT SIDEBAR ───────────────────────── */
+    .aw-sidebar {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 70px 0 64px 72px;
+      border-right: 1px solid var(--border);
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .aw-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+      margin-bottom: 32px;
+    }
+    .aw-back:hover { color: var(--white); }
+
+    .aw-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .aw-title {
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      line-height: 0.95;
+      margin-bottom: 32px;
+    }
+
+    .aw-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .aw-sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .aw-filter {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .aw-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s;
+      padding: 2px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .aw-tag::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .aw-tag:hover, .aw-tag.active { color: var(--white); }
+    .aw-tag:hover::before, .aw-tag.active::before { background: var(--white); }
+
+    /* ── RIGHT CONTENT ──────────────────────── */
+    .aw-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 70px 72px 80px 60px;
+      scrollbar-width: none;
+      animation: fadeInUp 0.9s ease 0.1s both;
+    }
+    .aw-content::-webkit-scrollbar { display: none; }
+
+    /* ── GRID ───────────────────────────────── */
+    .aw-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+
+    .aw-item {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .aw-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+      opacity: 0.7;
+      filter: grayscale(20%);
+    }
+
+    .aw-item:hover img {
+      transform: scale(1.04);
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    /* Overlay on hover */
+    .aw-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .aw-item:hover .aw-item-overlay { opacity: 1; }
+
+    .aw-item-num {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+    }
+
+    .aw-item-title {
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .aw-item-tag {
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* Placeholder when no image */
+    .aw-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.1);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px dashed rgba(255,255,255,0.06);
+    }
+
+    /* ── LIGHTBOX ───────────────────────────── */
+    .aw-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      backdrop-filter: blur(6px);
+    }
+    .aw-lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .aw-lb-inner {
+      position: relative;
+      max-width: 85vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .aw-lb-img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      display: block;
+      transform: scale(0.96);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .aw-lightbox.open .aw-lb-img { transform: scale(1); }
+
+    .aw-lb-meta {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .aw-lb-title {
+      font-size: 0.82rem;
+      color: var(--off-white);
+      letter-spacing: 0.05em;
+    }
+    .aw-lb-sub {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .aw-lb-close {
+      position: fixed;
+      top: 40px;
+      right: 48px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      cursor: crosshair;
+      transition: color 0.2s;
+    }
+    .aw-lb-close:hover { color: var(--white); }
+
+    .aw-lb-nav {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 32px;
+    }
+    .aw-lb-nav button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      cursor: crosshair;
+      transition: color 0.2s;
+    }
+    .aw-lb-nav button:hover { color: var(--white); }
+
+    /* ── STAGGER ANIMATION ──────────────────── */
+    .aw-item {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: itemReveal 0.6s ease both;
+    }
+    @keyframes itemReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .aw-item:nth-child(1)  { animation-delay: 0.05s; }
+    .aw-item:nth-child(2)  { animation-delay: 0.10s; }
+    .aw-item:nth-child(3)  { animation-delay: 0.15s; }
+    .aw-item:nth-child(4)  { animation-delay: 0.20s; }
+    .aw-item:nth-child(5)  { animation-delay: 0.25s; }
+    .aw-item:nth-child(6)  { animation-delay: 0.30s; }
+    .aw-item:nth-child(7)  { animation-delay: 0.35s; }
+    .aw-item:nth-child(8)  { animation-delay: 0.40s; }
+  
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+</style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div class="screen-border"></div>
+
+  <div class="aw-wrap">
+    <!-- SIDEBAR -->
+    <aside class="aw-sidebar">
+      <div>
+        <a href="project-portfolio.html" class="aw-back">← Portfolio</a>
+        <p class="aw-label">Selected Works</p>
+        <h1 class="aw-title">Life<br>Study</h1>
+        <p class="aw-count" id="awCount">— items</p>
+      </div>
+      <div class="aw-sidebar-bottom">
+        <p class="aw-filter">Filter</p>
+        <span class="aw-tag active" data-filter="all">All</span>
+        <span class="aw-tag" data-filter="generative">Generative</span>
+        <span class="aw-tag" data-filter="digital">Digital</span>
+        <span class="aw-tag" data-filter="motion">Motion</span>
+        <span class="aw-tag" data-filter="ui">UI / Visual</span>
+      </div>
+    </aside>
+
+    <!-- GRID -->
+    <main class="aw-content">
+      <div class="aw-grid" id="awGrid">
+        <!-- Items are rendered by JS below -->
+      </div>
+    </main>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="aw-lightbox" id="awLightbox">
+    <button class="aw-lb-close" id="lbClose">✕ Close</button>
+    <div class="aw-lb-inner">
+      <img class="aw-lb-img" id="lbImg" src="" alt="">
+      <div class="aw-lb-meta">
+        <p class="aw-lb-title" id="lbTitle"></p>
+        <p class="aw-lb-sub" id="lbSub"></p>
+      </div>
+    </div>
+    <div class="aw-lb-nav">
+      <button id="lbPrev">← Prev</button>
+      <button id="lbNext">Next →</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="../assets/js/sketch.js"></script>
+  <script src="../assets/js/audio.js"></script>
+  <script>
+    // ── ARTWORK DATA ────────────────────────────────────────────
+    // Replace src with your actual image paths (../assets/img/your-file.jpg)
+    // or external URLs. Leave src empty for placeholder slots.
+    const ARTWORKS = [
+      {
+        title: 'Noise Field #01',
+        sub: 'Generative · 2025',
+        tag: 'generative',
+        src: '', // replace with actual image
+      },
+      {
+        title: 'Type Study',
+        sub: 'UI / Visual · 2025',
+        tag: 'ui',
+        src: '',
+      },
+      {
+        title: 'Particle System',
+        sub: 'Generative · 2024',
+        tag: 'generative',
+        src: '',
+      },
+      {
+        title: 'Motion Loop 01',
+        sub: 'Motion · 2025',
+        tag: 'motion',
+        src: '',
+      },
+      {
+        title: 'Dark Interface',
+        sub: 'UI / Visual · 2024',
+        tag: 'ui',
+        src: '',
+      },
+      {
+        title: 'Glitch Study',
+        sub: 'Digital · 2025',
+        tag: 'digital',
+        src: '',
+      },
+      {
+        title: 'Flow Field #03',
+        sub: 'Generative · 2025',
+        tag: 'generative',
+        src: '',
+      },
+      {
+        title: 'Waveform Visual',
+        sub: 'Motion · 2024',
+        tag: 'motion',
+        src: '',
+      },
+    ];
+
+    // ── RENDER GRID ─────────────────────────────────────────────
+    const grid     = document.getElementById('awGrid');
+    const countEl  = document.getElementById('awCount');
+    const lightbox = document.getElementById('awLightbox');
+    const lbImg    = document.getElementById('lbImg');
+    const lbTitle  = document.getElementById('lbTitle');
+    const lbSub    = document.getElementById('lbSub');
+
+    let currentFilter = 'all';
+    let currentIndex  = 0;
+    let filtered      = [...ARTWORKS];
+
+    function render(filter) {
+      currentFilter = filter;
+      filtered = filter === 'all'
+        ? [...ARTWORKS]
+        : ARTWORKS.filter(a => a.tag === filter);
+
+      countEl.textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+      grid.innerHTML = '';
+
+      filtered.forEach((art, i) => {
+        const item = document.createElement('div');
+        item.className = 'aw-item';
+        item.style.animationDelay = (i * 0.05 + 0.05) + 's';
+
+        if (art.src) {
+          item.innerHTML = `
+            <img src="${art.src}" alt="${art.title}" loading="lazy">
+            <div class="aw-item-overlay">
+              <p class="aw-item-num">#${String(i + 1).padStart(2, '0')}</p>
+              <p class="aw-item-title">${art.title}</p>
+              <p class="aw-item-tag">${art.sub}</p>
+            </div>
+          `;
+        } else {
+          item.innerHTML = `
+            <div class="aw-placeholder">#${String(i + 1).padStart(2, '0')} — ${art.title}</div>
+            <div class="aw-item-overlay">
+              <p class="aw-item-num">#${String(i + 1).padStart(2, '0')}</p>
+              <p class="aw-item-title">${art.title}</p>
+              <p class="aw-item-tag">${art.sub}</p>
+            </div>
+          `;
+        }
+
+        item.addEventListener('click', () => openLightbox(i));
+        grid.appendChild(item);
+      });
+    }
+
+    // ── LIGHTBOX ────────────────────────────────────────────────
+    function openLightbox(index) {
+      currentIndex = index;
+      const art = filtered[index];
+      lbImg.src     = art.src || '';
+      lbImg.style.display = art.src ? 'block' : 'none';
+      lbTitle.textContent = art.title;
+      lbSub.textContent   = art.sub;
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+    }
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+    document.getElementById('lbPrev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + filtered.length) % filtered.length;
+      openLightbox(currentIndex);
+    });
+    document.getElementById('lbNext').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % filtered.length;
+      openLightbox(currentIndex);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape')       closeLightbox();
+      if (e.key === 'ArrowLeft')    { currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; openLightbox(currentIndex); }
+      if (e.key === 'ArrowRight')   { currentIndex = (currentIndex + 1) % filtered.length; openLightbox(currentIndex); }
+    });
+
+    // ── FILTER ──────────────────────────────────────────────────
+    document.querySelectorAll('.aw-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.aw-tag').forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        render(tag.dataset.filter);
+      });
+    });
+
+    // ── INIT ────────────────────────────────────────────────────
+    render('all');
+  </script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Arya Satya Andhika Akbar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/showcase.css">
+</head>
+<body class="sc-works">
+  <nav class="site-nav">
+    <a href="../../personal-website/pages/project-portfolio.html" class="site-nav-back">← Portfolio</a>
+    <a href="../index.html" >Top</a>
+    <a href="../gallery.html">Gallery</a>
+    <a href="index.html" class="active">Works</a>
+    <a href="../info.html">Info</a>
+  </nav>
+
+  <div class="sc-w" id="root">
+    <h1>Works<small id="cnt"></small></h1>
+    <div class="sc-list" id="list"></div>
+    <div class="sc-stage" id="stage">
+      <a class="sc-card3d" id="card" href="#"><div class="sc-vis" id="cardVis"></div></a>
+      <div class="sc-bigtitle" id="big"></div>
+      <article class="sc-detail" id="detail"></article>
+    </div>
+  </div>
+
+  <script src="../js/works-data.js"></script>
+  <script src="../js/art.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../../personal-website/assets/js/audio.js"></script>
+  <script>
+    const root = document.getElementById('root'), list = document.getElementById('list'), card = document.getElementById('card'),
+          cardVis = document.getElementById('cardVis'), big = document.getElementById('big'), detail = document.getElementById('detail');
+    document.getElementById('cnt').textContent = WORKS.length + ' ITEMS';
+    const C = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    function scramble(el, txt) {       // random characters resolve into the real title
+      let f = 0; const id = setInterval(() => {
+        el.textContent = [...txt].map((ch, i) => (ch === ' ' || i < f / 2) ? ch : C[Math.random() * C.length | 0]).join('');
+        if (++f > txt.length * 2) { el.textContent = txt; clearInterval(id); }
+      }, 35);
+    }
+    const items = WORKS.map((w, i) => {
+      const a = document.createElement('a'); a.className = 'sc-item'; a.href = '#' + w.id;
+      a.innerHTML = `<b>#${w.num}</b><div class="sc-vis"></div><span>${w.title}</span>`;
+      workVisual(a.querySelector('.sc-vis'), w, i);
+      a.onmouseenter = () => { if (!opened) set(i); };
+      a.onclick = e => { e.preventDefault(); openWork(i); };
+      list.appendChild(a); return a;
+    });
+    let active = -1, opened = false, rx = 0, ry = 0, tx = 0, ty = 0, flip = 0;
+
+    function set(i) {                  // card stage (index view)
+      if (i === active) return; active = i; const w = WORKS[i];
+      items.forEach((it, k) => it.classList.toggle('on', k === i));
+      cardVis.innerHTML = ''; workVisual(cardVis, w, i);
+      big.innerHTML = `${w.title}<small>${w.category} · ${w.year}</small>`; flip = 70;
+    }
+    list.addEventListener('scroll', () => {
+      if (opened) return;
+      const mid = innerHeight / 2; let best = 0, d = 1e9;
+      items.forEach((it, k) => { const r = it.getBoundingClientRect(), dd = Math.abs(r.top + r.height / 2 - mid); if (dd < d) { d = dd; best = k; } });
+      set(best);
+    });
+
+    // ── in-place detail (no redirect) ──
+    function render(i) {
+      const w = WORKS[i], spec = [['Year', w.year], ['Role', w.role], ['Tools', w.tools], ['Status', w.status]];
+      detail.innerHTML = `
+        <h2 class="d-title" id="dTitle">${w.title}</h2>
+        ${w.link ? `<a class="d-btn" href="${w.link}" target="_blank" rel="noopener noreferrer">▷ View project ↗</a>` : `<span class="d-btn">${w.category}</span>`}
+        <p class="d-sub">${w.title} — ${w.category}</p>
+        <p class="d-desc">${w.desc}</p>
+        <dl class="d-spec">${spec.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+        <div class="d-media"><div class="sc-vis"></div>${w.img ? '' : '<div class="sc-vis"></div><div class="sc-vis"></div>'}</div>
+        <button class="d-back" id="dBack">Back to index</button>`;
+      detail.querySelectorAll('.d-media .sc-vis').forEach((v, k) => workVisual(v, w, i + 6 * k));
+      detail.querySelector('#dBack').onclick = closeWork;
+      detail.scrollTop = 0; scramble(detail.querySelector('#dTitle'), w.title);
+    }
+    function openWork(i, push = true) {
+      active = -1; set(i); opened = true; root.classList.add('open'); render(i);
+      items[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (push && location.hash !== '#' + WORKS[i].id) history.pushState(null, '', '#' + WORKS[i].id);
+    }
+    function closeWork(push = true) {
+      opened = false; root.classList.remove('open');
+      if (push === true && location.hash) history.pushState(null, '', location.pathname + location.search);
+    }
+    card.onclick = e => { e.preventDefault(); if (active >= 0) openWork(active); };
+    function fromHash() {              // browser Back/Forward + direct links (works/index.html#noise-field)
+      const i = WORKS.findIndex(w => '#' + w.id === location.hash);
+      i >= 0 ? openWork(i, false) : closeWork(false);
+    }
+    window.addEventListener('popstate', fromHash);
+
+    document.addEventListener('mousemove', e => { ty = (e.clientX / innerWidth - .5) * 16; tx = -(e.clientY / innerHeight - .5) * 12; });
+    (function loop() {
+      flip *= .88; ry += (ty - 14 - ry + flip) * .08; rx += (tx + 5 - rx) * .08;
+      card.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg)`; requestAnimationFrame(loop);
+    })();
+    set(0); fromHash();
+  </script>
+</body>
+</html>

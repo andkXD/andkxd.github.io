@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARYA | PORTFOLIO</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+.scanline {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0px, transparent 3px,
+    rgba(255,255,255,0.007) 3px, rgba(255,255,255,0.007) 4px
+  );
+}
+.project-detail {
+  position: fixed; inset: 28px; z-index: 10;
+  display: grid; grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+.detail-topbar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-bottom: 1px solid var(--border); z-index: 30;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+
+/* content sits between top + bottom bar */
+.detail-content {
+  position: absolute; top: 52px; bottom: 48px; left: 0; right: 0;
+  display: grid; grid-template-columns: 1fr 1fr; overflow: hidden;
+}
+
+/* ── LEFT (unchanged from v8_1) ── */
+.detail-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 48px 56px 48px 48px;
+  border-right: 1px solid var(--border);
+  animation: fadeInUp 0.8s ease both;
+  overflow-y: auto;
+}
+.detail-category {
+  font-size: 0.8rem; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 100px;
+  margin-left: -0.08em; /* same optical correction as the title */
+}
+.detail-title {
+  font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 300;
+  letter-spacing: -4px; text-transform: uppercase; line-height: 0.88;
+  margin-bottom: 36px; color: var(--white);
+  margin-left: -0.1em; /* optical alignment: cancels the glyph side-bearing so the "P" sits flush left */
+}
+.detail-quote {
+  max-width: 34ch; margin: 0 0 20px;
+  font-size: 0.95rem; font-weight: 300; line-height: 1.8; letter-spacing: 0.01em;
+  color: var(--off-white);
+}
+.detail-quote::before {
+  content: ''; display: block; width: 450px; height: 0.5px;
+  background: var(--muted); margin-bottom: 20px;
+}
+.detail-quote-by {
+  display: block; margin-top: 14px;
+  font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+}
+body.theme-light .detail-quote::before { background: rgba(0,0,0,0.35); }
+.detail-visit {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white); font-size: 0.72rem;
+  letter-spacing: 0.1em; padding: 10px 20px;
+  border: 1px solid rgba(255,255,255,0.2); width: fit-content;
+  transition: background 0.25s, border-color 0.25s;
+}
+.detail-visit:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.45); }
+.detail-cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── RIGHT — GSAP CARD CAROUSEL ── */
+.detail-right {
+  position: relative; overflow: hidden;
+  animation: fadeInUp 0.8s ease both 0.12s;
+}
+
+/* small label */
+.showcase-label {
+  position: absolute; top: 28px; left: 56px;
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--muted); z-index: 20; pointer-events: none;
+}
+.showcase-live {
+  position: absolute; top: 28px; right: 48px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.58rem; color: var(--muted); letter-spacing: 0.1em; z-index: 20;
+}
+.showcase-live-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--muted); animation: livePulse 2s ease-in-out infinite;
+}
+.showcase-live.loaded .showcase-live-dot { background: #4caf50; }
+.showcase-live.error  .showcase-live-dot { background: #f44336; }
+@keyframes livePulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+/* GSAP gallery container */
+.gallery {
+  position: absolute; inset: 0; overflow: hidden;
+}
+
+/* card stack */
+.cards {
+  position: absolute; list-style: none; margin: 0; padding: 0;
+  width: 400px; height: 580px; /* 9:16 ratio */
+  top: 46%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cards li {
+  position: absolute; top: 0; left: 0;
+  width: 400px; height: 580px; /* 9:16 ratio */
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  background: #0c0c0c;
+  transition: border-color 0.2s;
+  text-decoration: none;
+  display: block;
+}
+.cards li:hover { border-color: rgba(255,255,255,0.35); }
+
+/* card interior */
+.card-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.card-canvas {
+  width: 100%; height: 100%; opacity: 0.45; display: block;
+}
+.card-body {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 18px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%);
+}
+.card-num {
+  font-size: 0.6rem; color: rgba(255,255,255,0.28);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px;
+}
+.card-name {
+  font-size: 0.82rem; color: rgba(255,255,255,0.88);
+  letter-spacing: 0.02em; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-weight: 400;
+}
+.card-lang {
+  font-size: 0.6rem; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px;
+}
+
+/* nav buttons */
+.card-actions {
+  position: absolute; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 14px; z-index: 20;
+}
+.card-btn {
+  font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 5px 12px; cursor: crosshair;
+  transition: color 0.2s, border-color 0.2s;
+}
+.card-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.4); }
+
+/* loading state */
+.card-loading {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em;
+  flex-direction: column; gap: 10px;
+}
+.card-loading-dot {
+  width: 4px; height: 4px; border-radius: 50%; background: var(--muted);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+
+.drag-proxy { visibility: hidden; position: absolute; }
+
+/* ── BOTTOM BAR ── */
+.detail-bottombar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px;
+  border-top: 1px solid var(--border); z-index: 30;
+}
+.detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a {
+  font-size: 0.68rem; color: var(--muted); text-decoration: none;
+  letter-spacing: 0.08em; transition: color 0.2s;
+}
+.project-nav a:hover { color: var(--white); }
+
+/* ── LIGHT MODE ── */
+body.theme-light .detail-visit { color: #111; border-color: rgba(0,0,0,0.3); }
+body.theme-light .detail-visit:hover { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.7); }
+body.theme-light .cards li { border-color: rgba(0,0,0,0.12); background: #e4e1db; }
+body.theme-light .cards li:hover { border-color: rgba(0,0,0,0.32); }
+body.theme-light .card-name { color: rgba(0,0,0,0.8); }
+body.theme-light .card-num, body.theme-light .card-lang { color: rgba(0,0,0,0.35); }
+body.theme-light .card-btn { color: #888; border-color: rgba(0,0,0,0.15); }
+body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
+</style>
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<div class="scanline"></div>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#portfolio" class="detail-back">← Projects</a>
+    <span class="detail-page-id">01 | 06</span>
+  </div>
+
+  <div class="detail-content">
+
+    <!-- LEFT — unchanged -->
+    <div class="detail-left">
+      <p class="detail-category">Personal Project</p>
+      <h1 class="detail-title">Portfolio</h1>
+      <blockquote class="detail-quote">
+        Things I draw, code, and never quite finish.
+        <span class="detail-quote-by">2026</span>
+      </blockquote>
+      <div class="detail-cta-row">
+        <a href="project-life-study.html" class="detail-visit">Life Study</a>
+        <a href="../../Artwork/index.html" class="detail-visit">Artwork</a>
+      </div>
+    </div>
+
+    <!-- RIGHT — GSAP GitHub card carousel -->
+    <div class="detail-right">
+      <span class="showcase-label">GitHub</span>
+      <span class="showcase-live" id="showcaseLive">
+        <span id="showcaseLiveText">andkXD</span>
+      </span>
+
+      <!-- loading placeholder shown while fetching -->
+      <div class="card-loading" id="cardLoading">
+        <div class="card-loading-dot"></div>
+        <span>Fetching repos</span>
+      </div>
+
+      <div class="gallery" id="galleryWrap" style="display:none;">
+        <ul class="cards" id="cardList"></ul>
+        <div class="card-actions">
+          <button class="card-btn prev">← Prev</button>
+          <button class="card-btn next">Next →</button>
+        </div>
+      </div>
+
+      <div class="drag-proxy"></div>
+    </div>
+
+  </div><!-- /detail-content -->
+
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© 10129</span>
+    <nav class="project-nav">
+      <a href="project-type-lab.html">← Prev</a>
+      <a href="project-uiux.html">Next →</a>
+    </nav>
+  </div>
+</div><!-- /project-detail -->
+
+<!-- p5 bg -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+
+<!-- GSAP suite -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+
+<script>
+const GITHUB_USER = 'andkXD';
+
+/* ── generative card background painters ── */
+const PAINTERS = [
+  (cx,W,H)=>{ for(let i=0;i<55;i++){cx.beginPath();cx.arc(Math.random()*W,Math.random()*H,Math.random()*2+0.4,0,Math.PI*2);cx.fillStyle=`rgba(255,255,255,${Math.random()*0.15+0.03})`;cx.fill();} },
+  (cx,W,H)=>{ for(let i=0;i<7;i++){cx.beginPath();cx.moveTo(Math.random()*W,0);cx.lineTo(Math.random()*W,H);cx.strokeStyle=`rgba(255,255,255,${Math.random()*0.07+0.02})`;cx.lineWidth=0.6;cx.stroke();} },
+  (cx,W,H)=>{ cx.beginPath();cx.arc(W/2,H*0.38,W*0.22,0,Math.PI*2);cx.strokeStyle='rgba(255,255,255,0.07)';cx.lineWidth=0.8;cx.stroke();for(let i=0;i<28;i++){cx.fillStyle=`rgba(255,255,255,${Math.random()*0.1})`;cx.fillRect(Math.random()*W,Math.random()*H,1,1);} },
+  (cx,W,H)=>{ for(let i=0;i<5;i++){let y=H*0.15+i*(H*0.17);cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.strokeStyle='rgba(255,255,255,0.045)';cx.lineWidth=0.5;cx.stroke();} },
+  (cx,W,H)=>{ for(let i=0;i<3;i++){cx.beginPath();cx.arc(W/2,H/2,W*(0.12+i*0.1),0,Math.PI*2);cx.strokeStyle=`rgba(255,255,255,${0.06-i*0.015})`;cx.lineWidth=0.6;cx.stroke();} },
+  (cx,W,H)=>{ for(let i=0;i<38;i++){let x=Math.random()*W,y=Math.random()*H,s=Math.random()*3+1;cx.fillStyle=`rgba(255,255,255,${Math.random()*0.1})`;cx.fillRect(x,y,s,s);} },
+  (cx,W,H)=>{ for(let a=0;a<Math.PI*2;a+=0.4){cx.beginPath();cx.moveTo(W/2,H/2);cx.lineTo(W/2+Math.cos(a)*W*0.38,H/2+Math.sin(a)*H*0.38);cx.strokeStyle='rgba(255,255,255,0.035)';cx.lineWidth=0.5;cx.stroke();} },
+];
+
+/* ── build one <li> card ── */
+function makeCard(repo, idx) {
+  const li = document.createElement('li');
+  li.setAttribute('data-href', repo.html_url);
+
+  // generative canvas bg
+  const cv = document.createElement('canvas');
+  cv.width = 200; cv.height = 280;
+  const cx = cv.getContext('2d');
+  PAINTERS[idx % PAINTERS.length](cx, 130, 182);
+
+  const bg = document.createElement('div');
+  bg.className = 'card-bg';
+  bg.appendChild(cv);
+
+  const body = document.createElement('div');
+  body.className = 'card-body';
+  body.innerHTML = `
+    <span class="card-num">${String(idx + 1).padStart(2,'0')}</span>
+    <span class="card-name">${repo.name}</span>
+    <span class="card-lang">${repo.language || 'N/A'}</span>
+  `;
+
+  li.appendChild(bg);
+  li.appendChild(body);
+
+  // click → open GitHub in new tab
+  li.addEventListener('click', () => window.open(repo.html_url, '_blank', 'noopener'));
+
+  return li;
+}
+
+/* ── fetch repos then boot GSAP ── */
+async function init() {
+  const liveEl   = document.getElementById('showcaseLive');
+  const liveText = document.getElementById('showcaseLiveText');
+  const loading  = document.getElementById('cardLoading');
+  const gallery  = document.getElementById('galleryWrap');
+  const cardList = document.getElementById('cardList');
+
+  try {
+    const res  = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=20`, {
+      headers: { Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    const repos = (await res.json()).filter(r => !r.fork);
+
+    // build cards
+    repos.forEach((repo, i) => cardList.appendChild(makeCard(repo, i)));
+
+    loading.style.display = 'none';
+    gallery.style.display = 'block';
+    liveEl.classList.add('loaded');
+    liveText.textContent = `github.com/${GITHUB_USER}`;
+
+    bootGSAP();
+
+  } catch (err) {
+    loading.innerHTML = `<span style="color:rgba(255,255,255,0.3);font-size:0.6rem;letter-spacing:0.1em">Could not reach GitHub<br><small>${err.message}</small></span>`;
+    liveEl.classList.add('error');
+    liveText.textContent = 'Offline';
+  }
+}
+
+/* ── GSAP infinite scroll (original CodePen logic, adapted) ── */
+function bootGSAP() {
+  gsap.registerPlugin(Draggable);
+
+  const spacing     = 0.1;
+  const snapTime    = gsap.utils.snap(spacing);
+  const cards       = gsap.utils.toArray('.cards li');
+
+  gsap.set(cards, { xPercent: 400, opacity: 0, scale: 0 });
+
+  const animateFunc = el => {
+    const tl = gsap.timeline();
+    tl.fromTo(el,
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: 'power1.in', immediateRender: false }
+    ).fromTo(el,
+      { xPercent: 400 },
+      { xPercent: -400, duration: 1, ease: 'none', immediateRender: false },
+      0
+    );
+    return tl;
+  };
+
+  const seamlessLoop = buildSeamlessLoop(cards, spacing, animateFunc);
+  const playhead     = { offset: 0 };
+  const wrapTime     = gsap.utils.wrap(0, seamlessLoop.duration());
+
+  const scrub = gsap.to(playhead, {
+    offset: 0,
+    onUpdate() { seamlessLoop.time(wrapTime(playhead.offset)); },
+    duration: 0.7,
+    ease: 'power3',
+    paused: true,
+  });
+
+  /* ── virtual playhead: no window scroll involved, so up AND down both work ── */
+  const WHEEL_THRESHOLD = 60;    // wheel movement needed to count as one "flick" (bigger = less sensitive)
+  const WHEEL_COOLDOWN  = 450;   // ms before the next card can move (bigger = slower scrolling)
+  const WHEEL_PAUSE     = 140;   // ms of no wheel input that counts as "gesture finished"
+  const WHEEL_HOLD      = 900;   // during one endless spin, a new card is allowed every this many ms
+  let target = 0;                // where the playhead is heading, in timeline seconds
+
+  scrub.vars.offset = 0; scrub.invalidate().restart();   // draw the initial state
+
+  function scrollToOffset(offset) {
+    target = snapTime(offset);                            // always land exactly on a card
+    scrub.vars.offset = target;
+    scrub.invalidate().restart();
+  }
+  const step = dir => scrollToOffset(target + dir * spacing);
+
+  document.querySelector('.card-btn.prev').addEventListener('click', () => step(-1));
+  document.querySelector('.card-btn.next').addEventListener('click', () => step(1));
+
+  /* scroll wheel on the right panel: one flick = one card (down = next, up = previous).
+     After a card moves, wheel input is ignored until the gesture ends (a short pause),
+     so a fast spin or trackpad inertia can't skip several cards. */
+  let acc = 0, lastStep = 0, lastWheel = 0, locked = false;
+  document.querySelector('.detail-right').addEventListener('wheel', e => {
+    e.preventDefault();
+    const now = performance.now(), gap = now - lastWheel; lastWheel = now;
+    if (gap > WHEEL_PAUSE) { acc = 0; locked = false; }               // a pause = a new gesture
+    if (locked && now - lastStep > WHEEL_HOLD) locked = false;        // very long continuous spin: allow the next card
+    if (locked) return;
+    acc += e.deltaY * (e.deltaMode === 1 ? 16 : 1);                   // normalise line-based wheels
+    if (Math.abs(acc) >= WHEEL_THRESHOLD && now - lastStep > WHEEL_COOLDOWN) {
+      step(acc > 0 ? 1 : -1); lastStep = now; acc = 0; locked = true;
+    }
+  }, { passive: false });
+
+  Draggable.create('.drag-proxy', {
+    type: 'x',
+    trigger: '.cards',
+    onPress()    { this.startOffset = scrub.vars.offset; },
+    onDrag()     { scrub.vars.offset = this.startOffset + (this.startX - this.x) * 0.001; scrub.invalidate().restart(); },
+    onDragEnd()  { scrollToOffset(scrub.vars.offset); },
+  });
+
+  function buildSeamlessLoop(items, spacing, animateFunc) {
+    const overlap   = Math.ceil(1 / spacing);
+    const startTime = items.length * spacing + 0.5;
+    const loopTime  = (items.length + overlap) * spacing + 1;
+    const rawSeq    = gsap.timeline({ paused: true });
+    const loop      = gsap.timeline({
+      paused: true, repeat: -1,
+      onRepeat() { this._time === this._dur && (this._tTime += this._dur - 0.01); },
+    });
+    for (let i = 0; i < items.length + overlap * 2; i++) {
+      rawSeq.add(animateFunc(items[i % items.length]), i * spacing);
+      if (i <= items.length) loop.add('label' + i, i * spacing);
+    }
+    rawSeq.time(startTime);
+    loop.to(rawSeq, { time: loopTime, duration: loopTime - startTime, ease: 'none' })
+        .fromTo(rawSeq, { time: overlap * spacing + 1 }, { time: startTime, duration: startTime - (overlap * spacing + 1), immediateRender: false, ease: 'none' });
+    return loop;
+  }
+}
+
+init();
+</script>
+
+<script src="../assets/js/audio.js"></script>
+<script src="../assets/js/theme.js"></script>
+</body>
+</html>

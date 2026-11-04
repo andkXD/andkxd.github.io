@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artwork — Arya Satya Andhika Akbar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/showcase.css">
+</head>
+<body class="sc-top">
+  <nav class="site-nav">
+    <a href="../personal-website/pages/project-portfolio.html" class="site-nav-back">← Portfolio</a>
+    <a href="index.html" class="active">Top</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="works/index.html">Works</a>
+    <a href="info.html">Info</a>
+  </nav>
+  <div class="sc-tl">ARYA SATYA<br>ANDHIKA AKBAR<small>ARTWORK<br>© ARYA SATYA ANDHIKA AKBAR</small></div>
+  <div class="sc-mq"><div class="sc-mq-in">ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA </div></div>
+  <a class="sc-bigc" id="big" href="works/index.html">
+    <div class="sc-vis" id="bigVis"></div>
+    <div class="sc-mq"><div class="sc-mq-in">ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA </div></div>
+    <span class="sc-cap" id="cap"></span>
+  </a>
+  <div class="sc-smallc"><div class="sc-intro" id="intro">ASAA</div><span class="sc-cap">Artwork intro — 2025</span></div>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/main.js"></script>
+  <script src="../personal-website/assets/js/audio.js"></script>
+  <script>
+    const C = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    function scramble(el, txt) {       // random characters resolve into the real text
+      let f = 0; const id = setInterval(() => {
+        el.textContent = [...txt].map((ch, i) => (ch === ' ' || i < f / 2) ? ch : C[Math.random() * C.length | 0]).join('');
+        if (++f > txt.length * 2) { el.textContent = txt; clearInterval(id); }
+      }, 40);
+    }
+    const big = document.getElementById('big'), vis = document.getElementById('bigVis'), cap = document.getElementById('cap');
+    let cur = 0;
+    function show(i) {
+      const w = WORKS[i]; vis.classList.remove('glt'); void vis.offsetWidth; vis.classList.add('glt');
+      vis.innerHTML = ''; workVisual(vis, w, i); big.href = 'works/' + w.id + '.html'; scramble(cap, w.title);
+    }
+    show(0); setInterval(() => { cur = (cur + 1) % WORKS.length; show(cur); }, 4200);
+    const intro = document.getElementById('intro'); scramble(intro, 'ASAA'); setInterval(() => scramble(intro, 'ASAA'), 6000);
+  </script>
+</body>
+</html>

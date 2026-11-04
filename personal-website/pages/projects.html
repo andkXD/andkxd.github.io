@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARYA | PROJECTS</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    html, body { overflow: hidden; height: 100%; }
+
+    /* ── GRID BACKGROUND ── */
+    #grid-bg {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.06;
+    }
+
+    /* ── SCANLINES ── */
+    .scanline {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom, transparent 0px, transparent 3px,
+        rgba(255,255,255,0.012) 3px, rgba(255,255,255,0.012) 4px
+      );
+    }
+
+    /* ── HEADER ── */
+    .projects-page-header {
+      position: fixed; top: 70px; left: 72px; z-index: 20;
+      animation: fadeInUp 0.8s ease both;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--muted); font-size: 0.78rem;
+      letter-spacing: 0.05em; margin-bottom: 20px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--white); }
+    .projects-page-header h1 {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); font-weight: 400;
+    }
+
+    /* ── SCROLL PIPS ── */
+    .scroll-indicator {
+      position: fixed; left: 72px; top: 50%; transform: translateY(-50%);
+      z-index: 20; display: flex; flex-direction: column; gap: 10px;
+    }
+    .scroll-pip {
+      position: relative; width: 16px; height: 1px;
+      background: var(--border); transition: width 0.4s ease, background 0.4s ease;
+      cursor: pointer;
+    }
+    .scroll-pip.active { width: 25px; background: var(--white); }
+    .scroll-pip-label {
+      position: absolute; left: 44px; top: 50%; transform: translateY(-50%) translateX(-4px);
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); white-space: nowrap; opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+      pointer-events: none;
+    }
+    .scroll-pip:hover .scroll-pip-label,
+    .scroll-pip.active .scroll-pip-label {
+      opacity: 1; transform: translateY(-50%) translateX(0); color: var(--white);
+    }
+
+    /* ── COUNTER ── */
+    .project-counter {
+      position: fixed; left: 72px; bottom: 64px; z-index: 20;
+      font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em;
+      animation: fadeInUp 1s ease both 0.4s;
+    }
+    .counter-current {
+      color: var(--white); font-size: 1.1rem; font-weight: 300;
+      display: block; margin-bottom: 2px; transition: color 0.3s;
+    }
+
+    /* ── HINT ── */
+    .bottom-right {
+      position: fixed; bottom: 64px; right: 72px; text-align: right;
+      z-index: 20; animation: fadeInUp 1.2s ease both 0.3s;
+    }
+    .bottom-right p { font-size: 0.8rem; line-height: 1.75; color: var(--dim); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      position: fixed; top: 28px; left: 28px; right: 28px; height: 1px;
+      z-index: 25; overflow: hidden; pointer-events: none;
+    }
+    .progress-fill {
+      height: 100%; background: rgba(255,255,255,0.35); width: 0%;
+      transition: width 0.9s cubic-bezier(0.77,0,0.175,1);
+    }
+
+    /* ── BG INDEX ── */
+    .bg-index {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      font-size: 28vw; font-weight: 300; color: rgba(255,255,255,0.018);
+      z-index: 3; pointer-events: none; letter-spacing: -0.05em;
+      line-height: 1; user-select: none;
+      transition: opacity 0.5s ease;
+    }
+
+    /* ── WHEEL HINT ── */
+    .wheel-hint {
+      position: fixed; bottom: 64px; left: 50%; transform: translateX(-50%);
+      z-index: 20; display: flex; flex-direction: column;
+      align-items: center; gap: 6px; opacity: 1; transition: opacity 0.5s ease;
+    }
+    .wheel-hint.hidden { opacity: 0; pointer-events: none; }
+    .wheel-icon {
+      width: 18px; height: 28px; border: 1px solid var(--border);
+      border-radius: 10px; display: flex; justify-content: center; padding-top: 5px;
+    }
+    .wheel-dot {
+      width: 0.5px; height: 6px; background: var(--muted); border-radius: 2px;
+      animation: wheelScroll 1.6s ease infinite;
+    }
+    @keyframes wheelScroll {
+      0%   { transform: translateY(0); opacity: 1; }
+      80%  { transform: translateY(8px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 0; }
+    }
+    .wheel-hint p { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+    /* ── PROJECTS VIEWPORT ── */
+    .projects-viewport {
+      position: fixed; top: 0; right: 0; width: 62%; height: 100%;
+      z-index: 10; overflow: hidden;
+    }
+    .projects-track {
+      position: absolute; top: 0; left: 0; width: 100%;
+      will-change: transform;
+      transition: transform 0.9s cubic-bezier(0.77,0,0.175,1);
+    }
+
+    /* ── SLIDES ── */
+    .project-slide {
+      height: 100vh; width: 100%; display: flex; flex-direction: column;
+      justify-content: center; padding-right: 80px; padding-left: 40px;
+      align-items: flex-end; position: relative;
+    }
+    .project-slide::before {
+      content: ''; position: absolute; bottom: 0; left: 40px; right: 80px;
+      height: 1px; background: var(--border); transform: scaleX(0);
+      transform-origin: left; transition: transform 0.6s ease;
+    }
+    .project-slide.active::before { transform: scaleX(1); }
+
+    .project-slide a {
+      text-decoration: none; color: var(--white);
+      display: inline-flex; flex-direction: column;
+      align-items: flex-end; padding: 12px 0; position: relative;
+    }
+
+    .slide-accent {
+      position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 0.5px; height: 0; background: var(--white);
+      transition: height 0.6s cubic-bezier(0.77,0,0.175,1);
+    }
+    .project-slide.active .slide-accent { height: 50px; }
+
+    .slide-num {
+      font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 16px; transition: color 0.4s;
+    }
+    .project-slide.active .slide-num { color: var(--dim); }
+
+    .project-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 300;
+      letter-spacing: -4px; text-transform: uppercase; line-height: 0.92;
+      display: block; opacity: 0.18; transform: translateX(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, letter-spacing 0.4s ease;
+    }
+    .project-slide.active .project-title { opacity: 1; transform: translateX(0); }
+    .project-slide.adjacent .project-title { opacity: 0.1; transform: translateX(10px); }
+    .project-slide a:hover .project-title { letter-spacing: -1px; }
+
+    .project-meta {
+      font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em;
+      margin-top: 12px; display: block; opacity: 0; transform: translateY(8px);
+      transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+    }
+    .project-slide.active .project-meta { opacity: 1; transform: translateY(0); }
+
+    .project-arrow {
+      font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em;
+      margin-top: 20px; display: block; opacity: 0; transform: translateX(-8px);
+      transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    }
+    .project-slide.active a:hover .project-arrow {
+      opacity: 1; transform: translateX(0); color: var(--white);
+    }
+  </style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+  <canvas id="grid-bg"></canvas>
+  <div class="scanline"></div>
+  <div class="screen-border"></div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="bg-index" id="bgIndex">01</div>
+
+  <header class="projects-page-header">
+    <a href="../index.html" class="back-link">← Home</a>
+    <h1>Projects</h1>
+  </header>
+
+  <nav class="scroll-indicator" id="scrollPips"></nav>
+
+  <div class="project-counter">
+    <span class="counter-current" id="counterCurrent">01</span>
+    <span>- 06</span>
+  </div>
+
+  <div class="bottom-right">
+    <p>Scroll to navigate</p>
+    <p>Click to explore</p>
+  </div>
+
+  <div class="wheel-hint" id="wheelHint">
+    <div class="wheel-icon"><div class="wheel-dot"></div></div>
+    <p>Scroll</p>
+  </div>
+
+  <div class="projects-viewport">
+    <div class="projects-track" id="projectsTrack">
+
+      <div class="project-slide" data-index="0" data-slug="portfolio">
+        <div class="slide-accent"></div>
+        <a href="project-portfolio.html">
+          <span class="slide-num">01 | 06</span>
+          <span class="project-title">Portfolio</span>
+          <span class="project-meta">Things I've made | Illustration · Interaction · Code</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+      <div class="project-slide" data-index="1" data-slug="uiux">
+        <div class="slide-accent"></div>
+        <a href="project-uiux.html">
+          <span class="slide-num">02 | 06</span>
+          <span class="project-title">Lorem Ipsum</span>
+          <span class="project-meta">An ongoing collection | Lorem · Ipsum</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+      <div class="project-slide" data-index="2" data-slug="creative-code">
+        <div class="slide-accent"></div>
+        <a href="project-creative-code.html">
+          <span class="slide-num">03 | 06</span>
+          <span class="project-title">Dolor Sit</span>
+          <span class="project-meta">An ongoing collection | Dolor · Sit</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+      <div class="project-slide" data-index="3" data-slug="web-experiment">
+        <div class="slide-accent"></div>
+        <a href="project-web-experiment.html">
+          <span class="slide-num">04 | 06</span>
+          <span class="project-title">Amet Elit</span>
+          <span class="project-meta">An ongoing collection | Amet · Elit · Sed</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+      <div class="project-slide" data-index="4" data-slug="motion-study">
+        <div class="slide-accent"></div>
+        <a href="project-motion-study.html">
+          <span class="slide-num">05 | 06</span>
+          <span class="project-title">Tempor Ut</span>
+          <span class="project-meta">An ongoing collection | Tempor · Ut</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+      <div class="project-slide" data-index="5" data-slug="type-lab">
+        <div class="slide-accent"></div>
+        <a href="project-type-lab.html">
+          <span class="slide-num">06 | 06</span>
+          <span class="project-title">Magna Aliqua</span>
+          <span class="project-meta">An ongoing collection | Magna · Aliqua</span>
+          <span class="project-arrow">View project →</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="../assets/js/sketch.js"></script>
+<script src="../assets/js/audio.js"></script>
+
+  <script>
+    // Grid background
+    (function () {
+      const canvas = document.getElementById('grid-bg');
+      const ctx = canvas.getContext('2d');
+      function drawGrid() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cols = 12, rows = 8;
+        const cw = canvas.width / cols, ch = canvas.height / rows;
+        ctx.strokeStyle = 'rgba(255,255,255,1)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= cols; i++) {
+          ctx.beginPath(); ctx.moveTo(i * cw, 0); ctx.lineTo(i * cw, canvas.height); ctx.stroke();
+        }
+        for (let j = 0; j <= rows; j++) {
+          ctx.beginPath(); ctx.moveTo(0, j * ch); ctx.lineTo(canvas.width, j * ch); ctx.stroke();
+        }
+      }
+      drawGrid();
+      window.addEventListener('resize', drawGrid);
+    })();
+
+    // Scroll system
+    const slides   = Array.from(document.querySelectorAll('.project-slide'));
+    const track    = document.getElementById('projectsTrack');
+    const pipsNav  = document.getElementById('scrollPips');
+    const bgIndex  = document.getElementById('bgIndex');
+    const counter  = document.getElementById('counterCurrent');
+    const progress = document.getElementById('progressFill');
+    const hint     = document.getElementById('wheelHint');
+
+    const LABELS = ['Portfolio','Lorem Ipsum','Dolor Sit','Amet Elit','Tempor Ut','Magna Aliqua'];
+    const TOTAL  = slides.length;
+    let current  = 0;
+    let locked   = false;
+
+    slides.forEach((_, i) => {
+      const pip = document.createElement('div');
+      pip.className = 'scroll-pip';
+      const label = document.createElement('span');
+      label.className = 'scroll-pip-label';
+      label.textContent = LABELS[i];
+      pip.appendChild(label);
+      pip.addEventListener('click', () => goTo(i));
+      pipsNav.appendChild(pip);
+    });
+
+    function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+    function goTo(index, opts = {}) {
+      if (index < 0 || index >= TOTAL) return;
+      current = index;
+      track.style.transform = `translateY(-${current * 100}vh)`;
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'adjacent');
+        if (i === current) s.classList.add('active');
+        if (i === current - 1 || i === current + 1) s.classList.add('adjacent');
+      });
+      pipsNav.querySelectorAll('.scroll-pip').forEach((p, i) => p.classList.toggle('active', i === current));
+      if (!opts.skipHash && slides[current].dataset.slug) {
+        try { history.replaceState(null, '', '#' + slides[current].dataset.slug); } catch (_) {}
+      }
+      counter.textContent  = pad(current);
+      bgIndex.textContent  = pad(current);
+      progress.style.width = ((current / (TOTAL - 1)) * 100) + '%';
+      if (current > 0) hint.classList.add('hidden');
+    }
+
+    // Restore the slide from the URL hash (so "← Projects" returns to the right project)
+    function indexFromHash() {
+      const slug = decodeURIComponent(location.hash.replace('#', ''));
+      const i = slides.findIndex(s => s.dataset.slug === slug);
+      return i >= 0 ? i : 0;
+    }
+    track.style.transition = 'none';
+    goTo(indexFromHash(), { skipHash: true });
+    void track.offsetHeight;              // flush so the jump is instant
+    track.style.transition = '';
+    window.addEventListener('hashchange', () => goTo(indexFromHash(), { skipHash: true }));
+
+    function handleNav(dir) {
+      if (locked) return;
+      locked = true;
+      goTo(current + dir);
+      setTimeout(() => { locked = false; }, 950);
+    }
+
+    let wheelAccum = 0;
+    window.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      wheelAccum += e.deltaY;
+      if (Math.abs(wheelAccum) > 60) { handleNav(wheelAccum > 0 ? 1 : -1); wheelAccum = 0; }
+    }, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') handleNav(1);
+      if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  handleNav(-1);
+    });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
+    window.addEventListener('touchend',   (e) => {
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 40) handleNav(dy > 0 ? 1 : -1);
+    });
+  </script>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>
