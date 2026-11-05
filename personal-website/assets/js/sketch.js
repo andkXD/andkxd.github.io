@@ -100,3 +100,6 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   initCells();
 }
+
+   // load the star trackers (small brackets on stars) on every page that uses this background
+   (() => { const s = document.createElement('script'); s.src = new URL('trackers.js', document.currentScript.src).href; document.head.appendChild(s); })();

@@ -18,7 +18,7 @@
   const SHIFT_X  = 200;     // move the cloud right (+) / left (−)
   const SCALE    = 0.85;    // overall size of the cloud
   const MARKS_ON_PICTURE = 3;   // groups of 3 tracker brackets on the picture (0 = none)
-  const MARKS_ON_STARS   = 5;   // groups of 3 tracker brackets on the background stars (0 = none)
+  const MARKS_ON_STARS   = 0;   // groups of 3 tracker brackets on the background stars (0 = none)
   const START_MS = 1200;    // wait before the cloud gathers (lets the intro finish)
 
   if (!window.THREE) return;

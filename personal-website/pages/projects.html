@@ -90,15 +90,6 @@
       transition: width 0.9s cubic-bezier(0.77,0,0.175,1);
     }
 
-    /* ── BG INDEX ── */
-    .bg-index {
-      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
-      font-size: 28vw; font-weight: 300; color: rgba(255,255,255,0.018);
-      z-index: 3; pointer-events: none; letter-spacing: -0.05em;
-      line-height: 1; user-select: none;
-      transition: opacity 0.5s ease;
-    }
-
     /* ── WHEEL HINT ── */
     .wheel-hint {
       position: fixed; bottom: 64px; left: 50%; transform: translateX(-50%);
@@ -201,7 +192,6 @@
   <div class="screen-border"></div>
 
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="bg-index" id="bgIndex">01</div>
 
   <header class="projects-page-header">
     <a href="../index.html" class="back-link">← Home</a>
@@ -323,7 +313,6 @@
     const slides   = Array.from(document.querySelectorAll('.project-slide'));
     const track    = document.getElementById('projectsTrack');
     const pipsNav  = document.getElementById('scrollPips');
-    const bgIndex  = document.getElementById('bgIndex');
     const counter  = document.getElementById('counterCurrent');
     const progress = document.getElementById('progressFill');
     const hint     = document.getElementById('wheelHint');
@@ -360,7 +349,6 @@
         try { history.replaceState(null, '', '#' + slides[current].dataset.slug); } catch (_) {}
       }
       counter.textContent  = pad(current);
-      bgIndex.textContent  = pad(current);
       progress.style.width = ((current / (TOTAL - 1)) * 100) + '%';
       if (current > 0) hint.classList.add('hidden');
     }
