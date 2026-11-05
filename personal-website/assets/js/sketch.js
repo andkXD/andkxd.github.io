@@ -4,7 +4,7 @@
 
 let cells = [];
 // star count scales with screen area (≈950 on 1920×1080, was 300)
-const starCount = () => constrain(floor(windowWidth * windowHeight / 1100), 500, 1500);
+const starCount = () => constrain(floor(windowWidth * windowHeight / 1100), 500, 2500);
 
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
