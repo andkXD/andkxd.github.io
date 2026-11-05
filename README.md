@@ -2,7 +2,7 @@
 
 Personal portfolio + creative "Artwork" showcase by **Arya Satya Andhika Akbar** (Information Systems, Universitas Airlangga).
 
-Plain HTML / CSS / JavaScript — no build step.
+Plain HTML / CSS / JavaScript; no build step.
 
 ## Structure
 
