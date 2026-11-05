@@ -9,16 +9,16 @@
 // ============================================
 (() => {
   // ── settings (edit these) ──
-  const POINTS   = 90000;   // max number of points (lower = lighter on weak laptops)
+  const POINTS   = 100000;   // max number of points (lower = lighter on weak laptops)
   const DRIFT    = 0.30;    // 0–1  how much the points wander + stream to the right
-  const SPLASH   = 0.60;    // 0–1  how strongly the mouse pushes points away
-  const GATHER   = 0.85;    // 0–1  how tightly points hug the picture (1 = crisp)
+  const SPLASH   = 0.50;    // 0–1  how strongly the mouse pushes points away
+  const GATHER   = 1.00;    // 0–1  how tightly points hug the picture (1 = crisp)
   const DEPTH    = 150;     // depth of the relief
-  const SIZE     = 1.5;     // point size
-  const SHIFT_X  = 150;     // move the cloud right (+) / left (−)
+  const SIZE     = 2.0;     // point size
+  const SHIFT_X  = 200;     // move the cloud right (+) / left (−)
   const SCALE    = 0.85;    // overall size of the cloud
-  const MARKS_ON_PICTURE = 2;   // groups of 3 tracker brackets on the picture (0 = none)
-  const MARKS_ON_STARS   = 3;   // groups of 3 tracker brackets on the background stars (0 = none)
+  const MARKS_ON_PICTURE = 3;   // groups of 3 tracker brackets on the picture (0 = none)
+  const MARKS_ON_STARS   = 5;   // groups of 3 tracker brackets on the background stars (0 = none)
   const START_MS = 1200;    // wait before the cloud gathers (lets the intro finish)
 
   if (!window.THREE) return;
