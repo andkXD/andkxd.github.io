@@ -1,0 +1,65 @@
+/* ============================================
+   ARTWORK — RESPONSIVE / MOBILE (loaded LAST on every Artwork page)
+   ≤ 860px = phones + small tablets
+   ============================================ */
+
+/* touch screens: no custom cursor, normal pointer */
+@media (hover: none) {
+  .cursor { display: none !important; }
+  body, a, button, label, input, .sc-filters li, .th { cursor: auto !important; }
+  a, button { cursor: pointer !important; }
+}
+
+@media (max-width: 860px) {
+  html, body { overflow-x: hidden; }
+
+  /* nav: one compact row; the music widget shows only its bars */
+  .site-nav { padding: 12px 14px; gap: 12px; flex-wrap: wrap; mix-blend-mode: normal; background: rgba(5,5,6,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .site-nav a, .site-nav-back { font-size: .58rem; letter-spacing: .1em; }
+  .site-nav .np-text { display: none; }
+  .site-nav .now-playing { margin: 0 2px 0 0; }
+  .detail-back { top: 48px; left: 14px; }
+
+  footer { padding: 24px 18px; flex-direction: column; gap: 8px; }
+
+  /* ── TOP ── */
+  body.sc-top .sc-tl { left: 18px; top: 56px; font-size: 1.05rem; }
+  body.sc-top .sc-bigc { left: 3vw; right: 3vw; width: auto; top: 22vh; }
+  body.sc-top .sc-bigc .sc-mq { display: none; }              /* the outline copy only lines up on desktop */
+  body.sc-top .sc-mq { top: 60vh; }
+  body.sc-top .sc-mq-in { font-size: clamp(4rem, 24vw, 7rem); }
+
+  /* ── GALLERY ── */
+  .sc-hero { height: 50vh; }
+  .sc-bar h1 { padding: 24px 18px; font-size: clamp(1.7rem, 8vw, 2.4rem); }
+  .sc-filters { border-left: 0; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; }
+  .sc-filters li { flex: 1 0 50%; padding: 12px 18px; }
+  .sc-collage { grid-auto-rows: 46vw; }
+  .sc-collage .sc-card:nth-child(3n+1) { grid-column: span 2 !important; }   /* every 3rd tile full-width = collage rhythm */
+  .sc-collage .sc-card h3 { font-size: .8rem; bottom: 22px; }
+  .sc-all { padding: 40px 0; }
+
+  /* ── WORKS (list → tap a work to open its detail panel) ── */
+  body.sc-works .sc-w { display: block; height: 100vh; height: 100dvh; }
+  .sc-w h1 { top: 54px; left: 18px; }
+  .sc-list { height: 100%; padding: 120px 22px 80px; }
+  .sc-item { width: 74%; margin-bottom: 8vh; }
+  .sc-item .sc-vis { filter: grayscale(.4) brightness(.85); }
+  .sc-detail { padding: 78px 18px 70px; }
+  .d-spec { gap: 0 24px; }
+
+  /* ── WORK DETAIL PAGES ── */
+  .detail-hero { height: 52vh; min-height: 280px; }
+  .detail-body { grid-template-columns: 1fr; gap: 36px; padding: 36px 18px 56px; }
+  .detail-main h1 { font-size: clamp(2rem, 11vw, 3rem); }
+  .detail-nav { padding: 24px 18px; }
+
+  /* ── INFO ── */
+  .info-wrap { grid-template-columns: 1fr; gap: 12px; padding: 92px 18px 56px; min-height: 0; }
+  .info-wrap h1 { font-size: clamp(2.6rem, 14vw, 4rem); margin-bottom: 28px; }
+}
+
+@media (max-width: 400px) {
+  .site-nav { gap: 9px; padding: 12px 10px; }
+  .site-nav a, .site-nav-back { font-size: .54rem; letter-spacing: .08em; }
+}

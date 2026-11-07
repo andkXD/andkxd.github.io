@@ -1,0 +1,83 @@
+/* ============================================
+   RESPONSIVE / MOBILE — loaded LAST on every personal-website page.
+   Pages are tagged with <body data-page="home|projects|detail|life">.
+   ≤ 900px = phones + small tablets · ≤ 520px = small phones
+   ============================================ */
+
+/* touch screens have no hover cursor */
+@media (hover: none) { body { cursor: auto; } }
+
+@media (max-width: 900px) {
+  /* shared frame + widgets */
+  .screen-border { top: 8px; left: 8px; right: 8px; bottom: 8px; }
+  .now-playing { top: 13px; }
+  .now-playing .np-text { font-size: .58rem; letter-spacing: .1em; }
+  .theme-switcher { right: 2px; }
+
+  /* ── HOME ── */
+  [data-page=home] .top-left { top: 54px; left: 26px; right: 26px; }
+  [data-page=home] .site-title { font-size: clamp(1.9rem, 9.5vw, 3rem); line-height: 1.12; }
+  [data-page=home] .bottom-right { left: 26px; right: 26px; bottom: 54px; }
+  [data-page=home] .bottom-right p { font-size: .72rem; line-height: 1.65; }
+  [data-page=home] .bottom-left-year { left: 26px; bottom: 22px; font-size: .62rem; }
+  .overlay-section { align-items: flex-start; overflow-y: auto; }
+  .overlay-inner { width: 88%; padding: 64px 0 56px; }
+  .close-btn { top: 24px; right: 22px; }
+
+  /* ── PROJECTS (slides) ── */
+  [data-page=projects] .projects-page-header { top: 40px; left: 26px; }
+  [data-page=projects] .projects-viewport { width: 100%; }
+  [data-page=projects] .project-slide { height: 100vh; height: 100dvh; padding: 0 28px; align-items: flex-start; }
+  [data-page=projects] .project-slide::before { left: 28px; right: 28px; }
+  [data-page=projects] .project-slide a { align-items: flex-start; }
+  [data-page=projects] .project-title { font-size: clamp(2.3rem, 13.5vw, 4rem); letter-spacing: -2px; transform: translateX(-12px); }
+  [data-page=projects] .project-slide.active .project-title { transform: none; }
+  [data-page=projects] .project-slide.adjacent .project-title { transform: translateX(-6px); }
+  [data-page=projects] .scroll-indicator { left: auto; right: 26px; top: auto; bottom: 26px; transform: none; flex-direction: row; align-items: center; gap: 8px; }
+  [data-page=projects] .scroll-pip-label { display: none; }
+  [data-page=projects] .wheel-hint { display: none; }
+  [data-page=projects] .bottom-right { right: 26px; left: auto; bottom: 62px; }
+  [data-page=projects] .bottom-right p { font-size: .66rem; }
+  [data-page=projects] .project-counter { left: 26px; bottom: 24px; }
+
+  /* ── DETAIL PAGES: stop being a fixed desktop panel, become one scrolling column ── */
+  html:has(body[data-page=detail]), body[data-page=detail],
+  html:has(body[data-page=life]),   body[data-page=life] { height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; }
+  [data-page=detail] .project-detail { position: relative; inset: auto; display: block !important; grid-template-columns: none !important; margin: 14px; min-height: calc(100dvh - 28px); overflow: visible; }
+  [data-page=detail] .detail-topbar { position: sticky; width: auto; top: 0; z-index: 40; padding: 0 16px; background: var(--black); }
+  [data-page=detail] .detail-bottombar { position: sticky; bottom: 0; z-index: 40; padding: 0 16px; background: var(--black); }
+  [data-page=detail] .project-nav { gap: 18px; }
+  [data-page=detail] .detail-body, [data-page=detail] .detail-content, [data-page=detail] .detail-upper { display: flex !important; flex-direction: column; grid-template-columns: none !important; height: auto !important; overflow: visible !important; flex: none; }
+  [data-page=detail] .detail-left, [data-page=detail] .detail-right, [data-page=detail] .sidebar, [data-page=detail] .panel-mid, [data-page=detail] .panel-right {
+    width: auto !important; height: auto !important; min-height: 0 !important; overflow: visible !important; border-right: 0 !important; padding: 26px 20px !important; }
+  [data-page=detail] .detail-body > *:not(:last-child), [data-page=detail] .detail-content > *:not(:last-child), [data-page=detail] .detail-upper > *:not(:last-child) { border-bottom: 1px solid var(--border); }
+  [data-page=detail] .detail-content { position: static !important; inset: auto !important; }   /* Portfolio: was absolutely positioned, so it took no space */
+  [data-page=detail] .cards, [data-page=detail] .cards li { width: min(74vw, 320px); height: min(112vw, 480px); }   /* repo cards must fit a phone */
+  [data-page=detail] .detail-right:has(.gallery) { height: 72vh !important; min-height: 440px !important; padding: 0 !important; overflow: hidden !important; }   /* Portfolio: repo card carousel */
+  [data-page=detail] .detail-hero { padding: 28px 20px !important; flex-direction: column; align-items: flex-start; gap: 16px; height: auto !important; }
+  [data-page=detail] .hero-title { font-size: clamp(2.4rem, 13vw, 3.8rem) !important; }
+  [data-page=detail] .detail-title, [data-page=detail] .sidebar-title { font-size: clamp(2.2rem, 12vw, 3.6rem) !important; }
+  [data-page=detail] .type-strip { overflow: hidden; }
+  [data-page=detail] .type-specimen { font-size: clamp(1.8rem, 9vw, 3.2rem) !important; flex-wrap: wrap; }
+  [data-page=detail] .code-block, [data-page=detail] .terminal-header { overflow-x: auto; max-width: 100%; }
+  [data-page=detail] .detail-back { padding: 10px 0; }
+
+  /* ── LIFE STUDY ── */
+  [data-page=life] .aw-wrap { position: relative; inset: auto; display: block; min-height: 100dvh; }
+  [data-page=life] .aw-sidebar { padding: 56px 22px 18px; border-right: 0; border-bottom: 1px solid var(--border); gap: 18px; }
+  [data-page=life] .aw-sidebar-bottom { flex-direction: row; flex-wrap: wrap; gap: 6px 18px; }
+  [data-page=life] .aw-filter { width: 100%; margin-bottom: 0; }
+  [data-page=life] .aw-content { overflow: visible; padding: 18px 14px 56px; }
+  [data-page=life] .aw-lb-inner { max-width: 94vw; }
+  [data-page=life] .aw-lb-close { top: 18px; right: 18px; }
+  [data-page=life] .aw-lb-nav { bottom: 18px; gap: 26px; }
+}
+
+/* phones: no hover → show the caption overlays that normally appear on hover */
+@media (hover: none) { [data-page=life] .aw-item-overlay { opacity: 1; } }
+
+@media (max-width: 520px) {
+  [data-page=detail] .detail-left, [data-page=detail] .detail-right, [data-page=detail] .sidebar, [data-page=detail] .panel-mid, [data-page=detail] .panel-right { padding: 22px 16px !important; }
+  [data-page=life] .aw-grid { grid-template-columns: 1fr; }
+  .overlay-inner { width: 90%; }
+}

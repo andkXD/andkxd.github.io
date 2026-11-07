@@ -5,7 +5,7 @@
 // ============================================
 (() => {
   // ── settings (edit these) ──
-  const GROUPS   = 3;     // groups of 3 brackets, each group joined by thin lines (0 = off)
+  const GROUPS   = innerWidth < 700 ? 1 : 3;   // groups of 3 brackets, joined by thin lines (0 = off) — fewer on phones
   const MIN_SIZE = 1.6;   // only stars bigger than this can get a bracket
   const MAX_LINE = 420;   // hide a connecting line when its stars drift further apart than this (px)
   if (!GROUPS) return;

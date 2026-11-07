@@ -66,7 +66,7 @@
   color: var(--off-white);
 }
 .detail-quote::before {
-  content: ''; display: block; width: 450px; height: 0.5px;
+  content: ''; display: block; width: 375px; height: 0.5px;
   background: var(--muted); margin-bottom: 20px;
 }
 .detail-quote-by {
@@ -218,8 +218,9 @@ body.theme-light .card-btn { color: #888; border-color: rgba(0,0,0,0.15); }
 body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
 </style>
   <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
-<body>
+<body data-page="detail">
 <div class="scanline"></div>
 <div id="canvas-container"></div>
 <div class="screen-border"></div>

@@ -22,6 +22,9 @@
   const DEPTH    = 150;     // relief depth for your own pictures
 
   if (!window.THREE) return;
+  const MOBILE = () => innerWidth < 700;                               // phones: smaller, centred, lighter
+  const PTS = () => MOBILE() ? Math.min(POINTS, 30000) : POINTS;
+  if (matchMedia('(hover: none)').matches) document.documentElement.style.touchAction = 'none';   // so dragging the moon never scrolls/zooms the page
   const BASE = new URL('../img/', document.currentScript.src).href;
   const COMMON = `
   uniform float uTime, uDrift, uSplash, uGather, uAppear, uBurst, uSize, uPx;`;
@@ -78,20 +81,21 @@
   css.textContent = '#cloud-bg .mk{position:absolute;left:0;top:0;font:500 10px "Roboto Mono",monospace;letter-spacing:.08em;white-space:nowrap;color:var(--cb-fg,#ddd);opacity:.6}' +
     '#cloud-bg .mk svg{position:absolute;left:-7px;top:-7px}#cloud-bg .mk span{position:absolute;left:12px;top:-6px}#cloud-bg svg.ln{position:absolute;inset:0;width:100%;height:100%;stroke:var(--cb-fg,#ddd);opacity:.22}';
   document.head.appendChild(css); document.body.insertBefore(box, document.body.firstChild.nextSibling || null);
-  const R = new THREE.WebGLRenderer({ alpha: true, antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, 2)); R.setClearColor(0x000000, 0);
+  const R = new THREE.WebGLRenderer({ alpha: true, antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, MOBILE() ? 1.5 : 2)); R.setClearColor(0x000000, 0);
   R.domElement.style.display = 'block';
   const lines = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); lines.setAttribute('class', 'ln'); lines.setAttribute('stroke-width', '1');
   const hud = document.createElement('div'); hud.style.cssText = 'position:absolute;inset:0';
   box.append(R.domElement, lines, hud);
 
   const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, 1, 1, 4000), group = new THREE.Group();
-  cam.position.z = 900; group.position.x = SHIFT_X; group.scale.setScalar(SCALE); scene.add(group);
+  cam.position.z = 900; scene.add(group);
   const U = { uTime: { value: 0 }, uDrift: { value: DRIFT }, uSplash: { value: SPLASH }, uGather: { value: GATHER }, uDepth: { value: DEPTH }, uAppear: { value: 0 },
     uBurst: { value: 0 }, uSize: { value: SIZE }, uPx: { value: R.getPixelRatio() }, uMouse: { value: new THREE.Vector3(9999, 9999, 0) }, uMouseW: { value: new THREE.Vector3(9999, 9999, 0) },
     uLight: { value: new THREE.Vector3(-.62, .35, .70).normalize() }, uInvert: { value: 0 } };
   const mk = vs => new THREE.ShaderMaterial({ uniforms: U, vertexShader: vs, fragmentShader: FS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
   const matR = mk(VS_RELIEF), matS = mk(VS_SPHERE);
-  function fit() { const w = innerWidth, h = innerHeight; R.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+  function layout() { const m = MOBILE(); group.position.set(m ? 28 : SHIFT_X, m ? -42 : 0, 0); group.scale.setScalar(m ? SCALE * .5 : SCALE); box.style.opacity = m ? .6 : 1; U.uDrift.value = m ? DRIFT * .4 : DRIFT; }
+  function fit() { const w = innerWidth, h = innerHeight; R.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); layout(); }
   addEventListener('resize', fit); fit();
 
   let pts = null, cur = null, appearT = -START_MS / 1000, mks = [], mm = [];
@@ -103,7 +107,7 @@
 
   // ── default picture: a full 3D moon (grains on the whole sphere) ──
   function buildMoon() {
-    const N = Math.round(POINTS * 2.8), pos = new Float32Array(N * 3), alb = new Float32Array(N), rnd = new Float32Array(N * 3), thr = new Float32Array(N);
+    const N = Math.round(PTS() * 2.8), pos = new Float32Array(N * 3), alb = new Float32Array(N), rnd = new Float32Array(N * 3), thr = new Float32Array(N);
     let s = 11; const rr = () => (s = (s * 9301 + 49297) % 233280) / 233280;
     const unit = () => { const z = rr() * 2 - 1, a = rr() * 6.283, r = Math.sqrt(1 - z * z); return [r * Math.cos(a), r * Math.sin(a), z]; };
     const cr = Array.from({ length: 70 }, () => { const u = unit(), r = .03 + rr() * rr() * .2; return { u, r, cmax: Math.cos(Math.min(3.1, r * 1.25)) }; });
@@ -127,7 +131,7 @@
 
   // ── your own picture → relief point cloud (bright = near) ──
   function buildRelief(src) {
-    const s = Math.min(1, Math.sqrt(POINTS / (src.width * src.height))), cw = Math.max(8, Math.round(src.width * s)), ch = Math.max(8, Math.round(src.height * s));
+    const s = Math.min(1, Math.sqrt(PTS() / (src.width * src.height))), cw = Math.max(8, Math.round(src.width * s)), ch = Math.max(8, Math.round(src.height * s));
     const o = document.createElement('canvas'); o.width = cw; o.height = ch;
     const g = o.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0, cw, ch);
     const d = g.getImageData(0, 0, cw, ch).data, L = new Float32Array(cw * ch);
@@ -189,7 +193,7 @@
   const UI = 'a,button,input,select,textarea,label';
   function overMoon(cx, cy) {
     if (!cur) return false;
-    V.set(group.position.x, 0, 0).project(cam); V2.set(group.position.x + cur.hitR * SCALE, 0, 0).project(cam);
+    V.set(group.position.x, group.position.y, 0).project(cam); V2.set(group.position.x + cur.hitR * group.scale.x, group.position.y, 0).project(cam);
     return Math.hypot(cx - (V.x * .5 + .5) * innerWidth, cy - (-V.y * .5 + .5) * innerHeight) < Math.abs(V2.x - V.x) * .5 * innerWidth;
   }
   addEventListener('pointermove', e => {
@@ -197,7 +201,7 @@
     if (drag) {
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag = { x: e.clientX, y: e.clientY };
       rotY += dx * .006; rotX = Math.max(-1.3, Math.min(1.3, rotX + dy * .006)); velY = dx * .006; velX = dy * .006;
-    } else if (!e.target.closest(UI)) document.body.style.cursor = overMoon(e.clientX, e.clientY) ? 'grab' : '';
+    } else if (!e.target.closest(UI) && e.pointerType === 'mouse') document.body.style.cursor = overMoon(e.clientX, e.clientY) ? 'grab' : '';
   });
   addEventListener('pointerdown', e => {
     if (e.button !== 0 || e.target.closest(UI) || !overMoon(e.clientX, e.clientY)) return;
