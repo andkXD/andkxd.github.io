@@ -1,5 +1,5 @@
 // ============================================
-// GLOBAL AUDIO PLAYER — seamless across ALL pages (personal-website + Artwork)
+// GLOBAL AUDIO PLAYER — seamless across ALL pages (main site + Artwork)
 // Playlist loops: nc17 → Von → nc17 → ...
 // Sync: position + timestamp are saved, so the next page resumes where the
 // music would be "now" (no jump back), via sessionStorage (same origin).
