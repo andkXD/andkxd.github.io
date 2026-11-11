@@ -119,9 +119,23 @@
   <script src="assets/js/cloudbg.js"></script>
   <script src="assets/js/audio.js"></script>
   <script>
-    // Info / Contact / FAQ = panel di kiri bawah
+    // Info / Contact / FAQ
+    //  - laptop/PC (mouse): teks mengikuti kursor, ada garis tether ke titik awal; wheel = scroll; klik layar = tutup
+    //  - HP / tablet: panel diam di kiri bawah
     const panels = document.querySelectorAll('.overlay-section');
     const navLinks = document.querySelectorAll('.nav-scroll');
+    const isDesktop = () => matchMedia('(hover: hover) and (pointer: fine) and (min-width: 901px)').matches;
+
+    // tether (garis + penanda titik awal) — hanya dipakai di mode ikut-kursor
+    const NS = 'http://www.w3.org/2000/svg';
+    const tether = document.createElementNS(NS, 'svg');
+    tether.setAttribute('class', 'follow-tether');
+    tether.innerHTML = '<line class="ft-line"/><rect class="ft-box" width="16" height="16" x="-8" y="-8"/><circle class="ft-dot" r="1.6"/><text class="ft-label" x="14" y="4"></text>';
+    document.body.appendChild(tether);
+    const ftLine = tether.querySelector('.ft-line'), ftBox = tether.querySelector('.ft-box'),
+          ftDot = tether.querySelector('.ft-dot'), ftLabel = tether.querySelector('.ft-label');
+
+    let follow = null; // {el, inner, ax, ay, x, y, mx, my, st, raf}
 
     function fitPanel(el) {
       // bawah panel = tepat di atas "An ongoing collection"; atas panel tidak pernah melewati menu
@@ -131,30 +145,92 @@
       el.style.bottom = bottom + 'px';
       el.style.setProperty('--panel-max', Math.max(60, innerHeight - bottom - (nav.bottom + 14)) + 'px');
     }
+
+    function tick() {
+      const f = follow; if (!f) return;
+      const w = f.el.offsetWidth, hgt = f.el.offsetHeight;
+      const tx = Math.min(f.mx + 28, innerWidth - w - 24), ty = Math.min(f.my + 20, innerHeight - hgt - 24);
+      f.x += (tx - f.x) * 0.14; f.y += (Math.max(24, ty) - f.y) * 0.14;
+      f.el.style.transform = 'translate3d(' + f.x.toFixed(1) + 'px,' + f.y.toFixed(1) + 'px,0)';
+      // scroll halus
+      const max = f.inner.scrollHeight - f.inner.clientHeight;
+      f.st = Math.max(0, Math.min(max, f.st));
+      f.inner.scrollTop += (f.st - f.inner.scrollTop) * 0.2;
+      // tether: dari titik awal ke pojok kiri atas teks
+      ftLine.setAttribute('x1', f.ax); ftLine.setAttribute('y1', f.ay);
+      ftLine.setAttribute('x2', f.x); ftLine.setAttribute('y2', f.y + 8);
+      f.raf = requestAnimationFrame(tick);
+    }
+    const onMove = e => { if (follow) { follow.mx = e.clientX; follow.my = e.clientY; } };
+    const onWheel = e => {
+      if (!follow) return;
+      const k = e.deltaMode === 1 ? 32 : 1; // baris -> px
+      follow.st += e.deltaY * k;
+    };
+
+    function openFollow(el, x, y, name) {
+      const inner = el.querySelector('.overlay-inner');
+      el.style.bottom = ''; el.style.removeProperty('--panel-max');
+      el.classList.add('follow');
+      inner.scrollTop = 0;
+      follow = { el, inner, ax: x, ay: y, x: x, y: y, mx: x, my: y, st: 0, raf: 0 };
+      ftBox.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
+      ftDot.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
+      ftLabel.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
+      ftLabel.textContent = name;
+      tether.classList.add('on');
+      addEventListener('mousemove', onMove);
+      addEventListener('wheel', onWheel, { passive: true });
+      follow.raf = requestAnimationFrame(tick);
+    }
+
     function closeSection() {
+      if (follow) {
+        cancelAnimationFrame(follow.raf);
+        removeEventListener('mousemove', onMove);
+        removeEventListener('wheel', onWheel);
+        follow.el.classList.remove('follow');
+        follow.el.style.transform = '';
+        follow = null;
+        tether.classList.remove('on');
+      }
       panels.forEach(s => s.classList.remove('active'));
       navLinks.forEach(l => l.classList.remove('on'));
       document.body.classList.remove('panel-open');
     }
+
     navLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
         const el = document.querySelector(this.getAttribute('href'));
-        if (el.classList.contains('active')) return closeSection();
+        const was = el.classList.contains('active');
         closeSection();
-        fitPanel(el);
-        el.querySelector('.overlay-inner').scrollTop = 0;
+        if (was) return;
         el.classList.add('active');
         this.classList.add('on');
-        document.body.classList.add('panel-open');
+        if (isDesktop()) {
+          const r = this.getBoundingClientRect();
+          // titik awal = tempat menu diklik (kalau dari keyboard, pakai posisi link)
+          const x = e.clientX || r.right + 10, y = e.clientY || r.top + r.height / 2;
+          openFollow(el, x, y, this.textContent.trim().toUpperCase());
+        } else {
+          document.body.classList.add('panel-open');
+          fitPanel(el);
+          el.querySelector('.overlay-inner').scrollTop = 0;
+        }
       });
     });
-    addEventListener('resize', () => { const a = document.querySelector('.overlay-section.active'); if (a) fitPanel(a); });
+    addEventListener('resize', () => {
+      const a = document.querySelector('.overlay-section.active');
+      if (!a) return;
+      if (follow !== null && !isDesktop()) return closeSection();
+      if (!follow) fitPanel(a);
+    });
     addEventListener('keydown', e => { if (e.key === 'Escape') closeSection(); });
-    // klik di luar panel = tutup
+    // klik di luar panel / di layar = tutup
     document.addEventListener('click', e => {
-      if (!document.body.classList.contains('panel-open')) return;
-      if (e.target.closest('.overlay-section, .nav-scroll')) return;
+      if (!panels.length || !document.querySelector('.overlay-section.active')) return;
+      if (e.target.closest('.nav-scroll') || (!follow && e.target.closest('.overlay-section'))) return;
       closeSection();
     });
   </script>
