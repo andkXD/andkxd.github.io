@@ -300,6 +300,8 @@ body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
 
 <script>
 const GITHUB_USER = 'andkXD';
+/* Repos shown on this page, in this order. Add or remove names here to change the list. */
+const FEATURED = ['andkxd.github.io', 'Adaptive-Neuromorphic-Sensor', 'I2ASPO-2023', 'MSU-IREX-2026'];
 
 /* ── generative card background painters ──
    The old ones used alpha 0.03–0.15 on a canvas that was shown at 45 % → practically invisible, so every card looked empty.
@@ -368,22 +370,28 @@ function writeCache(repos) {
       name: r.name, html_url: r.html_url, language: r.language, description: r.description, stargazers_count: r.stargazers_count })) }));
   } catch (_) {}
 }
+/* keep only FEATURED, in that order; anything GitHub did not return still gets a card that links to the repo */
+function pickFeatured(all) {
+  const byName = {}; (all || []).forEach(r => { byName[r.name.toLowerCase()] = r; });
+  return FEATURED.map(n => byName[n.toLowerCase()] ||
+    { name: n, html_url: `https://github.com/${GITHUB_USER}/${n}`, language: null, description: '', stargazers_count: 0 });
+}
 async function loadRepos() {
   const cached = readCache();
-  if (cached && Date.now() - cached.t < CACHE_TTL) return cached.repos;
+  if (cached && Date.now() - cached.t < CACHE_TTL) return pickFeatured(cached.repos);
   try {
     const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 8000);
-    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=20`, {
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`, {
       headers: { Accept: 'application/vnd.github.v3+json' }, signal: ctl.signal
     });
     clearTimeout(timer);
     if (!res.ok) throw new Error(res.status === 403 ? 'rate-limit' : String(res.status));
-    const repos = (await res.json()).filter(r => !r.fork);
+    const repos = await res.json();
     writeCache(repos);
-    return repos;
+    return pickFeatured(repos);
   } catch (err) {
-    if (cached) return cached.repos;      // stale copy is better than an empty panel
-    throw err;
+    // GitHub unreachable / rate-limited: use the last good copy, or just plain cards linking to the repos
+    return pickFeatured(cached ? cached.repos : []);
   }
 }
 
