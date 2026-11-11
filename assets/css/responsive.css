@@ -23,9 +23,9 @@
   [data-page=home] .bottom-right { left: 26px; right: 26px; bottom: 54px; }
   [data-page=home] .bottom-right p { font-size: .72rem; line-height: 1.65; }
   [data-page=home] .bottom-left-year { left: 26px; bottom: 22px; font-size: .62rem; }
-  .overlay-section { left: 26px; bottom: 50px; width: min(420px, calc(100vw - 52px)); }
-  .overlay-inner { padding: 50px 22px 28px; }
-  .close-btn { top: 12px; right: 18px; }
+  .overlay-section { left: 26px; bottom: 50px; width: min(300px, calc(100vw - 52px)); }
+  .overlay-inner { padding: 22px 0 24px; }
+  .close-btn { top: 0; right: 0; }
   body.panel-open .bottom-right { opacity: 0 !important; pointer-events: none; transition: opacity .3s; }
 
   /* ── PROJECTS (slides) ── */
