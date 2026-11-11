@@ -130,10 +130,10 @@
     const NS = 'http://www.w3.org/2000/svg';
     const tether = document.createElementNS(NS, 'svg');
     tether.setAttribute('class', 'follow-tether');
-    tether.innerHTML = '<line class="ft-line"/><rect class="ft-box" width="16" height="16" x="-8" y="-8"/><circle class="ft-dot" r="1.6"/><circle class="ft-end" r="2.4"/><text class="ft-label" x="14" y="4"></text>';
+    tether.innerHTML = '<line class="ft-line"/><circle class="ft-dot" r="1.6"/><circle class="ft-end" r="2.4"/>';
     document.body.appendChild(tether);
-    const ftLine = tether.querySelector('.ft-line'), ftBox = tether.querySelector('.ft-box'),
-          ftDot = tether.querySelector('.ft-dot'), ftEnd = tether.querySelector('.ft-end'), ftLabel = tether.querySelector('.ft-label');
+    const ftLine = tether.querySelector('.ft-line'),
+          ftDot = tether.querySelector('.ft-dot'), ftEnd = tether.querySelector('.ft-end');
 
     // panel ikut-kursor = elemen terpisah (isinya disalin dari section), digerakkan JS
     const fp = document.createElement('div');
@@ -182,10 +182,7 @@
       fpView.style.height = Math.min(full, maxH) + 'px';
       follow = { ax: x, ay: y, mx: x, my: y, st: 0, cur: 0, max: Math.max(0, full - maxH), raf: 0 };
       fpContent.style.transform = 'translate3d(0,0,0)';
-      ftBox.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
       ftDot.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
-      ftLabel.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
-      ftLabel.textContent = name;
       render();
       fp.classList.add('on'); tether.classList.add('on');
       addEventListener('mousemove', onMove);
