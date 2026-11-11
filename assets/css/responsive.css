@@ -34,7 +34,7 @@
 
   /* ── PROJECTS (slides) ── */
   [data-page=projects] .projects-page-header { top: 40px; left: 26px; }
-  [data-page=projects] .projects-viewport { width: 100%; }
+  [data-page=projects] .projects-viewport { width: 100%; height: 100vh; height: 100dvh; }
   [data-page=projects] .project-slide { height: 100vh; height: 100dvh; padding: 0 28px; align-items: flex-start; }
   [data-page=projects] .project-slide::before { left: 28px; right: 28px; }
   [data-page=projects] .project-slide a { align-items: flex-start; }

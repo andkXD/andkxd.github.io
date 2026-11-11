@@ -340,7 +340,9 @@
     function goTo(index, opts = {}) {
       if (index < 0 || index >= TOTAL) return;
       current = index;
-      track.style.transform = `translateY(-${current * 100}vh)`;
+      // Move by the slide's REAL height, not 100vh: on phones the browser bar shows/hides, so 100vh
+      // (tallest viewport) differs from the slide height (100dvh) and every step drifted a bit upward.
+      track.style.transform = `translateY(-${current * slides[0].getBoundingClientRect().height}px)`;
       slides.forEach((s, i) => {
         s.classList.remove('active', 'adjacent');
         if (i === current) s.classList.add('active');
@@ -366,6 +368,13 @@
     void track.offsetHeight;              // flush so the jump is instant
     track.style.transition = '';
     window.addEventListener('hashchange', () => goTo(indexFromHash(), { skipHash: true }));
+    // Re-align when the viewport height changes (mobile address bar, rotation) so the slide stays centred
+    window.addEventListener('resize', () => {
+      track.style.transition = 'none';
+      goTo(current, { skipHash: true });
+      void track.offsetHeight;
+      track.style.transition = '';
+    });
 
     function handleNav(dir) {
       if (locked) return;
