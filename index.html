@@ -124,9 +124,12 @@
     const navLinks = document.querySelectorAll('.nav-scroll');
 
     function fitPanel(el) {
-      const top = document.querySelector('.top-left').getBoundingClientRect().bottom + 18;
-      const bottom = parseFloat(getComputedStyle(el).bottom) || 0;
-      el.style.setProperty('--panel-max', Math.max(190, innerHeight - bottom - top) + 'px');
+      // bawah panel = tepat di atas "An ongoing collection"; atas panel tidak pernah melewati menu
+      const year = document.querySelector('.bottom-left-year').getBoundingClientRect();
+      const nav = document.querySelector('.top-left').getBoundingClientRect();
+      const bottom = Math.max(0, innerHeight - year.top + 12);
+      el.style.bottom = bottom + 'px';
+      el.style.setProperty('--panel-max', Math.max(60, innerHeight - bottom - (nav.bottom + 14)) + 'px');
     }
     function closeSection() {
       panels.forEach(s => s.classList.remove('active'));
