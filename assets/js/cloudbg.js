@@ -94,7 +94,16 @@
     uLight: { value: new THREE.Vector3(-.62, .35, .70).normalize() }, uInvert: { value: 0 } };
   const mk = vs => new THREE.ShaderMaterial({ uniforms: U, vertexShader: vs, fragmentShader: FS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
   const matR = mk(VS_RELIEF), matS = mk(VS_SPHERE);
-  function layout() { const m = MOBILE(); group.position.set(m ? 28 : SHIFT_X, m ? -42 : 0, 0); group.scale.setScalar(m ? SCALE * .5 : SCALE); box.style.opacity = m ? .6 : 1; U.uDrift.value = m ? DRIFT * .4 : DRIFT; }
+  // phones: park the moon just above the bottom-right text block so it never sits on top of it
+  function mobileY() {
+    const u  = 2 * 900 * Math.tan(Math.PI / 9) / innerHeight;              // world units per CSS px (camera fov 40°, z = 900)
+    const rPx = MOON_R * SCALE * .5 / u;                                    // moon radius in CSS px
+    const br = document.querySelector('.bottom-right');
+    const textTop = br ? innerHeight - br.offsetHeight - (parseFloat(getComputedStyle(br).bottom) || 0) : innerHeight * .7;
+    const centrePx = Math.max(innerHeight * .34, textTop - 16 - rPx);        // not higher than ~1/3 of the screen
+    return (innerHeight / 2 - centrePx) * u;
+  }
+  function layout() { const m = MOBILE(); group.position.set(m ? 28 : SHIFT_X, m ? mobileY() : 0, 0); group.scale.setScalar(m ? SCALE * .5 : SCALE); box.style.opacity = m ? .6 : 1; U.uDrift.value = m ? DRIFT * .4 : DRIFT; }
   function fit() { const w = innerWidth, h = innerHeight; R.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); layout(); }
   addEventListener('resize', fit); fit();
 

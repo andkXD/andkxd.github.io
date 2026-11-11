@@ -2,7 +2,7 @@
    PORTFOLIO — style.css
    ===================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Serif+Display:ital@0;1&display=swap');
+/* fonts are now loaded non-blocking from each page's <head> (an @import here blocked rendering until Google Fonts answered) */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 

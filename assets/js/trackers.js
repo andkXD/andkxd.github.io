@@ -12,7 +12,8 @@
 
   const css = document.createElement('style');
   css.textContent = '#star-trackers{position:fixed;inset:0;z-index:2;pointer-events:none}' +
-    '#star-trackers .st{position:absolute;left:0;top:0;font:500 10px "Roboto Mono",monospace;letter-spacing:.08em;white-space:nowrap;color:var(--st-fg,#ddd);opacity:.6}' +
+    '#star-trackers .st{position:absolute;left:0;top:0;font:500 10px "Roboto Mono",monospace;letter-spacing:.08em;white-space:nowrap;color:var(--st-fg,#ddd);opacity:.6;transition:opacity .25s}' +
+    '#star-trackers .st.hid{opacity:0}' +
     '#star-trackers .st svg{position:absolute;left:-7px;top:-7px}#star-trackers .st span{position:absolute;left:12px;top:-6px}' +
     '#star-trackers svg.ln{position:absolute;inset:0;width:100%;height:100%;stroke:var(--st-fg,#ddd);stroke-width:1;opacity:.22}';
   document.head.appendChild(css);
@@ -49,17 +50,53 @@
   }
   addEventListener('resize', () => { ready = false; });      // stars are re-created on resize → pick new ones
 
+  // ── keep-out: a tracker label never sits on top of readable text ──
+  // Rectangles of the visible text elements are re-measured a few times a second (pages animate / slide),
+  // and any tracker whose label would overlap one of them fades out until its star drifts clear.
+  const TEXT_SEL = 'h1,h2,h3,p,a,button,li,blockquote,.site-title,.project-title,.project-meta,.slide-num,.detail-title,.card-name,.now-playing';
+  let keepOut = [], lastScan = 0;
+  function shown(el) {           // visible for real: no hidden / transparent element anywhere up the tree
+    for (let n = el, i = 0; n && n !== document.body && i < 12; n = n.parentElement, i++) {
+      const cs = getComputedStyle(n);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < .15) return false;
+    }
+    return true;
+  }
+  function scan() {
+    keepOut = [];
+    const vw = innerWidth, vh = innerHeight;
+    document.querySelectorAll(TEXT_SEL).forEach(el => {
+      if (box.contains(el)) return;
+      const r = el.getBoundingClientRect();
+      if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) return;
+      if (r.width * r.height > vw * vh * .35) return;                 // big containers are not "text"
+      if (!shown(el)) return;
+      keepOut.push(r);
+    });
+  }
+  function hits(x, y) {          // label box = bracket (14px) + text (~84px), a little padded
+    const l = x - 10, r = x + 100, t = y - 12, b = y + 12;
+    for (const k of keepOut) if (l < k.right && r > k.left && t < k.bottom && b > k.top) return true;
+    return false;
+  }
+
   (function loop() {
     requestAnimationFrame(loop); if (document.hidden) return;
     if (!ready && typeof cells !== 'undefined' && cells.length > 50) build();      // the star field starts after p5 loads
     if (!ready) return;
     const light = window.__THEME__ === 'light';
     if (light !== theme) { theme = light; box.style.setProperty('--st-fg', light ? '#111' : '#ddd'); }
-    for (const m of marks) m.el.style.transform = `translate(${m.cell.x}px,${m.cell.y}px)`;
+    const now = performance.now();
+    if (now - lastScan > 350) { lastScan = now; scan(); }
+    for (const m of marks) {
+      m.el.style.transform = `translate(${m.cell.x}px,${m.cell.y}px)`;
+      m.hidden = hits(m.cell.x, m.cell.y);
+      m.el.classList.toggle('hid', m.hidden);
+    }
     for (const s of segs) {
       const A = marks[s.a].cell, B = marks[s.b].cell;
       s.l.setAttribute('x1', A.x); s.l.setAttribute('y1', A.y); s.l.setAttribute('x2', B.x); s.l.setAttribute('y2', B.y);
-      s.l.style.display = Math.hypot(A.x - B.x, A.y - B.y) > MAX_LINE ? 'none' : '';
+      s.l.style.display = (Math.hypot(A.x - B.x, A.y - B.y) > MAX_LINE || marks[s.a].hidden || marks[s.b].hidden) ? 'none' : '';
     }
   })();
 })();

@@ -4,8 +4,16 @@
    ≤ 900px = phones + small tablets · ≤ 520px = small phones
    ============================================ */
 
+/* no blue/grey flash box when tapping links on touch screens */
+* { -webkit-tap-highlight-color: transparent; }
+
 /* touch screens have no hover cursor */
 @media (hover: none) { body { cursor: auto; } }
+
+/* Info / Contact / FAQ overlays: when the text is taller than the screen (tablet landscape, small phones)
+   it used to start above the top edge. Scroll inside the overlay and centre only when there is room. */
+.overlay-section { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; }
+.overlay-inner { margin: auto; }
 
 @media (max-width: 900px) {
   /* shared frame + widgets */

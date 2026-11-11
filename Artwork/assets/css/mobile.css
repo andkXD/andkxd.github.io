@@ -3,6 +3,8 @@
    ≤ 860px = phones + small tablets
    ============================================ */
 
+* { -webkit-tap-highlight-color: transparent; }
+
 /* touch screens: no custom cursor, normal pointer */
 @media (hover: none) {
   .cursor { display: none !important; }
@@ -41,8 +43,8 @@
 
   /* ── WORKS (list → tap a work to open its detail panel) ── */
   body.sc-works .sc-w { display: block; height: 100vh; height: 100dvh; }
-  .sc-w h1 { top: 54px; left: 18px; }
-  .sc-list { height: 100%; padding: 120px 22px 80px; }
+  .sc-w h1 { top: 44px; left: 0; right: 0; width: auto; padding: 12px 18px 22px; }   /* backdrop: list items no longer run through the heading */
+  .sc-list { height: 100%; padding: 132px 22px 80px; }
   .sc-item { width: 74%; margin-bottom: 8vh; }
   .sc-item .sc-vis { filter: grayscale(.4) brightness(.85); }
   .sc-detail { padding: 78px 18px 70px; }

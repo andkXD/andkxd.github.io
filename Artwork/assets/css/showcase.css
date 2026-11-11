@@ -1,7 +1,10 @@
 /* showcase.css — Infocus-style landing + Hasu-style works page */
 :root { --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif; --accent: #e8325a; }
 .sc-vis { overflow: hidden; } .sc-vis, .sc-vis canvas, .sc-vis img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.site-nav { mix-blend-mode: difference; } .site-nav a { color: #aaa; }
+/* nav: was mix-blend-mode:difference, which made the links vanish over bright images; now a readable bar */
+.site-nav { mix-blend-mode: normal; background: rgba(11,11,11,.78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.site-nav a { color: #c9c6c0; } .site-nav a:hover, .site-nav a.active { color: #fff; }
+.site-nav .np-text { color: #9a968f; }
 
 /* ── LANDING: hero ── */
 .sc-hero { position: relative; height: 82vh; margin-top: 0; overflow: hidden; background: #000; }
@@ -32,7 +35,8 @@
 /* ── WORKS (Hasu) ── */
 body.sc-works { height: 100vh; overflow: hidden; }
 .sc-w { display: grid; grid-template-columns: 36% 1fr; height: 100vh; padding-top: 0; }
-.sc-w h1 { position: fixed; left: 40px; top: 72px; font: 800 1.3rem/1 var(--sans); letter-spacing: -.02em; z-index: 5; mix-blend-mode: difference; }
+.sc-w h1 { position: fixed; left: 0; top: 56px; width: 36%; padding: 16px 40px 28px; font: 800 1.3rem/1 var(--sans); letter-spacing: -.02em; z-index: 5; color: #f0ede8;
+  background: linear-gradient(to bottom, #111 62%, rgba(17,17,17,0)); }   /* backdrop so list items don't run through the heading */
 .sc-w h1 small { display: block; margin-top: 6px; font: 400 .6rem var(--mono); letter-spacing: .14em; color: var(--off); }
 .sc-list { min-width: 0; overflow-y: auto; scrollbar-width: none; padding: 38vh 40px 38vh 0; scroll-snap-type: y proximity; }
 .sc-list::-webkit-scrollbar { display: none; }
@@ -105,3 +109,11 @@ body.sc-top { height: 100vh; overflow: hidden; background: #0a0a0a repeating-lin
 .sc-bx.noise { border: 0; color: #000; background: repeating-linear-gradient(0deg,#222 0 2px,#ddd 2px 3px,#666 3px 5px); }
 .sc-bx.bars { border: 0; background: linear-gradient(90deg,#ff0 0 16%,#0f0 16% 33%,#f0f 33% 50%,#f00 50% 66%,#00f 66% 83%,#000 83%); }
 @keyframes bx { 0% { opacity: 0; transform: scale(.6); } 15%, 60% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+
+/* ── loading placeholders: something visible while scripts/CDN load instead of a black hole ── */
+@keyframes scpulse { 0%,100% { opacity: .25 } 50% { opacity: .9 } }
+.sc-hero:not(.gl)::after, #bigVis:empty::after, .sc-list:empty::after, .sc-grid:empty::after {
+  content: 'LOADING'; position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font: 400 .66rem 'DM Mono', monospace; letter-spacing: .3em; color: #8a8680; animation: scpulse 1.2s ease-in-out infinite; }
+#bigVis, .sc-list, .sc-grid { position: relative; } #bigVis:empty { min-height: 40vw; } .sc-list:empty { min-height: 40vh; } .sc-grid:empty { min-height: 30vh; }
+.sc-hero.ready::after { display: none; }

@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gallery — Arya Satya Andhika Akbar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/showcase.css">
   <link rel="stylesheet" href="assets/css/mobile.css">
@@ -27,7 +28,6 @@
   <a class="sc-all" href="works/index.html">All Works</a>
   <footer><p>© 2025 Arya Satya Andhika Akbar</p><p>Information Systems · Class of 2024</p></footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="assets/js/works-data.js"></script>
   <script src="assets/js/art.js"></script>
   <script src="assets/js/main.js"></script>
@@ -50,9 +50,9 @@
       setTimeout(() => { slides.forEach((s, k) => s.classList.toggle('on', k === i)); if (window.glSet) glSet(i); }, 160);
       cur = i; now.textContent = `${WORKS[i].num} / ${WORKS[i].title} — ${WORKS[i].category}`;
     }
-    show(0); setInterval(() => show((cur + 1) % WORKS.length), 4200);
+    show(0); hero.classList.add('ready'); setInterval(() => show((cur + 1) % WORKS.length), 4200);
     // ── WebGL glitch: reacts to mouse movement over the hero (three.js) ──
-    (function initGL() {
+    function initGL() {
       if (!window.THREE) return;                       // offline/CDN blocked → keep the plain DOM hero
       try {
         const R = new THREE.WebGLRenderer({ antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -114,6 +114,13 @@
             if (p && p.diagnostics && !p.diagnostics.runnable) { cv.remove(); hero.classList.remove('gl'); window.glSet = window.glBurst = null; } }
         })();
       } catch (err) { console.warn('hero WebGL disabled:', err); }
+    }
+    // three.js (~600 KB from a CDN) used to block the whole page; now the DOM hero shows first and WebGL is added when it arrives
+    (function loadThree() {
+      const t = document.createElement('script');
+      t.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      t.onload = initGL; t.onerror = () => console.warn('three.js unavailable → plain hero');
+      document.head.appendChild(t);
     })();
 
 

@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARYA | PORTFOLIO</title>
 <link rel="stylesheet" href="../assets/css/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"></noscript>
 <style>
 .scanline {
   position: fixed; inset: 0; z-index: 2; pointer-events: none;
@@ -140,7 +141,7 @@ body.theme-light .detail-quote::before { background: rgba(0,0,0,0.35); }
   position: absolute; inset: 0; z-index: 0;
 }
 .card-canvas {
-  width: 100%; height: 100%; opacity: 0.45; display: block;
+  width: 100%; height: 100%; opacity: 0.85; display: block; object-fit: cover;
 }
 .card-body {
   position: absolute; inset: 0; z-index: 1;
@@ -158,6 +159,13 @@ body.theme-light .detail-quote::before { background: rgba(0,0,0,0.35); }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   font-weight: 400;
 }
+.card-desc {
+  font-size: 0.64rem; line-height: 1.55; color: rgba(255,255,255,0.55); margin-top: 8px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: normal;
+}
+body.theme-light .card-canvas { filter: invert(1); opacity: 0.6; }
+body.theme-light .card-desc { color: rgba(0,0,0,0.55); }
+.card-loading a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
 .card-lang {
   font-size: 0.6rem; color: rgba(255,255,255,0.35);
   letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px;
@@ -263,8 +271,8 @@ body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
       <div class="gallery" id="galleryWrap" style="display:none;">
         <ul class="cards" id="cardList"></ul>
         <div class="card-actions">
-          <button class="card-btn prev">← Prev</button>
-          <button class="card-btn next">Next →</button>
+          <button class="card-btn prev" aria-label="Previous repository">←</button>
+          <button class="card-btn next" aria-label="Next repository">→</button>
         </div>
       </div>
 
@@ -293,79 +301,131 @@ body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
 <script>
 const GITHUB_USER = 'andkXD';
 
-/* ── generative card background painters ── */
+/* ── generative card background painters ──
+   The old ones used alpha 0.03–0.15 on a canvas that was shown at 45 % → practically invisible, so every card looked empty.
+   These are clearer, fill the whole card, and are seeded by the repo name so a card looks the same on every visit. */
+function seeded(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return () => { h += 0x6D2B79F5; let t = Math.imul(h ^ h >>> 15, 1 | h); t ^= t + Math.imul(t ^ t >>> 7, 61 | t); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 const PAINTERS = [
-  (cx,W,H)=>{ for(let i=0;i<55;i++){cx.beginPath();cx.arc(Math.random()*W,Math.random()*H,Math.random()*2+0.4,0,Math.PI*2);cx.fillStyle=`rgba(255,255,255,${Math.random()*0.15+0.03})`;cx.fill();} },
-  (cx,W,H)=>{ for(let i=0;i<7;i++){cx.beginPath();cx.moveTo(Math.random()*W,0);cx.lineTo(Math.random()*W,H);cx.strokeStyle=`rgba(255,255,255,${Math.random()*0.07+0.02})`;cx.lineWidth=0.6;cx.stroke();} },
-  (cx,W,H)=>{ cx.beginPath();cx.arc(W/2,H*0.38,W*0.22,0,Math.PI*2);cx.strokeStyle='rgba(255,255,255,0.07)';cx.lineWidth=0.8;cx.stroke();for(let i=0;i<28;i++){cx.fillStyle=`rgba(255,255,255,${Math.random()*0.1})`;cx.fillRect(Math.random()*W,Math.random()*H,1,1);} },
-  (cx,W,H)=>{ for(let i=0;i<5;i++){let y=H*0.15+i*(H*0.17);cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.strokeStyle='rgba(255,255,255,0.045)';cx.lineWidth=0.5;cx.stroke();} },
-  (cx,W,H)=>{ for(let i=0;i<3;i++){cx.beginPath();cx.arc(W/2,H/2,W*(0.12+i*0.1),0,Math.PI*2);cx.strokeStyle=`rgba(255,255,255,${0.06-i*0.015})`;cx.lineWidth=0.6;cx.stroke();} },
-  (cx,W,H)=>{ for(let i=0;i<38;i++){let x=Math.random()*W,y=Math.random()*H,s=Math.random()*3+1;cx.fillStyle=`rgba(255,255,255,${Math.random()*0.1})`;cx.fillRect(x,y,s,s);} },
-  (cx,W,H)=>{ for(let a=0;a<Math.PI*2;a+=0.4){cx.beginPath();cx.moveTo(W/2,H/2);cx.lineTo(W/2+Math.cos(a)*W*0.38,H/2+Math.sin(a)*H*0.38);cx.strokeStyle='rgba(255,255,255,0.035)';cx.lineWidth=0.5;cx.stroke();} },
+  // starfield
+  (cx,W,H,r)=>{ for(let i=0;i<120;i++){cx.beginPath();cx.arc(r()*W,r()*H,r()*1.8+0.5,0,Math.PI*2);cx.fillStyle=`rgba(255,255,255,${r()*0.5+0.15})`;cx.fill();} },
+  // diagonal sweep lines
+  (cx,W,H,r)=>{ cx.lineWidth=1; for(let i=0;i<22;i++){const x=r()*W*1.6-W*0.3; cx.beginPath();cx.moveTo(x,0);cx.lineTo(x-W*0.5,H);cx.strokeStyle=`rgba(255,255,255,${r()*0.25+0.08})`;cx.stroke();} },
+  // orbit rings
+  (cx,W,H,r)=>{ cx.lineWidth=1; for(let i=0;i<7;i++){cx.beginPath();cx.arc(W*0.5,H*0.4,W*(0.14+i*0.085),0,Math.PI*2);cx.strokeStyle=`rgba(255,255,255,${0.32-i*0.035})`;cx.stroke();} cx.fillStyle='rgba(255,255,255,0.7)';cx.beginPath();cx.arc(W*0.5,H*0.4,3,0,Math.PI*2);cx.fill(); },
+  // grid + a few filled cells
+  (cx,W,H,r)=>{ cx.lineWidth=1; cx.strokeStyle='rgba(255,255,255,0.12)'; for(let x=0;x<=W;x+=W/8){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();} for(let y=0;y<=H;y+=H/11){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();} for(let i=0;i<9;i++){cx.fillStyle=`rgba(255,255,255,${r()*0.18+0.05})`;cx.fillRect(Math.floor(r()*8)*W/8,Math.floor(r()*11)*H/11,W/8,H/11);} },
+  // radial rays
+  (cx,W,H,r)=>{ cx.lineWidth=1; for(let a=0;a<Math.PI*2;a+=0.18){cx.beginPath();cx.moveTo(W/2,H*0.42);cx.lineTo(W/2+Math.cos(a)*W,H*0.42+Math.sin(a)*H);cx.strokeStyle=`rgba(255,255,255,${r()*0.22+0.05})`;cx.stroke();} },
+  // scattered squares
+  (cx,W,H,r)=>{ for(let i=0;i<34;i++){const s=r()*26+5; cx.strokeStyle=`rgba(255,255,255,${r()*0.35+0.1})`; cx.lineWidth=1; cx.strokeRect(r()*W,r()*H,s,s);} },
+  // wave lines
+  (cx,W,H,r)=>{ cx.lineWidth=1; for(let k=0;k<14;k++){cx.beginPath();for(let x=0;x<=W;x+=4){const y=H*(0.1+k*0.062)+Math.sin(x*0.03+k*0.7)*10; x?cx.lineTo(x,y):cx.moveTo(x,y);} cx.strokeStyle=`rgba(255,255,255,${0.1+k*0.015})`;cx.stroke();} },
 ];
+
+/* ── helpers ── */
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
 /* ── build one <li> card ── */
 function makeCard(repo, idx) {
   const li = document.createElement('li');
   li.setAttribute('data-href', repo.html_url);
-
-  // generative canvas bg
+  // generative canvas bg — painters get the REAL canvas size (they used to get 130×182 on a 200×280 canvas,
+  // so the pattern only filled the top-left of every card and the rest looked empty)
   const cv = document.createElement('canvas');
-  cv.width = 200; cv.height = 280;
+  cv.className = 'card-canvas';            // this class (fills the whole card) existed in the CSS but was never applied
+  cv.width = 320; cv.height = 448;
   const cx = cv.getContext('2d');
-  PAINTERS[idx % PAINTERS.length](cx, 130, 182);
-
+  PAINTERS[idx % PAINTERS.length](cx, cv.width, cv.height, seeded(repo.name));
   const bg = document.createElement('div');
   bg.className = 'card-bg';
   bg.appendChild(cv);
-
   const body = document.createElement('div');
   body.className = 'card-body';
+  const stars = repo.stargazers_count ? ` · ★ ${repo.stargazers_count}` : '';
   body.innerHTML = `
     <span class="card-num">${String(idx + 1).padStart(2,'0')}</span>
-    <span class="card-name">${repo.name}</span>
-    <span class="card-lang">${repo.language || 'N/A'}</span>
+    <span class="card-name">${esc(repo.name)}</span>
+    ${repo.description ? `<span class="card-desc">${esc(repo.description)}</span>` : ''}
+    <span class="card-lang">${esc(repo.language || 'N/A')}${stars}</span>
   `;
-
   li.appendChild(bg);
   li.appendChild(body);
-
   // click → open GitHub in new tab
   li.addEventListener('click', () => window.open(repo.html_url, '_blank', 'noopener'));
-
   return li;
 }
 
-/* ── fetch repos then boot GSAP ── */
+/* ── repo list: cached 10 min (the GitHub API allows only 60 requests/hour per IP without a token),
+      8 s timeout, and the last good copy is reused if GitHub is unreachable or rate-limited ── */
+const CACHE_KEY = 'gh_repos_' + GITHUB_USER, CACHE_TTL = 10 * 60 * 1000;
+function readCache() {
+  try { const c = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); return c && Array.isArray(c.repos) ? c : null; } catch (_) { return null; }
+}
+function writeCache(repos) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), repos: repos.map(r => ({
+      name: r.name, html_url: r.html_url, language: r.language, description: r.description, stargazers_count: r.stargazers_count })) }));
+  } catch (_) {}
+}
+async function loadRepos() {
+  const cached = readCache();
+  if (cached && Date.now() - cached.t < CACHE_TTL) return cached.repos;
+  try {
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 8000);
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=20`, {
+      headers: { Accept: 'application/vnd.github.v3+json' }, signal: ctl.signal
+    });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(res.status === 403 ? 'rate-limit' : String(res.status));
+    const repos = (await res.json()).filter(r => !r.fork);
+    writeCache(repos);
+    return repos;
+  } catch (err) {
+    if (cached) return cached.repos;      // stale copy is better than an empty panel
+    throw err;
+  }
+}
+
+/* ── fallback when GSAP can't load (blocked CDN / offline): one card at a time with the arrow buttons ── */
+function simpleCarousel() {
+  const cards = Array.from(document.querySelectorAll('.cards li'));
+  let i = 0;
+  const show = n => {
+    i = (n + cards.length) % cards.length;
+    cards.forEach((li, k) => { li.style.cssText = k === i ? 'display:block;opacity:1;transform:none;scale:none;translate:none' : 'display:none'; });
+  };
+  document.querySelector('.card-btn.prev').onclick = () => show(i - 1);
+  document.querySelector('.card-btn.next').onclick = () => show(i + 1);
+  show(0);
+}
+
+/* ── load repos then boot GSAP ── */
 async function init() {
   const liveEl   = document.getElementById('showcaseLive');
   const liveText = document.getElementById('showcaseLiveText');
   const loading  = document.getElementById('cardLoading');
   const gallery  = document.getElementById('galleryWrap');
   const cardList = document.getElementById('cardList');
-
-  try {
-    const res  = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=20`, {
-      headers: { Accept: 'application/vnd.github.v3+json' }
-    });
-    if (!res.ok) throw new Error(`${res.status}`);
-    const repos = (await res.json()).filter(r => !r.fork);
-
-    // build cards
-    repos.forEach((repo, i) => cardList.appendChild(makeCard(repo, i)));
-
-    loading.style.display = 'none';
-    gallery.style.display = 'block';
-    liveEl.classList.add('loaded');
-    liveText.textContent = `github.com/${GITHUB_USER}`;
-
-    bootGSAP();
-
-  } catch (err) {
-    loading.innerHTML = `<span style="color:rgba(255,255,255,0.3);font-size:0.6rem;letter-spacing:0.1em">Could not reach GitHub<br><small>${err.message}</small></span>`;
+  const ghLink   = `<a href="https://github.com/${GITHUB_USER}" target="_blank" rel="noopener noreferrer">github.com/${GITHUB_USER} ↗</a>`;
+  const fail = msg => {
+    loading.innerHTML = `<span style="color:rgba(255,255,255,0.45);font-size:0.62rem;letter-spacing:0.1em;text-align:center;line-height:1.9">${msg}<br>${ghLink}</span>`;
     liveEl.classList.add('error');
     liveText.textContent = 'Offline';
-  }
+  };
+  let repos;
+  try { repos = await loadRepos(); }
+  catch (err) { fail(err.message === 'rate-limit' ? 'GitHub is limiting requests right now.<br>Try again in a few minutes.' : 'Could not reach GitHub.'); return; }
+  if (!repos.length) { fail('No public repositories yet.'); return; }
+
+  repos.forEach((repo, i) => cardList.appendChild(makeCard(repo, i)));
+  loading.style.display = 'none';
+  gallery.style.display = 'block';
+  liveEl.classList.add('loaded');
+  liveText.textContent = `github.com/${GITHUB_USER}`;
+  try {
+    if (window.gsap && window.Draggable) bootGSAP(); else simpleCarousel();
+  } catch (err) { console.warn('carousel animation failed → simple mode', err); simpleCarousel(); }
 }
 
 /* ── GSAP infinite scroll (original CodePen logic, adapted) ── */

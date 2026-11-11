@@ -3,6 +3,9 @@
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
 
+  // footer year follows the calendar (was hard-coded 2025)
+  document.querySelectorAll('footer p').forEach(p => { p.textContent = p.textContent.replace(/©\s*20\d\d/, '© ' + new Date().getFullYear()); });
+
   // Cursor
   const cursor = document.createElement('div');
   cursor.className = 'cursor';
@@ -32,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
       pt.style.transform = 'scaleY(0)';
     }, { once: true });
   });
+
+  // Failsafe: if the animationend event never fires (reduced-motion, throttled tab, slow device) the black
+  // cover would stay over the page → force it open after a moment.
+  setTimeout(() => { pt.classList.remove('out'); if (!pt.classList.contains('in')) pt.style.transform = 'scaleY(0)'; }, 1500);
 
   // Intercept clicks (skip modifier-clicks, new-tab links, downloads)
   document.querySelectorAll('a[href]').forEach(link => {
