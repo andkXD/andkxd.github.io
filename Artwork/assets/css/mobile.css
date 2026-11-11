@@ -16,7 +16,7 @@
   html, body { overflow-x: hidden; }
 
   /* nav: one compact row; the music widget shows only its bars */
-  .site-nav { padding: 12px 14px; gap: 12px; flex-wrap: wrap; mix-blend-mode: normal; background: rgba(5,5,6,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .site-nav { padding: 12px 14px; gap: 12px; flex-wrap: wrap; mix-blend-mode: normal; background: rgba(5,5,6,.9); }
   .site-nav a, .site-nav-back { font-size: .58rem; letter-spacing: .1em; }
   .site-nav .np-text { display: none; }
   .site-nav .now-playing { margin: 0 2px 0 0; }

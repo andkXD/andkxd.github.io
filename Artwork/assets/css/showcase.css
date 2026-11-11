@@ -2,7 +2,7 @@
 :root { --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif; --accent: #e8325a; }
 .sc-vis { overflow: hidden; } .sc-vis, .sc-vis canvas, .sc-vis img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* nav: was mix-blend-mode:difference, which made the links vanish over bright images; now a readable bar */
-.site-nav { mix-blend-mode: normal; background: rgba(11,11,11,.78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.site-nav { mix-blend-mode: normal; background: rgba(11,11,11,.88); }   /* no backdrop-filter: blur is expensive to repaint during transitions on phones */
 .site-nav a { color: #c9c6c0; } .site-nav a:hover, .site-nav a.active { color: #fff; }
 .site-nav .np-text { color: #9a968f; }
 

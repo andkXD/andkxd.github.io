@@ -53,15 +53,24 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
   transform-origin: bottom;
   transform: scaleY(0);
+  will-change: transform;
 }
-.pt.in  { animation: ptIn  .5s cubic-bezier(.76,0,.24,1) both; }
-.pt.out { animation: ptOut .5s cubic-bezier(.76,0,.24,1) both; }
+/* transform-origin used to be animated inside the keyframes → the browser could not run the animation on the
+   compositor and it stuttered whenever the main thread was busy. Origin now sits on the class; keyframes animate transform only. */
+.pt.in  { transform-origin: bottom; animation: ptIn  .5s cubic-bezier(.76,0,.24,1) both; }
+.pt.out { transform-origin: top;    animation: ptOut .5s cubic-bezier(.76,0,.24,1) both; }
 
-@keyframes ptIn  { from{transform:scaleY(0)} to{transform:scaleY(1)} }
-@keyframes ptOut {
-  from { transform: scaleY(1); transform-origin: top; }
-  to   { transform: scaleY(0); transform-origin: top; }
+@keyframes ptIn  { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+@keyframes ptOut { from { transform: scaleY(1) } to { transform: scaleY(0) } }
+
+/* page-enter cover: pure CSS, present from the first painted frame (it used to be created by JS only after every
+   script had run, so the new page flashed uncovered first), and it needs no JS to open */
+html::before {
+  content: ''; position: fixed; inset: 0; z-index: 800; pointer-events: none;
+  background: var(--bg); transform-origin: top; will-change: transform;
+  animation: ptOut .5s cubic-bezier(.76,0,.24,1) .04s both;
 }
+@media (prefers-reduced-motion: reduce) { html::before { animation: none; transform: scaleY(0); } .pt.in, .pt.out { animation-duration: .01s; } }
 
 /* ── NAV ────────────────────────────────────────────── */
 .site-nav {

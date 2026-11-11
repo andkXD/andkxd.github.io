@@ -47,7 +47,7 @@
     const items = WORKS.map((w, i) => {
       const a = document.createElement('a'); a.className = 'sc-item'; a.href = '#' + w.id;
       a.innerHTML = `<b>#${w.num}</b><div class="sc-vis"></div><span>${w.title}</span>`;
-      workVisual(a.querySelector('.sc-vis'), w, i);
+      workVisual(a.querySelector('.sc-vis'), w, i, { lazy: i > 1, q: .75 });
       a.onmouseenter = () => { if (!opened) set(i); };
       a.onclick = e => { e.preventDefault(); openWork(i); };
       list.appendChild(a); return a;

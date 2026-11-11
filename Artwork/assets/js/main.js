@@ -25,20 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
   pt.className = 'pt';
   document.body.appendChild(pt);
 
-  // On load: play exit animation
-  pt.style.transformOrigin = 'top';
-  pt.style.transform = 'scaleY(1)';
-  requestAnimationFrame(() => {
-    pt.classList.add('out');
-    pt.addEventListener('animationend', () => {
-      pt.classList.remove('out');
-      pt.style.transform = 'scaleY(0)';
-    }, { once: true });
-  });
+  // (the page-enter cover is now pure CSS: html::before in style.css)
 
-  // Failsafe: if the animationend event never fires (reduced-motion, throttled tab, slow device) the black
-  // cover would stay over the page → force it open after a moment.
-  setTimeout(() => { pt.classList.remove('out'); if (!pt.classList.contains('in')) pt.style.transform = 'scaleY(0)'; }, 1500);
+  // Warm up the next page: on hover / first touch (and again at click) the browser fetches it in the background
+  const warmed = new Set();
+  function prefetch(url) {
+    if (warmed.has(url)) return; warmed.add(url);
+    const l = document.createElement('link'); l.rel = 'prefetch'; l.href = url; l.as = 'document'; document.head.appendChild(l);
+  }
+  document.querySelectorAll('a[href]').forEach(a => {
+    const h = a.getAttribute('href');
+    if (!h || h.startsWith('#') || h.startsWith('http') || h.startsWith('mailto') || a.target === '_blank') return;
+    ['pointerenter', 'touchstart'].forEach(ev => a.addEventListener(ev, () => prefetch(a.href), { passive: true, once: true }));
+  });
 
   // Intercept clicks (skip modifier-clicks, new-tab links, downloads)
   document.querySelectorAll('a[href]').forEach(link => {
@@ -48,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', e => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
+      prefetch(link.href);          // the browser starts fetching the next page while the cover slides in
       pt.style.transform = '';
-      pt.style.transformOrigin = 'bottom';
       pt.classList.add('in');
       let done = false;
       const go = () => { if (done) return; done = true; window.location.href = link.href; };

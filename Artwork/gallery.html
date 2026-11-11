@@ -34,7 +34,7 @@
   <script src="../assets/js/audio.js"></script>
   <script>
     const hero = document.getElementById('hero'), glitch = document.getElementById('glitch'), now = document.getElementById('now');
-    const slides = WORKS.map((w, i) => { const d = document.createElement('div'); d.className = 'sc-vis'; workVisual(d, w, i); hero.insertBefore(d, glitch); return d; });
+    const slides = WORKS.map((w, i) => { const d = document.createElement('div'); d.className = 'sc-vis'; workVisual(d, w, i, { lazy: i > 0 }); hero.insertBefore(d, glitch); return d; });
     let cur = -1;
     function burst() {   // TV-static / colour-bar glitch blocks, Infocus style
       glitch.innerHTML = '';
@@ -119,7 +119,7 @@
     (function loadThree() {
       const t = document.createElement('script');
       t.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-      t.onload = initGL; t.onerror = () => console.warn('three.js unavailable → plain hero');
+      t.onload = () => setTimeout(() => (window.requestIdleCallback ? requestIdleCallback(initGL, { timeout: 1500 }) : initGL()), 700); t.onerror = () => console.warn('three.js unavailable → plain hero');
       document.head.appendChild(t);
     })();
 
@@ -152,7 +152,7 @@
     WORKS.forEach((w, i) => {
       const a = document.createElement('a'); a.className = 'sc-card'; a.href = 'works/' + w.id + '.html';
       a.innerHTML = '<div class="sc-vis"></div>' + `<h3>${w.title}</h3><p>${w.category} · ${w.year}</p>`;
-      workVisual(a.firstChild, w, i); grid.appendChild(a);
+      workVisual(a.firstChild, w, i, { lazy: true, q: .75 }); grid.appendChild(a);
     });
   </script>
 </body>
