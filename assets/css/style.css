@@ -247,11 +247,14 @@ body {
   text-shadow: 0 0 6px #000, 0 0 14px rgba(0,0,0,.85);
 }
 .follow-panel.on { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s; }
+.follow-panel.pinned { pointer-events: auto; }
+.follow-panel.pinned .section-title::after { content: "  ·  scroll / klik di luar untuk tutup"; }
+.follow-panel.pinned a { cursor: pointer; }
 .follow-panel .fp-view { overflow: hidden; }
 .follow-panel .fp-content { padding: 2px 0 6px; will-change: transform; }
 .follow-panel .close-btn { display: none; }
 .follow-panel .section-title { margin: 0 0 14px; }
-.follow-panel .section-title::after { content: "  ·  scroll / klik layar untuk tutup"; letter-spacing: .06em; text-transform: none; opacity: .6; }
+.follow-panel .section-title::after { content: "  ·  klik untuk berhenti, scroll untuk lihat"; letter-spacing: .06em; text-transform: none; opacity: .6; }
 body.theme-light .follow-panel { text-shadow: 0 0 6px #f2f0eb, 0 0 14px rgba(242,240,235,.85); }
 
 .follow-tether {

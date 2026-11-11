@@ -171,7 +171,7 @@
       fpContent.style.transform = 'translate3d(0,' + (-f.cur).toFixed(2) + 'px,0)';
       f.raf = requestAnimationFrame(tick);
     }
-    const onMove = e => { if (follow) { follow.mx = e.clientX; follow.my = e.clientY; render(); } };
+    const onMove = e => { if (follow && !follow.pinned) { follow.mx = e.clientX; follow.my = e.clientY; render(); } };
     const onWheel = e => { if (follow) follow.st += e.deltaY * (e.deltaMode === 1 ? 32 : 1); };
 
     function openFollow(el, x, y, name) {
@@ -180,7 +180,7 @@
       fpView.style.height = 'auto';
       const full = fpContent.offsetHeight;
       fpView.style.height = Math.min(full, maxH) + 'px';
-      follow = { ax: x, ay: y, mx: x, my: y, st: 0, cur: 0, max: Math.max(0, full - maxH), raf: 0 };
+      follow = { pinned: false, ax: x, ay: y, mx: x, my: y, st: 0, cur: 0, max: Math.max(0, full - maxH), raf: 0 };
       fpContent.style.transform = 'translate3d(0,0,0)';
       ftDot.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
       render();
@@ -196,7 +196,7 @@
         removeEventListener('mousemove', onMove);
         removeEventListener('wheel', onWheel);
         follow = null;
-        fp.classList.remove('on'); tether.classList.remove('on');
+        fp.classList.remove('on', 'pinned'); tether.classList.remove('on');
       }
       panels.forEach(s => s.classList.remove('active'));
       navLinks.forEach(l => l.classList.remove('on'));
@@ -230,10 +230,23 @@
       if (a) fitPanel(a);
     });
     addEventListener('keydown', e => { if (e.key === 'Escape') closeSection(); });
-    // klik di luar panel / di layar = tutup
+    // klik:
+    //  - teks lagi ikut kursor  -> klik di mana saja = teks berhenti di situ (bisa klik link + scroll)
+    //  - teks sudah berhenti    -> klik link = buka link, klik teksnya = ikut kursor lagi, klik di luar = tutup
     document.addEventListener('click', e => {
-      if (!follow && !document.querySelector('.overlay-section.active')) return;
-      if (e.target.closest('.nav-scroll') || (!follow && e.target.closest('.overlay-section'))) return;
+      if (e.target.closest('.nav-scroll')) return;
+      if (follow) {
+        if (!follow.pinned) { follow.pinned = true; fp.classList.add('pinned'); return; }
+        if (e.target.closest('.follow-panel a')) return;
+        if (e.target.closest('.follow-panel')) {
+          follow.pinned = false; fp.classList.remove('pinned');
+          follow.mx = e.clientX; follow.my = e.clientY; render();
+          return;
+        }
+        return closeSection();
+      }
+      if (!document.querySelector('.overlay-section.active')) return;
+      if (e.target.closest('.overlay-section')) return;
       closeSection();
     });
   </script>
