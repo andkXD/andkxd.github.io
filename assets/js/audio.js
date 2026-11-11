@@ -78,14 +78,37 @@
   window.addEventListener('beforeunload', save);
   window.addEventListener('pagehide', save);
 
+  // Browsers block sound until the visitor interacts with the page (autoplay policy).
+  // 1) try to play with sound right away (works if the browser allows it)
+  // 2) if blocked → play silently (always allowed) so the track keeps its position,
+  //    and switch the sound on at the very first click / tap / key press.
+  // Only these events count as a real "user activation" (wheel/touchstart/mousemove do not).
+  const UNLOCK_EVENTS = ['pointerdown', 'mousedown', 'touchend', 'click', 'keydown'];
+  let unlockArmed = false;
+
+  function armUnlock() {
+    if (unlockArmed) return;
+    unlockArmed = true;
+    textEl.innerHTML = `<span class="np-pre">Click anywhere to play </span>"${PLAYLIST[currentIndex].name}"`;
+    const unlock = () => {
+      audio.muted = isMuted;
+      audio.play().then(() => {
+        if (audio.paused) return;                    // browser still refused → keep listening
+        UNLOCK_EVENTS.forEach(e => document.removeEventListener(e, unlock, true));
+        unlockArmed = false;
+        setLabel();
+      }).catch(() => {});
+    };
+    UNLOCK_EVENTS.forEach(e => document.addEventListener(e, unlock, true));
+  }
+
   function tryPlay() {
     loadTrack(currentIndex, savedTime());
+    audio.muted = isMuted;
     audio.play().catch(() => {
-      const unlock = () => {
-        audio.play().catch(() => {});
-        ['click', 'keydown', 'wheel', 'touchstart'].forEach(e => document.removeEventListener(e, unlock));
-      };
-      ['click', 'keydown', 'wheel', 'touchstart'].forEach(e => document.addEventListener(e, unlock));
+      audio.muted = true;                            // silent autoplay is always allowed
+      audio.play().catch(() => {});
+      armUnlock();
     });
   }
   tryPlay();
