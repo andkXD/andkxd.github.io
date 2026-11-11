@@ -130,12 +130,18 @@
     const NS = 'http://www.w3.org/2000/svg';
     const tether = document.createElementNS(NS, 'svg');
     tether.setAttribute('class', 'follow-tether');
-    tether.innerHTML = '<line class="ft-line"/><rect class="ft-box" width="16" height="16" x="-8" y="-8"/><circle class="ft-dot" r="1.6"/><text class="ft-label" x="14" y="4"></text>';
+    tether.innerHTML = '<line class="ft-line"/><rect class="ft-box" width="16" height="16" x="-8" y="-8"/><circle class="ft-dot" r="1.6"/><circle class="ft-end" r="2.4"/><text class="ft-label" x="14" y="4"></text>';
     document.body.appendChild(tether);
     const ftLine = tether.querySelector('.ft-line'), ftBox = tether.querySelector('.ft-box'),
-          ftDot = tether.querySelector('.ft-dot'), ftLabel = tether.querySelector('.ft-label');
+          ftDot = tether.querySelector('.ft-dot'), ftEnd = tether.querySelector('.ft-end'), ftLabel = tether.querySelector('.ft-label');
 
-    let follow = null; // {el, inner, ax, ay, x, y, mx, my, st, raf}
+    // panel ikut-kursor = elemen terpisah (isinya disalin dari section), digerakkan JS
+    const fp = document.createElement('div');
+    fp.className = 'follow-panel';
+    fp.innerHTML = '<div class="fp-view"><div class="fp-content"></div></div>';
+    document.body.appendChild(fp);
+    const fpView = fp.firstChild, fpContent = fpView.firstChild;
+    let follow = null; // {ax, ay, mx, my, st, cur, max, raf}
 
     function fitPanel(el) {
       // bawah panel = tepat di atas "An ongoing collection"; atas panel tidak pernah melewati menu
@@ -146,39 +152,42 @@
       el.style.setProperty('--panel-max', Math.max(60, innerHeight - bottom - (nav.bottom + 14)) + 'px');
     }
 
+    function render() {
+      const f = follow; if (!f) return;
+      const w = fp.offsetWidth, hgt = fp.offsetHeight;
+      const x = Math.max(16, Math.min(f.mx + 22, innerWidth - w - 16));
+      const y = Math.max(16, Math.min(f.my + 22, innerHeight - hgt - 16));
+      fp.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+      // tether: dari titik awal tepat ke tengah kursor
+      ftLine.setAttribute('x1', f.ax); ftLine.setAttribute('y1', f.ay);
+      ftLine.setAttribute('x2', f.mx); ftLine.setAttribute('y2', f.my);
+      ftEnd.setAttribute('cx', f.mx); ftEnd.setAttribute('cy', f.my);
+    }
     function tick() {
       const f = follow; if (!f) return;
-      const w = f.el.offsetWidth, hgt = f.el.offsetHeight;
-      const tx = Math.min(f.mx + 28, innerWidth - w - 24), ty = Math.min(f.my + 20, innerHeight - hgt - 24);
-      f.x += (tx - f.x) * 0.14; f.y += (Math.max(24, ty) - f.y) * 0.14;
-      f.el.style.transform = 'translate3d(' + f.x.toFixed(1) + 'px,' + f.y.toFixed(1) + 'px,0)';
-      // scroll halus
-      const max = f.inner.scrollHeight - f.inner.clientHeight;
-      f.st = Math.max(0, Math.min(max, f.st));
-      f.inner.scrollTop += (f.st - f.inner.scrollTop) * 0.2;
-      // tether: dari titik awal ke pojok kiri atas teks
-      ftLine.setAttribute('x1', f.ax); ftLine.setAttribute('y1', f.ay);
-      ftLine.setAttribute('x2', f.x); ftLine.setAttribute('y2', f.y + 8);
+      f.st = Math.max(0, Math.min(f.max, f.st));
+      f.cur += (f.st - f.cur) * 0.2;
+      if (Math.abs(f.st - f.cur) < 0.05) f.cur = f.st;
+      fpContent.style.transform = 'translate3d(0,' + (-f.cur).toFixed(2) + 'px,0)';
       f.raf = requestAnimationFrame(tick);
     }
-    const onMove = e => { if (follow) { follow.mx = e.clientX; follow.my = e.clientY; } };
-    const onWheel = e => {
-      if (!follow) return;
-      const k = e.deltaMode === 1 ? 32 : 1; // baris -> px
-      follow.st += e.deltaY * k;
-    };
+    const onMove = e => { if (follow) { follow.mx = e.clientX; follow.my = e.clientY; render(); } };
+    const onWheel = e => { if (follow) follow.st += e.deltaY * (e.deltaMode === 1 ? 32 : 1); };
 
     function openFollow(el, x, y, name) {
-      const inner = el.querySelector('.overlay-inner');
-      el.style.bottom = ''; el.style.removeProperty('--panel-max');
-      el.classList.add('follow');
-      inner.scrollTop = 0;
-      follow = { el, inner, ax: x, ay: y, x: x, y: y, mx: x, my: y, st: 0, raf: 0 };
+      fpContent.innerHTML = el.querySelector('.overlay-inner').innerHTML.replace(/<button class="close-btn"[\s\S]*?<\/button>/, '');
+      const maxH = Math.min(innerHeight * 0.58, 440);
+      fpView.style.height = 'auto';
+      const full = fpContent.offsetHeight;
+      fpView.style.height = Math.min(full, maxH) + 'px';
+      follow = { ax: x, ay: y, mx: x, my: y, st: 0, cur: 0, max: Math.max(0, full - maxH), raf: 0 };
+      fpContent.style.transform = 'translate3d(0,0,0)';
       ftBox.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
       ftDot.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
       ftLabel.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
       ftLabel.textContent = name;
-      tether.classList.add('on');
+      render();
+      fp.classList.add('on'); tether.classList.add('on');
       addEventListener('mousemove', onMove);
       addEventListener('wheel', onWheel, { passive: true });
       follow.raf = requestAnimationFrame(tick);
@@ -189,10 +198,8 @@
         cancelAnimationFrame(follow.raf);
         removeEventListener('mousemove', onMove);
         removeEventListener('wheel', onWheel);
-        follow.el.classList.remove('follow');
-        follow.el.style.transform = '';
         follow = null;
-        tether.classList.remove('on');
+        fp.classList.remove('on'); tether.classList.remove('on');
       }
       panels.forEach(s => s.classList.remove('active'));
       navLinks.forEach(l => l.classList.remove('on'));
@@ -203,10 +210,9 @@
       link.addEventListener('click', function(e) {
         e.preventDefault();
         const el = document.querySelector(this.getAttribute('href'));
-        const was = el.classList.contains('active');
+        const was = this.classList.contains('on');
         closeSection();
         if (was) return;
-        el.classList.add('active');
         this.classList.add('on');
         if (isDesktop()) {
           const r = this.getBoundingClientRect();
@@ -214,6 +220,7 @@
           const x = e.clientX || r.right + 10, y = e.clientY || r.top + r.height / 2;
           openFollow(el, x, y, this.textContent.trim().toUpperCase());
         } else {
+          el.classList.add('active');
           document.body.classList.add('panel-open');
           fitPanel(el);
           el.querySelector('.overlay-inner').scrollTop = 0;
@@ -221,15 +228,14 @@
       });
     });
     addEventListener('resize', () => {
+      if (follow) return isDesktop() ? null : closeSection();
       const a = document.querySelector('.overlay-section.active');
-      if (!a) return;
-      if (follow !== null && !isDesktop()) return closeSection();
-      if (!follow) fitPanel(a);
+      if (a) fitPanel(a);
     });
     addEventListener('keydown', e => { if (e.key === 'Escape') closeSection(); });
     // klik di luar panel / di layar = tutup
     document.addEventListener('click', e => {
-      if (!panels.length || !document.querySelector('.overlay-section.active')) return;
+      if (!follow && !document.querySelector('.overlay-section.active')) return;
       if (e.target.closest('.nav-scroll') || (!follow && e.target.closest('.overlay-section'))) return;
       closeSection();
     });

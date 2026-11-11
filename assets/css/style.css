@@ -236,18 +236,23 @@ body {
 }
 .overlay-inner::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-/* ── desktop: teks mengikuti kursor (JS yang menggerakkan translate3d) ── */
-.overlay-section.follow {
-  left: 0; top: 0; bottom: auto;
+/* ── desktop: teks mengikuti kursor (elemen .follow-panel, digerakkan JS) ── */
+.follow-panel {
+  position: fixed; left: 0; top: 0;
   width: 300px;
-  max-height: min(58vh, 440px);
+  z-index: 200;
   pointer-events: none;
-  will-change: transform;
-  transition: opacity .35s ease, visibility 0s linear .35s;
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease, visibility 0s linear .3s;
+  text-shadow: 0 0 6px #000, 0 0 14px rgba(0,0,0,.85);
 }
-.overlay-section.follow.active { transition: opacity .35s ease, visibility 0s; }
-.overlay-section.follow .close-btn { display: none; }
-.overlay-section.follow .section-title::after { content: "  ·  scroll / klik layar untuk tutup"; letter-spacing: .06em; text-transform: none; opacity: .6; }
+.follow-panel.on { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s; }
+.follow-panel .fp-view { overflow: hidden; }
+.follow-panel .fp-content { padding: 2px 0 6px; will-change: transform; }
+.follow-panel .close-btn { display: none; }
+.follow-panel .section-title { margin: 0 0 14px; }
+.follow-panel .section-title::after { content: "  ·  scroll / klik layar untuk tutup"; letter-spacing: .06em; text-transform: none; opacity: .6; }
+body.theme-light .follow-panel { text-shadow: 0 0 6px #f2f0eb, 0 0 14px rgba(242,240,235,.85); }
 
 .follow-tether {
   position: fixed; inset: 0; width: 100%; height: 100%;
@@ -259,6 +264,7 @@ body {
 .follow-tether .ft-line { stroke: currentColor; stroke-width: 1; stroke-opacity: .35; stroke-dasharray: 2 4; }
 .follow-tether .ft-box { fill: none; stroke: currentColor; stroke-width: 1; stroke-opacity: .55; stroke-dasharray: 3 3; }
 .follow-tether .ft-dot { fill: currentColor; }
+.follow-tether .ft-end { fill: currentColor; fill-opacity: .8; }
 .follow-tether .ft-label { fill: currentColor; fill-opacity: .6; font: 10px var(--font, monospace); letter-spacing: .08em; }
 
 .section-title {
