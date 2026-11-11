@@ -10,11 +10,6 @@
 /* touch screens have no hover cursor */
 @media (hover: none) { body { cursor: auto; } }
 
-/* Info / Contact / FAQ overlays: when the text is taller than the screen (tablet landscape, small phones)
-   it used to start above the top edge. Scroll inside the overlay and centre only when there is room. */
-.overlay-section { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; }
-.overlay-inner { margin: auto; }
-
 @media (max-width: 900px) {
   /* shared frame + widgets */
   .screen-border { top: 8px; left: 8px; right: 8px; bottom: 8px; }
@@ -28,9 +23,10 @@
   [data-page=home] .bottom-right { left: 26px; right: 26px; bottom: 54px; }
   [data-page=home] .bottom-right p { font-size: .72rem; line-height: 1.65; }
   [data-page=home] .bottom-left-year { left: 26px; bottom: 22px; font-size: .62rem; }
-  .overlay-section { align-items: flex-start; overflow-y: auto; }
-  .overlay-inner { width: 88%; padding: 64px 0 56px; }
-  .close-btn { top: 24px; right: 22px; }
+  .overlay-section { left: 26px; bottom: 50px; width: min(420px, calc(100vw - 52px)); }
+  .overlay-inner { padding: 50px 22px 28px; }
+  .close-btn { top: 12px; right: 18px; }
+  body.panel-open .bottom-right { opacity: 0 !important; pointer-events: none; transition: opacity .3s; }
 
   /* ── PROJECTS (slides) ── */
   [data-page=projects] .projects-page-header { top: 40px; left: 26px; }
@@ -87,5 +83,4 @@
 @media (max-width: 520px) {
   [data-page=detail] .detail-left, [data-page=detail] .detail-right, [data-page=detail] .sidebar, [data-page=detail] .panel-mid, [data-page=detail] .panel-right { padding: 22px 16px !important; }
   [data-page=life] .aw-grid { grid-template-columns: 1fr; }
-  .overlay-inner { width: 90%; }
 }

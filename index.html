@@ -51,8 +51,8 @@
 
   <!-- Section Info -->
   <section id="info" class="overlay-section">
+    <button class="close-btn" onclick="closeSection()">✕ Close</button>
     <div class="overlay-inner">
-      <button class="close-btn" onclick="closeSection()">✕ Close</button>
       <h2 class="section-title">Info</h2>
       <div class="section-content">
         <p><strong>Name</strong><br>Arya Satya Andhika Akbar</p>
@@ -68,8 +68,8 @@
 
   <!-- Section Contact -->
   <section id="contact" class="overlay-section">
+    <button class="close-btn" onclick="closeSection()">✕ Close</button>
     <div class="overlay-inner">
-      <button class="close-btn" onclick="closeSection()">✕ Close</button>
       <h2 class="section-title">Contact</h2>
       <div class="section-content">
         <p><strong>Email</strong><br>
@@ -88,8 +88,8 @@
 
   <!-- Section FAQ -->
   <section id="faq" class="overlay-section">
+    <button class="close-btn" onclick="closeSection()">✕ Close</button>
     <div class="overlay-inner">
-      <button class="close-btn" onclick="closeSection()">✕ Close</button>
       <h2 class="section-title">FAQ</h2>
       <div class="section-content faq-list">
         <div class="faq-item">
@@ -119,25 +119,40 @@
   <script src="assets/js/cloudbg.js"></script>
   <script src="assets/js/audio.js"></script>
   <script>
-    // Nav scroll ke section sebagai overlay
-    document.querySelectorAll('.nav-scroll').forEach(link => {
+    // Info / Contact / FAQ = panel di kiri bawah
+    const panels = document.querySelectorAll('.overlay-section');
+    const navLinks = document.querySelectorAll('.nav-scroll');
+
+    function fitPanel(el) {
+      const top = document.querySelector('.top-left').getBoundingClientRect().bottom + 18;
+      const bottom = parseFloat(getComputedStyle(el).bottom) || 0;
+      el.style.setProperty('--panel-max', Math.max(190, innerHeight - bottom - top) + 'px');
+    }
+    function closeSection() {
+      panels.forEach(s => s.classList.remove('active'));
+      navLinks.forEach(l => l.classList.remove('on'));
+      document.body.classList.remove('panel-open');
+    }
+    navLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
-        const target = this.getAttribute('href');
-        document.querySelectorAll('.overlay-section').forEach(s => s.classList.remove('active'));
-        document.querySelector(target).classList.add('active');
+        const el = document.querySelector(this.getAttribute('href'));
+        if (el.classList.contains('active')) return closeSection();
+        closeSection();
+        fitPanel(el);
+        el.querySelector('.overlay-inner').scrollTop = 0;
+        el.classList.add('active');
+        this.classList.add('on');
+        document.body.classList.add('panel-open');
       });
     });
-
-    function closeSection() {
-      document.querySelectorAll('.overlay-section').forEach(s => s.classList.remove('active'));
-    }
-
-    // Tutup overlay kalau klik di luar
-    document.querySelectorAll('.overlay-section').forEach(section => {
-      section.addEventListener('click', function(e) {
-        if (e.target === this) closeSection();
-      });
+    addEventListener('resize', () => { const a = document.querySelector('.overlay-section.active'); if (a) fitPanel(a); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') closeSection(); });
+    // klik di luar panel = tutup
+    document.addEventListener('click', e => {
+      if (!document.body.classList.contains('panel-open')) return;
+      if (e.target.closest('.overlay-section, .nav-scroll')) return;
+      closeSection();
     });
   </script>
   <script src="assets/js/theme.js"></script>
