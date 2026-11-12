@@ -397,7 +397,8 @@ async function loadRepos() {
 
 /* ── fallback when GSAP can't load (blocked CDN / offline): one card at a time with the arrow buttons ── */
 function simpleCarousel() {
-  const cards = Array.from(document.querySelectorAll('.cards li'));
+  document.querySelectorAll('.cards li[data-dup]').forEach(li => li.style.display = 'none');
+  const cards = Array.from(document.querySelectorAll('.cards li:not([data-dup])'));
   let i = 0;
   const show = n => {
     i = (n + cards.length) % cards.length;
@@ -427,6 +428,14 @@ async function init() {
   if (!repos.length) { fail('No public repositories yet.'); return; }
 
   repos.forEach((repo, i) => cardList.appendChild(makeCard(repo, i)));
+  /* The endless GSAP carousel needs at least ~10 cards (each card's animation lasts 1 s and a new one starts every 0.1 s,
+     otherwise the same card is animated twice at once and the row breaks). With few repos, repeat the set around the ring. */
+  const MIN_CARDS = 12;
+  for (let k = repos.length; k < MIN_CARDS; k++) {
+    const li = makeCard(repos[k % repos.length], k % repos.length);
+    li.dataset.dup = '1'; li.setAttribute('aria-hidden', 'true');
+    cardList.appendChild(li);
+  }
   loading.style.display = 'none';
   gallery.style.display = 'block';
   liveEl.classList.add('loaded');
