@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARYA | PORTFOLIO</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"></noscript>
+<style>
+.scanline {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 3px, rgba(255,255,255,0.007) 3px, rgba(255,255,255,0.007) 4px);
+}
+.project-detail { position: fixed; inset: 28px; z-index: 10; display: grid; grid-template-columns: 1fr 1.25fr; overflow: hidden; }
+.detail-topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 48px; border-bottom: 1px solid var(--border); z-index: 30;
+}
+.detail-back { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color .2s; }
+.detail-back:hover { color: var(--white); }
+.detail-page-id { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+.detail-content { position: absolute; top: 52px; bottom: 48px; left: 0; right: 0; display: grid; grid-template-columns: 1fr 1.25fr; overflow: hidden; }
+
+/* LEFT */
+.detail-left { display: flex; flex-direction: column; justify-content: center; padding: 48px 56px 48px 48px; border-right: 1px solid var(--border); animation: fadeInUp .8s ease both; overflow-y: auto; scrollbar-width: none; }
+.detail-left::-webkit-scrollbar { display: none; }
+.detail-category { font-size: .8rem; letter-spacing: .5em; text-transform: uppercase; color: var(--muted); margin: 0 0 20px -0.08em; }
+.detail-title { font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 300; letter-spacing: -4px; text-transform: uppercase; line-height: .88; margin: 0 0 36px -0.1em; color: var(--white); }
+.detail-quote { max-width: 38ch; margin: 0 0 24px; font-size: .95rem; font-weight: 300; line-height: 1.8; letter-spacing: .01em; color: var(--off-white); }
+.detail-quote::before { content: ''; display: block; width: 100%; max-width: 375px; height: .5px; background: var(--muted); margin-bottom: 20px; }
+.detail-quote-by { display: block; margin-top: 14px; font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+body.theme-light .detail-quote::before { background: rgba(0,0,0,.35); }
+.detail-visit { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--white); font-size: .72rem; letter-spacing: .1em; padding: 10px 20px; border: 1px solid rgba(255,255,255,.2); width: fit-content; transition: background .25s, border-color .25s; }
+.detail-visit:hover { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.45); }
+.detail-cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.pf-links { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 26px; }
+.pf-links a { font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.pf-links a:hover { color: var(--white); border-color: var(--muted); }
+
+/* RIGHT */
+.detail-right { position: relative; display: flex; flex-direction: column; min-height: 0; animation: fadeInUp .8s ease both .12s; }
+.pf-tabs { display: flex; flex-wrap: wrap; gap: 6px 26px; padding: 22px 48px 14px; border-bottom: 1px solid var(--border); flex: none; }
+.pf-tabs a { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding-bottom: 4px; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.pf-tabs a:hover, .pf-tabs a.on { color: var(--white); border-color: var(--white); }
+.pf-scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; scroll-behavior: smooth;
+  padding: 0 48px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 32px), transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 32px), transparent 100%);
+}
+.pf-scroll::-webkit-scrollbar { display: none; }
+.pf-sec { padding: 44px 0 8px; }
+.pf-sec + .pf-sec { margin-top: 28px; border-top: 1px solid var(--border); }
+.pf-h { display: flex; align-items: baseline; gap: 14px; margin: 0 0 26px; font-weight: 300; }
+.pf-h span { font-size: .6rem; letter-spacing: .25em; color: var(--muted); }
+.pf-h b { font-weight: 300; font-size: clamp(1.5rem, 2.6vw, 2.2rem); letter-spacing: -1.5px; text-transform: uppercase; color: var(--white); }
+.pf-sub { margin: 30px 0 12px; font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.pf-p { font-size: .8rem; line-height: 1.85; color: var(--dim); margin: 0 0 14px; }
+.pf-p strong { color: var(--off-white); font-weight: 400; }
+
+/* intro */
+.pf-intro { display: grid; grid-template-columns: minmax(130px, 200px) 1fr; gap: 28px; align-items: start; }
+.pf-photo { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; border: 1px solid var(--border); filter: grayscale(1) contrast(1.05); transition: filter .5s; display: block; }
+.pf-photo:hover { filter: none; }
+.pf-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+.pf-tags li { font-size: .66rem; letter-spacing: .06em; padding: 5px 10px; border: 1px solid var(--border); color: var(--off-white); }
+
+/* experience */
+.pf-xp { list-style: none; margin: 0; padding: 0; }
+.pf-xp li { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 16px 0; border-top: 1px solid var(--border); }
+.pf-xp li:last-child { border-bottom: 1px solid var(--border); }
+.pf-xp time { font-size: .62rem; letter-spacing: .14em; color: var(--muted); padding-top: 3px; }
+.pf-xp h4 { margin: 0 0 4px; font-size: .82rem; font-weight: 400; letter-spacing: .04em; color: var(--white); }
+.pf-xp p { margin: 0; font-size: .72rem; line-height: 1.7; color: var(--dim); }
+.pf-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 22px; }
+.pf-strip figure { margin: 0; }
+.pf-strip img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border: 1px solid var(--border); filter: grayscale(.85); transition: filter .4s; cursor: zoom-in; }
+.pf-strip img:hover { filter: none; }
+.pf-strip figcaption { margin-top: 6px; font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* projects */
+.pf-proj { padding: 22px 0; border-top: 1px solid var(--border); }
+.pf-proj:last-of-type { border-bottom: 1px solid var(--border); }
+.pf-proj header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+.pf-proj h4 { margin: 0; font-size: 1.05rem; font-weight: 300; letter-spacing: .08em; text-transform: uppercase; color: var(--white); }
+.pf-proj header a { font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); transition: color .2s, border-color .2s; }
+.pf-proj header a:hover { color: var(--white); border-color: var(--white); }
+.pf-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 14px; }
+.pf-shots img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border: 1px solid var(--border); cursor: zoom-in; opacity: .92; transition: opacity .3s; }
+.pf-shots img:hover { opacity: 1; }
+
+/* photo grids */
+.pf-grid { columns: 3 150px; column-gap: 8px; }
+.pf-grid img { width: 100%; display: block; margin: 0 0 8px; break-inside: avoid; border: 1px solid var(--border); cursor: zoom-in; filter: grayscale(.7); transition: filter .4s; }
+.pf-grid img:hover { filter: none; }
+.pf-more { margin: 26px 0 0; font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.pf-cv { display: flex; justify-content: flex-start; padding-top: 30px; }
+
+/* lightbox */
+.pf-lb { position: fixed; inset: 0; z-index: 400; display: none; align-items: center; justify-content: center; padding: 40px; background: rgba(0,0,0,.92); cursor: zoom-out; }
+.pf-lb.on { display: flex; }
+.pf-lb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+body.theme-light .pf-lb { background: rgba(242,240,235,.95); }
+
+/* bottom bar */
+.detail-bottombar { position: absolute; bottom: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; border-top: 1px solid var(--border); z-index: 30; }
+.detail-copyright { font-size: .63rem; color: var(--muted); letter-spacing: .08em; }
+.project-nav { display: flex; gap: 28px; }
+.project-nav a { font-size: .68rem; color: var(--muted); text-decoration: none; letter-spacing: .08em; transition: color .2s; }
+.project-nav a:hover { color: var(--white); }
+body.theme-light .detail-visit { color: #111; border-color: rgba(0,0,0,.3); }
+body.theme-light .detail-visit:hover { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.7); }
+body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf-grid img { border-color: rgba(0,0,0,.15); }
+
+/* phone / tablet: the page scrolls normally (responsive.css makes .project-detail static) */
+@media (max-width: 900px) {
+  .pf-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; padding: 0 0 40px; }
+  .pf-tabs { padding: 18px 0 12px; }
+  .pf-intro { grid-template-columns: 110px 1fr; gap: 16px; }
+  .pf-xp li { grid-template-columns: 1fr; gap: 4px; }
+  .pf-strip { grid-template-columns: repeat(2, 1fr); }
+  .pf-grid { columns: 2 120px; }
+  .pf-lb { padding: 14px; }
+}
+</style>
+<script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body data-page="detail">
+<div class="scanline"></div>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+
+<div class="project-detail">
+  <div class="detail-topbar">
+    <a href="projects.html#portfolio" class="detail-back">← Projects</a>
+    <span class="detail-page-id">01 | 06</span>
+  </div>
+
+  <div class="detail-content">
+
+    <!-- LEFT -->
+    <div class="detail-left">
+      <p class="detail-category">Profile</p>
+      <h1 class="detail-title">Portfolio</h1>
+      <blockquote class="detail-quote">
+        Information Systems student at Universitas Airlangga. I build AI and IoT systems for urban traffic.
+        <span class="detail-quote-by">Arya Satya Andhika Akbar</span>
+      </blockquote>
+      <div class="detail-cta-row">
+        <a href="https://github.com/andkXD/andkXD/blob/main/assets/CV.pdf" target="_blank" rel="noopener" class="detail-visit">Curriculum Vitae ↗</a>
+        <a href="project-portfolio.html" class="detail-visit">GitHub projects</a>
+      </div>
+      <nav class="pf-links" aria-label="Links">
+        <a href="https://github.com/andkXD" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/arya-satya-andhika-akbar-2a3880286/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/andhi.ndk/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://x.com/HaruPyonXD" target="_blank" rel="noopener">X</a>
+        <a href="mailto:arya.andhikaakbar@gmail.com">Email</a>
+      </nav>
+    </div>
+
+    <!-- RIGHT: scrolling portfolio -->
+    <div class="detail-right">
+      <nav class="pf-tabs" id="pfTabs" aria-label="Sections">
+        <a href="#intro" class="on">Introduction</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#archive">Archive</a>
+      </nav>
+
+      <div class="pf-scroll" id="pfScroll">
+
+        <section class="pf-sec" id="intro">
+          <h2 class="pf-h"><span>01</span><b>Introduction</b></h2>
+          <div class="pf-intro">
+            <img class="pf-photo" src="../assets/img/portfolio/about.webp" alt="Portrait of Arya Satya Andhika Akbar" width="816" height="1000" decoding="async">
+            <div>
+              <p class="pf-sub" style="margin-top:0">About</p>
+              <p class="pf-p">Information Systems undergraduate at Universitas Airlangga (2024–present). Born in Malang, now based in Surabaya. I build AI and IoT systems for urban traffic, from competition prototypes to team-built web platforms.</p>
+              <p class="pf-sub">Skills</p>
+              <ul class="pf-tags">
+                <li>Problem Solving</li><li>Computer Literacy</li><li>Copywriting (Research)</li><li>Public Speaking</li><li>Graphic Design</li>
+              </ul>
+              <ul class="pf-tags">
+                <li>Python</li><li>JavaScript</li><li>FastAPI</li><li>Leaflet</li><li>Docker</li><li>Laragon</li><li>Git</li><li>PHP</li>
+              </ul>
+              <p class="pf-sub">Languages</p>
+              <ul class="pf-tags">
+                <li>Indonesian · native</li><li>English · fluent</li><li>Finnish · basic</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="pf-sec" id="experience">
+          <h2 class="pf-h"><span>02</span><b>Experience</b></h2>
+          <ul class="pf-xp">
+            <li><time>2024 – NOW</time><div><h4>Universitas Airlangga</h4><p>S1 Information Systems.</p></div></li>
+            <li><time>—</time><div><h4>HIMSI UNAIR</h4><p>Part of Himpunan Mahasiswa Sistem Informasi.</p></div></li>
+            <li><time>2024 – 2025</time><div><h4>GDGoC UNAIR</h4><p>Google Developer Groups on Campus. Community experience in the field of education.</p></div></li>
+            <li><time>2025 – 2026</time><div><h4>Samsung Innovation Campus</h4><p>Bootcamp Batch 7.</p></div></li>
+            <li><time>2023</time><div><h4>Japan exchange</h4><p>CCU Program, exchange student.</p></div></li>
+            <li><time>2021</time><div><h4>Intel AI for Youth</h4><p>Social Distancing Monitor, JCI Prakarsa Muda.</p></div></li>
+            <li><time>2019</time><div><h4>Korea exchange</h4><p>Yonggang Middle School, exchange student program.</p></div></li>
+            <li><time>—</time><div><h4>SAIM Senior High</h4><p>Sekolah Alam Insan Mulia.</p></div></li>
+          </ul>
+          <div class="pf-strip">
+            <figure><img src="../assets/img/portfolio/exp-japan.webp" alt="Tokyo street during the Japan exchange" loading="lazy" decoding="async"><figcaption>Japan · 2023</figcaption></figure>
+            <figure><img src="../assets/img/portfolio/exp-korea.webp" alt="Selfie with classmates at Yonggang Middle School" loading="lazy" decoding="async"><figcaption>Korea · 2019</figcaption></figure>
+            <figure><img src="../assets/img/portfolio/exp-samsung.webp" alt="Samsung Innovation Campus team" loading="lazy" decoding="async"><figcaption>Samsung · 2025</figcaption></figure>
+            <figure><img src="../assets/img/portfolio/exp-intel.webp" alt="Intel AI for Youth team" loading="lazy" decoding="async"><figcaption>Intel · 2021</figcaption></figure>
+          </div>
+          <p class="pf-more">And so much more!</p>
+        </section>
+
+        <section class="pf-sec" id="projects">
+          <h2 class="pf-h"><span>03</span><b>Projects</b></h2>
+          <article class="pf-proj">
+            <header><h4>NERIC</h4><a href="https://github.com/andkXD/MSU-IREX-2026" target="_blank" rel="noopener">GitHub ↗</a></header>
+            <p class="pf-p">Neuromorphic-inspired adaptive traffic AI. Gold Medal and Best Tech Impact, MSU iReX 2026.</p>
+            <div class="pf-shots">
+              <img src="../assets/img/portfolio/proj-neric-1.webp" alt="NERIC WebSocket connection manager code" loading="lazy" decoding="async">
+              <img src="../assets/img/portfolio/proj-neric-2.webp" alt="NERIC spiking neuron model code" loading="lazy" decoding="async">
+            </div>
+          </article>
+          <article class="pf-proj">
+            <header><h4>SINAPSIS</h4><a href="https://github.com/AgilePemdigi-2026/SINAPSIS_K05" target="_blank" rel="noopener">GitHub ↗</a></header>
+            <p class="pf-p">Team traffic platform built on NERIC: Leaflet map, live simulation, JWT auth, 159 tests.</p>
+            <div class="pf-shots">
+              <img src="../assets/img/portfolio/proj-sinapsis-1.webp" alt="SINAPSIS live intersection simulation" loading="lazy" decoding="async">
+              <img src="../assets/img/portfolio/proj-sinapsis-2.webp" alt="SINAPSIS Leaflet city map" loading="lazy" decoding="async">
+            </div>
+          </article>
+          <article class="pf-proj">
+            <header><h4>Personal website</h4><a href="https://andkxd.github.io/" target="_blank" rel="noopener">Website ↗</a></header>
+            <p class="pf-p">This site: plain HTML, CSS and JavaScript with p5.js, GSAP and three.js.</p>
+            <div class="pf-shots">
+              <img src="../assets/img/portfolio/proj-web-1.webp" alt="Website home page" loading="lazy" decoding="async">
+              <img src="../assets/img/portfolio/proj-web-2.webp" alt="Website artwork page" loading="lazy" decoding="async">
+              <img src="../assets/img/portfolio/proj-web-3.webp" alt="Website portfolio page" loading="lazy" decoding="async">
+            </div>
+          </article>
+          <p class="pf-more">And so much more! <a href="project-portfolio.html" style="color:inherit">See all on GitHub →</a></p>
+        </section>
+
+        <section class="pf-sec" id="achievements">
+          <h2 class="pf-h"><span>04</span><b>Achievements</b></h2>
+          <div class="pf-grid">
+            <img src="../assets/img/portfolio/ach-01.webp" alt="Achievement photo 1" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-02.webp" alt="Achievement photo 2" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-03.webp" alt="Achievement photo 3" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-06.webp" alt="Achievement photo 4" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-04.webp" alt="Achievement photo 5" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-05.webp" alt="Achievement photo 6" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-09.webp" alt="Achievement photo 7" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-07.webp" alt="Achievement photo 8" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/ach-08.webp" alt="Achievement photo 9" loading="lazy" decoding="async">
+          </div>
+        </section>
+
+        <section class="pf-sec" id="archive">
+          <h2 class="pf-h"><span>05</span><b>Visual Archive</b></h2>
+          <div class="pf-grid">
+            <img src="../assets/img/portfolio/arc-01.webp" alt="Archive photo 1" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-02.webp" alt="Archive photo 2" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-03.webp" alt="Archive photo 3: Petronas Towers" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-07.webp" alt="Archive photo 4" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-08.webp" alt="Archive photo 5: Korean palace" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-04.webp" alt="Archive photo 6: Shibuya" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-05.webp" alt="Archive photo 7" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-06.webp" alt="Archive photo 8" loading="lazy" decoding="async">
+            <img src="../assets/img/portfolio/arc-09.webp" alt="Archive photo 9" loading="lazy" decoding="async">
+          </div>
+          <div class="pf-cv"><a href="https://github.com/andkXD/andkXD/blob/main/assets/CV.pdf" target="_blank" rel="noopener" class="detail-visit">Curriculum Vitae ↗</a></div>
+        </section>
+
+      </div>
+    </div>
+  </div><!-- /detail-content -->
+
+  <div class="detail-bottombar">
+    <span class="detail-copyright">© <span id="yr">2026</span></span>
+    <nav class="project-nav">
+      <a href="project-type-lab.html">← Prev</a>
+      <a href="project-portfolio.html">Next →</a>
+    </nav>
+  </div>
+</div><!-- /project-detail -->
+
+<div class="pf-lb" id="pfLb" role="dialog" aria-label="Photo"><img alt=""></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+<script>
+(function () {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // section tabs: smooth scroll inside the right column + highlight the section in view
+  const scroller = document.getElementById('pfScroll');
+  const tabs = Array.from(document.querySelectorAll('#pfTabs a'));
+  const secs = tabs.map(a => document.querySelector(a.getAttribute('href')));
+  tabs.forEach((a, i) => a.addEventListener('click', e => {
+    e.preventDefault();
+    const inner = scroller.scrollHeight > scroller.clientHeight + 2;   // desktop: the column scrolls; phone: the page does
+    if (inner) scroller.scrollTo({ top: secs[i].offsetTop - 8, behavior: 'smooth' });
+    else secs[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+  function mark() {
+    const inner = scroller.scrollHeight > scroller.clientHeight + 2;
+    const y = inner ? scroller.scrollTop + 80 : 0;
+    let cur = 0;
+    secs.forEach((s, i) => { const top = inner ? s.offsetTop : s.getBoundingClientRect().top + scrollY - 120; if ((inner ? y : scrollY) >= top - 1) cur = i; });
+    tabs.forEach((a, i) => a.classList.toggle('on', i === cur));
+  }
+  scroller.addEventListener('scroll', mark, { passive: true });
+  addEventListener('scroll', mark, { passive: true });
+  mark();
+
+  // lightbox for every photo
+  const lb = document.getElementById('pfLb'), lbImg = lb.querySelector('img');
+  document.querySelectorAll('.pf-grid img, .pf-strip img, .pf-shots img').forEach(img => img.addEventListener('click', () => {
+    lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt; lb.classList.add('on');
+  }));
+  const close = () => lb.classList.remove('on');
+  lb.addEventListener('click', close);
+  addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+<script src="../assets/js/audio.js"></script>
+<script src="../assets/js/theme.js"></script>
+</body>
+</html>

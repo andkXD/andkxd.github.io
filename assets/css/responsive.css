@@ -45,8 +45,9 @@
   [data-page=projects] .project-counter { left: 26px; bottom: 24px; }
 
   /* ── DETAIL PAGES: stop being a fixed desktop panel, become one scrolling column ── */
-  html:has(body[data-page=detail]), body[data-page=detail],
-  html:has(body[data-page=life]),   body[data-page=life] { height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; }
+  html:has(body[data-page=detail]), html:has(body[data-page=life]) { height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; }
+  /* body must NOT be a scroll container itself, otherwise the sticky top/bottom bars never stick */
+  body[data-page=detail], body[data-page=life] { height: auto !important; overflow: visible !important; }
   [data-page=detail] .project-detail { position: relative; inset: auto; display: block !important; grid-template-columns: none !important; margin: 14px; min-height: calc(100dvh - 28px); overflow: visible; }
   [data-page=detail] .detail-topbar { position: sticky; width: auto; top: 0; z-index: 40; padding: 0 16px; background: var(--black); }
   [data-page=detail] .detail-bottombar { position: sticky; bottom: 0; z-index: 40; padding: 0 16px; background: var(--black); }
