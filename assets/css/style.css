@@ -871,23 +871,16 @@ html[data-theme="dark"] {
 
 /* ── phones / tablets / small windows: Info, Contact, FAQ open as a sheet from the bottom ── */
 @media (max-width: 900px), (hover: none), (pointer: coarse) {
+  /* teks polos di bawah menu (di kolom kiri), tidak menutupi apa pun; bisa di-scroll */
   .overlay-section {
-    left: 0; right: auto; bottom: 0;
-    width: 100%; max-width: 560px;
-    max-height: 72vh; max-height: min(72dvh, 560px);
-    background: #000;
-    border: 0; border-top: 1px solid var(--border);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    transform: translateY(24px);
+    left: var(--pm-left, 28px); right: auto;
+    top: var(--pm-top, 56vh); bottom: max(52px, calc(env(safe-area-inset-bottom, 0px) + 40px));
+    width: min(320px, calc(64vw - var(--pm-left, 28px))); max-height: none;
+    background: none; border: 0; padding: 0;
+    transform: translateY(8px);
   }
   .overlay-section.active { transform: none; }
-  body.theme-light .overlay-section { background: #f2f0eb; }
-  .overlay-inner {
-    padding: 22px 26px 30px;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
-            mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
-  }
-  .close-btn { top: 16px; right: 22px; }
-  .section-title { margin: 0 0 18px; }
-  body.panel-open .bottom-right, body.panel-open .bottom-left-year { opacity: 0 !important; transition: opacity .3s; }
+  .overlay-inner { padding: 14px 0 18px; }
+  .close-btn { display: none; }
+  .section-title { margin: 0 0 14px; }
 }

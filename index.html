@@ -208,6 +208,9 @@
           const x = e.clientX || r.right + 10, y = e.clientY || r.top + r.height / 2;
           openFollow(el, x, y, this.textContent.trim().toUpperCase());
         } else {
+          const nav = document.querySelector('.main-nav').getBoundingClientRect();
+          el.style.setProperty('--pm-left', Math.round(nav.left) + 'px');
+          el.style.setProperty('--pm-top', Math.round(nav.bottom + 26) + 'px');
           el.classList.add('active');
           document.body.classList.add('panel-open');
           el.querySelector('.overlay-inner').scrollTop = 0;
