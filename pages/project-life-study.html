@@ -41,6 +41,13 @@
       margin-bottom: 32px;
     }
     .aw-back:hover { color: var(--white); }
+    .aw-dir { display: inline-flex; margin-top: 18px; padding: 9px 18px; border: 1px solid rgba(255,255,255,.2); color: var(--white); text-decoration: none; font-size: .7rem; letter-spacing: .1em; transition: background .25s, border-color .25s; }
+    .aw-dir:hover { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.45); }
+    body.theme-light .aw-dir { color: #111; border-color: rgba(0,0,0,.3); }
+    body.theme-light .aw-dir:hover { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.7); }
+    .aw-pager { display: flex; gap: 28px; margin-top: 26px; }
+    .aw-pager a { font-size: .68rem; color: var(--muted); text-decoration: none; letter-spacing: .08em; transition: color .2s; }
+    .aw-pager a:hover { color: var(--white); }
 
     .aw-label {
       font-size: 0.65rem;
@@ -355,18 +362,19 @@ body.theme-light .sidebar-visit:hover {
     <!-- SIDEBAR -->
     <aside class="aw-sidebar">
       <div>
-        <a href="project-portfolio.html" class="aw-back">← Portfolio</a>
+        <a href="projects.html#life-study" class="aw-back">← Projects</a>
         <p class="aw-label">Selected Works</p>
         <h1 class="aw-title">Life<br>Study</h1>
         <p class="aw-count" id="awCount">— items</p>
+        <a href="../Artwork/index.html" class="aw-dir">Artwork →</a>
       </div>
       <div class="aw-sidebar-bottom">
         <p class="aw-filter">Filter</p>
         <span class="aw-tag active" data-filter="all">All</span>
-        <span class="aw-tag" data-filter="generative">Generative</span>
         <span class="aw-tag" data-filter="digital">Digital</span>
         <span class="aw-tag" data-filter="motion">Motion</span>
         <span class="aw-tag" data-filter="ui">UI / Visual</span>
+        <nav class="aw-pager"><a href="project-portfolio.html">← Prev</a><a href="project-motion-study.html">Next →</a></nav>
       </div>
     </aside>
 
