@@ -281,7 +281,7 @@ body.theme-light .card-btn:hover { color: #111; border-color: rgba(0,0,0,0.5); }
   </div><!-- /detail-content -->
 
   <div class="detail-bottombar">
-    <span class="detail-copyright">© 10129</span>
+    <span class="detail-copyright">© 2026</span>
     <nav class="project-nav">
       <a href="portfolio.html">← Prev</a>
       <a href="project-life-study.html">Next →</a>
@@ -547,5 +547,6 @@ init();
 
 <script src="../assets/js/audio.js"></script>
 <script src="../assets/js/theme.js"></script>
+<script>document.querySelectorAll('.detail-copyright').forEach(function(e){e.textContent='© '+new Date().getFullYear()})</script>
 </body>
 </html>

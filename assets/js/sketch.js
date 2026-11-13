@@ -4,12 +4,17 @@
 
 let cells = [];
 // star count scales with screen area (≈950 on 1920×1080, was 300)
-const starCount = () => constrain(floor(windowWidth * windowHeight / 1100), 500, 2500);
+const LITE = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+const starCount = () => LITE
+  ? constrain(floor(windowWidth * windowHeight / 2600), 250, 600)
+  : constrain(floor(windowWidth * windowHeight / 1400), 500, 1700);
 
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
+  pixelDensity(LITE ? 1 : Math.min(window.devicePixelRatio || 1, 1.5));
   canvas.parent('canvas-container');
-  frameRate(30);
+  frameRate(LITE ? 24 : 30);
+  document.addEventListener('visibilitychange', () => document.hidden ? noLoop() : loop());
   initCells();
 }
 

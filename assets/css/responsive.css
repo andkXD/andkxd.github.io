@@ -23,10 +23,6 @@
   [data-page=home] .bottom-right { left: 26px; right: 26px; bottom: 54px; }
   [data-page=home] .bottom-right p { font-size: .72rem; line-height: 1.65; }
   [data-page=home] .bottom-left-year { left: 26px; bottom: 22px; font-size: .62rem; }
-  .overlay-section { left: 26px; bottom: 50px; width: min(300px, calc(100vw - 52px)); }
-  .overlay-inner { padding: 22px 0 24px; }
-  .close-btn { top: 0; right: 0; }
-  body.panel-open .bottom-right { opacity: 0 !important; pointer-events: none; transition: opacity .3s; }
 
   /* ── PROJECTS (slides) ── */
   [data-page=projects] .projects-page-header { top: 40px; left: 26px; }
@@ -84,4 +80,17 @@
 @media (max-width: 520px) {
   [data-page=detail] .detail-left, [data-page=detail] .detail-right, [data-page=detail] .sidebar, [data-page=detail] .panel-mid, [data-page=detail] .panel-right { padding: 22px 16px !important; }
   [data-page=life] .aw-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ── landscape phones / very short windows: home has to fit in ~360px of height ── */
+@media (max-height: 520px) {
+  [data-page=home] .top-left { top: 36px; left: 36px; right: auto; }
+  [data-page=home] .site-title { font-size: 1.6rem; margin-bottom: 4px; }
+  [data-page=home] .role { margin-bottom: 14px; font-size: .68rem; }
+  [data-page=home] .main-nav { flex-direction: row; flex-wrap: wrap; gap: 2px 24px; }
+  [data-page=home] .main-nav a { font-size: .8rem; }
+  [data-page=home] .bottom-right { left: auto; right: 44px; bottom: 36px; width: min(34%, 250px); }
+  [data-page=home] .bottom-right p { font-size: .6rem; line-height: 1.5; }
+  [data-page=home] .bottom-left-year { left: 36px; bottom: 16px; font-size: .6rem; }
 }

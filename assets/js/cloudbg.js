@@ -81,7 +81,7 @@
   css.textContent = '#cloud-bg .mk{position:absolute;left:0;top:0;font:500 10px "Roboto Mono",monospace;letter-spacing:.08em;white-space:nowrap;color:var(--cb-fg,#ddd);opacity:.6}' +
     '#cloud-bg .mk svg{position:absolute;left:-7px;top:-7px}#cloud-bg .mk span{position:absolute;left:12px;top:-6px}#cloud-bg svg.ln{position:absolute;inset:0;width:100%;height:100%;stroke:var(--cb-fg,#ddd);opacity:.22}';
   document.head.appendChild(css); document.body.insertBefore(box, document.body.firstChild.nextSibling || null);
-  const R = new THREE.WebGLRenderer({ alpha: true, antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, MOBILE() ? 1.5 : 2)); R.setClearColor(0x000000, 0);
+  const R = new THREE.WebGLRenderer({ alpha: true, antialias: false }); R.setPixelRatio(Math.min(devicePixelRatio, MOBILE() ? 1 : 1.5)); R.setClearColor(0x000000, 0);
   R.domElement.style.display = 'block';
   const lines = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); lines.setAttribute('class', 'ln'); lines.setAttribute('stroke-width', '1');
   const hud = document.createElement('div'); hud.style.cssText = 'position:absolute;inset:0';

@@ -87,7 +87,7 @@
     const light = window.__THEME__ === 'light';
     if (light !== theme) { theme = light; box.style.setProperty('--st-fg', light ? '#111' : '#ddd'); }
     const now = performance.now();
-    if (now - lastScan > 350) { lastScan = now; scan(); }
+    if (now - lastScan > 700) { lastScan = now; scan(); }
     for (const m of marks) {
       m.el.style.transform = `translate(${m.cell.x}px,${m.cell.y}px)`;
       m.hidden = hits(m.cell.x, m.cell.y);

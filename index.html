@@ -143,15 +143,6 @@
     const fpView = fp.firstChild, fpContent = fpView.firstChild;
     let follow = null; // {ax, ay, mx, my, st, cur, max, raf}
 
-    function fitPanel(el) {
-      // bawah panel = tepat di atas "An ongoing collection"; atas panel tidak pernah melewati menu
-      const year = document.querySelector('.bottom-left-year').getBoundingClientRect();
-      const nav = document.querySelector('.top-left').getBoundingClientRect();
-      const bottom = Math.max(0, innerHeight - year.top + 12);
-      el.style.bottom = bottom + 'px';
-      el.style.setProperty('--panel-max', Math.max(60, innerHeight - bottom - (nav.bottom + 14)) + 'px');
-    }
-
     function render() {
       const f = follow; if (!f) return;
       const w = fp.offsetWidth, hgt = fp.offsetHeight;
@@ -219,15 +210,12 @@
         } else {
           el.classList.add('active');
           document.body.classList.add('panel-open');
-          fitPanel(el);
           el.querySelector('.overlay-inner').scrollTop = 0;
         }
       });
     });
     addEventListener('resize', () => {
-      if (follow) return isDesktop() ? null : closeSection();
-      const a = document.querySelector('.overlay-section.active');
-      if (a) fitPanel(a);
+      if (follow && !isDesktop()) closeSection();
     });
     addEventListener('keydown', e => { if (e.key === 'Escape') closeSection(); });
     // klik:

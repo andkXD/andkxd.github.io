@@ -163,6 +163,7 @@ body {
    FOOTER — BOTTOM RIGHT
    ============================================ */
 .bottom-right {
+  pointer-events: none;   /* it spans the full width on phones and must never swallow taps meant for the menu */
   position: fixed;
   bottom: 64px;
   right: 72px;
@@ -865,4 +866,28 @@ html[data-theme="light"] {
 }
 html[data-theme="dark"] {
   background: #000000;
+}
+
+
+/* ── phones / tablets / small windows: Info, Contact, FAQ open as a sheet from the bottom ── */
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+  .overlay-section {
+    left: 0; right: auto; bottom: 0;
+    width: 100%; max-width: 560px;
+    max-height: 72vh; max-height: min(72dvh, 560px);
+    background: #000;
+    border: 0; border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    transform: translateY(24px);
+  }
+  .overlay-section.active { transform: none; }
+  body.theme-light .overlay-section { background: #f2f0eb; }
+  .overlay-inner {
+    padding: 22px 26px 30px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
+  }
+  .close-btn { top: 16px; right: 22px; }
+  .section-title { margin: 0 0 18px; }
+  body.panel-open .bottom-right, body.panel-open .bottom-left-year { opacity: 0 !important; transition: opacity .3s; }
 }
