@@ -42,7 +42,7 @@
       document.getElementById('detailContent').innerHTML = `
         <div class="detail-hero">
           ${work.img
-            ? `<img src="${work.img}" alt="${work.title}">`
+            ? `<img loading="lazy" decoding="async" src="${work.img}" alt="${work.title}">`
             : `<div class="detail-hero-ph"><span style="font-family:var(--serif);font-size:clamp(3rem,8vw,8rem);font-style:italic;color:rgba(255,255,255,.06);letter-spacing:-.04em">${work.num}</span></div>`}
         </div>
 
