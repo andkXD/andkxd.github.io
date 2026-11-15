@@ -884,3 +884,8 @@ html[data-theme="dark"] {
   .close-btn { display: none; }
   .section-title { margin: 0 0 14px; }
 }
+
+/* sembunyikan scrollbar bawaan browser */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+

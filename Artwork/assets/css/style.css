@@ -725,3 +725,8 @@ footer p {
 .site-nav .np-pre { display: none; }
 .site-nav .now-playing:hover .np-pre, .site-nav .now-playing.muted .np-pre { display: inline; }
 @media (max-width: 700px) { .site-nav .np-text { display: none; } }
+
+/* sembunyikan scrollbar bawaan browser */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
