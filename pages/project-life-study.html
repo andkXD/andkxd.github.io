@@ -152,7 +152,7 @@
     .ix-prev .pv { position: absolute; inset: 0; opacity: 0; transform: scale(.97); transition: opacity .28s ease, transform .45s cubic-bezier(.2,.7,.2,1); overflow: hidden; }
     .ix-prev .pv.on { opacity: .95; transform: none; }
     .ix-prev .pv:empty { display: none; }
-    .pv canvas, .pv img, .st canvas, .st img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pv canvas, .pv img, .ix-stage canvas, .ix-stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── EXPANDED VIEW ──────────────────────── */
     .ix-view {
@@ -165,9 +165,9 @@
     .ix-vhead .k { font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .ix-vhead h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 300; letter-spacing: -.02em; text-transform: uppercase; line-height: 1; }
     .ix-vmain { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 36px; padding: 22px 40px; min-height: 0; align-items: center; }
-    .st { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 100%; margin: 0 auto; overflow: hidden;
+    .ix-stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 100%; margin: 0 auto; overflow: hidden;
           transform: scale(.88); opacity: 0; transition: transform .55s cubic-bezier(.2,.7,.2,1), opacity .4s ease; }
-    .ix-view.open .st { transform: none; opacity: 1; }
+    .ix-view.open .ix-stage { transform: none; opacity: 1; }
     .ix-vside { font-size: .74rem; line-height: 1.7; color: var(--dim); align-self: end; padding-bottom: 6px; }
     .ix-vside dl { display: grid; grid-template-columns: 74px 1fr; gap: 6px 12px; margin-bottom: 18px; }
     .ix-vside dt { color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size: .62rem; padding-top: 2px; }
@@ -282,7 +282,7 @@ body.theme-light .sidebar-visit:hover {
   <div class="ix-view" id="ixView" role="dialog" aria-modal="true" aria-label="Artwork">
     <div class="ix-vhead"><p class="k" id="vK"></p><h2 id="vT"></h2></div>
     <div class="ix-vmain">
-      <div class="st" id="vStage"></div>
+      <div class="ix-stage" id="vStage"></div>
       <div class="ix-vside">
         <dl id="vMeta"></dl>
         <p id="vDesc"></p>
