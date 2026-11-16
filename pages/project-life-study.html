@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Life Study — Arya Satya Andhika Akbar</title>
+  <title>Artwork — Arya Satya Andhika Akbar</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"></noscript>
@@ -58,7 +58,7 @@
     }
 
     .aw-title {
-      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-size: clamp(1.6rem, 2.5vw, 2.3rem);
       font-weight: 300;
       letter-spacing: -2px;
       text-transform: uppercase;
@@ -109,208 +109,102 @@
     .aw-tag:hover, .aw-tag.active { color: var(--white); }
     .aw-tag:hover::before, .aw-tag.active::before { background: var(--white); }
 
-    /* ── RIGHT CONTENT ──────────────────────── */
+    /* ── RIGHT: INDEX LIST ──────────────────── */
     .aw-content {
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 70px 72px 80px 60px;
+      position: relative; z-index: 2;
+      overflow-y: auto; overflow-x: hidden;
+      padding: 70px 72px 80px 44px;
       scrollbar-width: none;
       animation: fadeInUp 0.9s ease 0.1s both;
     }
     .aw-content::-webkit-scrollbar { display: none; }
 
-    /* ── GRID ───────────────────────────────── */
-    .aw-grid {
+    .ix-head, .ix-row {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2px;
+      grid-template-columns: 56px minmax(0, 1.5fr) minmax(0, 1fr) 64px;
+      column-gap: 16px; align-items: baseline;
     }
+    .ix-head { padding: 0 12px 14px; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .ix-head span:last-child, .ix-row span:last-child { text-align: right; }
+    .ix-list { list-style: none; border-top: 1px solid var(--border); }
+    .ix-row {
+      padding: 15px 12px; font-size: .9rem; letter-spacing: .02em; color: var(--dim);
+      border-bottom: 1px solid var(--border); outline: 1px solid transparent; outline-offset: -1px;
+      cursor: pointer; transition: color .2s, opacity .25s, outline-color .2s, background .2s;
+      text-shadow: 0 0 8px rgba(0,0,0,.85);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ix-row .n { color: var(--muted); font-size: .72rem; }
+    .ix-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ix-row .c { color: var(--muted); font-size: .78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ix-list.hovering .ix-row { opacity: .32; }
+    .ix-list.hovering .ix-row.on { opacity: 1; color: var(--white); font-weight: 500; outline-color: rgba(255,255,255,.75); background: rgba(0,0,0,.25); }
+    .ix-list.hovering .ix-row.on .n, .ix-list.hovering .ix-row.on .c { color: var(--white); }
+    .ix-row:focus-visible { outline-color: rgba(255,255,255,.75); }
 
-    .aw-item {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      cursor: pointer;
-      background: rgba(255,255,255,0.03);
+    /* ── HOVER PREVIEW (besar, di belakang daftar) ── */
+    .ix-prev {
+      position: fixed; z-index: 1; pointer-events: none;
+      left: calc(260px + (100vw - 260px) / 2); top: 50%;
+      width: min(48vw, 780px); aspect-ratio: 16 / 10;
+      transform: translate(-50%, -50%);
     }
+    .ix-prev .pv { position: absolute; inset: 0; opacity: 0; transform: scale(.97); transition: opacity .28s ease, transform .45s cubic-bezier(.2,.7,.2,1); overflow: hidden; background: #111; }
+    .ix-prev .pv.on { opacity: .95; transform: none; }
+    .pv canvas, .pv img, .st canvas, .st img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .aw-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-      opacity: 0.7;
-      filter: grayscale(20%);
+    /* ── EXPANDED VIEW ──────────────────────── */
+    .ix-view {
+      position: fixed; inset: 0; z-index: 500; background: #0a0a0a; color: var(--white);
+      display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+      opacity: 0; pointer-events: none; transition: opacity .35s ease;
     }
+    .ix-view.open { opacity: 1; pointer-events: auto; }
+    .ix-vhead { padding: 26px 40px 0; }
+    .ix-vhead .k { font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .ix-vhead h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 300; letter-spacing: -.02em; text-transform: uppercase; line-height: 1; }
+    .ix-vmain { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 36px; padding: 22px 40px; min-height: 0; align-items: center; }
+    .st { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 100%; margin: 0 auto; overflow: hidden; background: #111;
+          transform: scale(.88); opacity: 0; transition: transform .55s cubic-bezier(.2,.7,.2,1), opacity .4s ease; }
+    .ix-view.open .st { transform: none; opacity: 1; }
+    .ix-vside { font-size: .74rem; line-height: 1.7; color: var(--dim); align-self: end; padding-bottom: 6px; }
+    .ix-vside dl { display: grid; grid-template-columns: 74px 1fr; gap: 6px 12px; margin-bottom: 18px; }
+    .ix-vside dt { color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size: .62rem; padding-top: 2px; }
+    .ix-vside dd { color: var(--white); }
+    .ix-vside p { color: var(--muted); }
+    .ix-bar {
+      display: flex; align-items: center; gap: 22px; margin: 0 40px 28px; padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,.55); font-size: .72rem; letter-spacing: .1em;
+    }
+    .ix-bar a, .ix-bar button { color: var(--white); background: none; border: 0; font: inherit; letter-spacing: inherit; cursor: pointer; text-decoration: none; padding: 2px 0; transition: opacity .2s; }
+    .ix-bar a:hover, .ix-bar button:hover { opacity: .6; }
+    .ix-bar .go { font-weight: 500; }
+    .ix-bar .sp { flex: 1; }
+    .ix-pos { color: var(--muted); }
 
-    .aw-item:hover img {
-      transform: scale(1.04);
-      opacity: 1;
-      filter: grayscale(0%);
+    @media (hover: none), (max-width: 900px) { .ix-prev { display: none; } }
+    @media (max-width: 900px) {
+      .ix-head, .ix-row { grid-template-columns: 38px minmax(0, 1fr) 52px; }
+      .ix-head span:nth-child(3), .ix-row .c { display: none; }
+      .ix-row { padding: 16px 8px; font-size: .88rem; }
+      .ix-head { padding: 0 8px 12px; }
+      .ix-vhead { padding: 18px 20px 0; }
+      .ix-vmain { grid-template-columns: 1fr; gap: 14px; padding: 16px 20px; align-content: start; overflow-y: auto; }
+      .ix-vside { align-self: start; }
+      .ix-bar { margin: 0 20px calc(18px + env(safe-area-inset-bottom, 0px)); gap: 14px; flex-wrap: wrap; }
+      .ix-bar .sp { display: none; }
+      .ix-bar .go { flex: 1 0 100%; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.18); }
+      .ix-bar .ix-pos { margin-right: auto; }
     }
+    @media (max-height: 520px) and (min-width: 700px) { .ix-vside { display: none; } .ix-vmain { grid-template-columns: 1fr; } }
 
-    /* Overlay on hover */
-    .aw-item-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 20px;
-    }
-    .aw-item:hover .aw-item-overlay { opacity: 1; }
+    body.theme-light .ix-view { background: #f2f0eb; color: #111; }
+    body.theme-light .ix-bar { border-color: rgba(0,0,0,.55); }
+    body.theme-light .ix-bar a, body.theme-light .ix-bar button, body.theme-light .ix-vside dd { color: #111; }
+    body.theme-light .ix-row { text-shadow: 0 0 8px #f2f0eb; }
+    body.theme-light .ix-list.hovering .ix-row.on { color: #111; outline-color: rgba(0,0,0,.7); background: rgba(255,255,255,.35); }
+    body.theme-light .ix-list.hovering .ix-row.on .n, body.theme-light .ix-list.hovering .ix-row.on .c { color: #111; }
 
-    .aw-item-num {
-      font-size: 0.6rem;
-      color: var(--muted);
-      letter-spacing: 0.15em;
-      margin-bottom: 6px;
-    }
-
-    .aw-item-title {
-      font-size: 0.85rem;
-      font-weight: 300;
-      letter-spacing: 0.02em;
-      color: var(--white);
-      line-height: 1.3;
-    }
-
-    .aw-item-tag {
-      font-size: 0.62rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-top: 6px;
-    }
-
-    /* Placeholder when no image */
-    .aw-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
-      color: rgba(255,255,255,0.1);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      border: 1px dashed rgba(255,255,255,0.06);
-    }
-
-    /* ── LIGHTBOX ───────────────────────────── */
-    .aw-lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      background: rgba(0,0,0,0.94);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-      
-    }
-    .aw-lightbox.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .aw-lb-inner {
-      position: relative;
-      max-width: 85vw;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .aw-lb-img {
-      max-width: 100%;
-      max-height: 75vh;
-      object-fit: contain;
-      display: block;
-      transform: scale(0.96);
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    .aw-lightbox.open .aw-lb-img { transform: scale(1); }
-
-    .aw-lb-meta {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .aw-lb-title {
-      font-size: 0.82rem;
-      color: var(--off-white);
-      letter-spacing: 0.05em;
-    }
-    .aw-lb-sub {
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .aw-lb-close {
-      position: fixed;
-      top: 40px;
-      right: 48px;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: var(--font);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      cursor: crosshair;
-      transition: color 0.2s;
-    }
-    .aw-lb-close:hover { color: var(--white); }
-
-    .aw-lb-nav {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 32px;
-    }
-    .aw-lb-nav button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: var(--font);
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      cursor: crosshair;
-      transition: color 0.2s;
-    }
-    .aw-lb-nav button:hover { color: var(--white); }
-
-    /* ── STAGGER ANIMATION ──────────────────── */
-    .aw-item {
-      opacity: 0;
-      transform: translateY(16px);
-      animation: itemReveal 0.6s ease both;
-    }
-    @keyframes itemReveal {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .aw-item:nth-child(1)  { animation-delay: 0.05s; }
-    .aw-item:nth-child(2)  { animation-delay: 0.10s; }
-    .aw-item:nth-child(3)  { animation-delay: 0.15s; }
-    .aw-item:nth-child(4)  { animation-delay: 0.20s; }
-    .aw-item:nth-child(5)  { animation-delay: 0.25s; }
-    .aw-item:nth-child(6)  { animation-delay: 0.30s; }
-    .aw-item:nth-child(7)  { animation-delay: 0.35s; }
-    .aw-item:nth-child(8)  { animation-delay: 0.40s; }
-  
 /* ============================================
    LIGHT MODE OVERRIDES — project pages
    ============================================ */
@@ -364,199 +258,113 @@ body.theme-light .sidebar-visit:hover {
       <div>
         <a href="projects.html#life-study" class="aw-back">← Projects</a>
         <p class="aw-label">Selected Works</p>
-        <h1 class="aw-title">Life<br>Study</h1>
-        <p class="aw-count" id="awCount">— items</p>
+        <h1 class="aw-title">Artwork</h1>
+        <p class="aw-count" id="awCount">— works</p>
         <a href="../Artwork/index.html" class="aw-dir">Artwork →</a>
       </div>
       <div class="aw-sidebar-bottom">
-        <p class="aw-filter">Filter</p>
-        <span class="aw-tag active" data-filter="all">All</span>
-        <span class="aw-tag" data-filter="digital">Digital</span>
-        <span class="aw-tag" data-filter="motion">Motion</span>
-        <span class="aw-tag" data-filter="ui">UI / Visual</span>
         <nav class="aw-pager"><a href="project-portfolio.html">← Prev</a><a href="project-motion-study.html">Next →</a></nav>
       </div>
     </aside>
 
-    <!-- GRID -->
+    <!-- PREVIEW BESAR (muncul saat hover, di belakang daftar) -->
+    <div class="ix-prev" id="ixPrev" aria-hidden="true"></div>
+
+    <!-- DAFTAR -->
     <main class="aw-content">
-      <div class="aw-grid" id="awGrid">
-        <!-- Items are rendered by JS below -->
-      </div>
+      <div class="ix-head"><span>N.</span><span>Title</span><span>Category</span><span>Y.</span></div>
+      <ol class="ix-list" id="ixList"></ol>
     </main>
   </div>
 
-  <!-- LIGHTBOX -->
-  <div class="aw-lightbox" id="awLightbox">
-    <button class="aw-lb-close" id="lbClose">✕ Close</button>
-    <div class="aw-lb-inner">
-      <img class="aw-lb-img" id="lbImg" src="" alt="">
-      <div class="aw-lb-meta">
-        <p class="aw-lb-title" id="lbTitle"></p>
-        <p class="aw-lb-sub" id="lbSub"></p>
+  <!-- TAMPILAN PENUH (klik baris) -->
+  <div class="ix-view" id="ixView" role="dialog" aria-modal="true" aria-label="Artwork">
+    <div class="ix-vhead"><p class="k" id="vK"></p><h2 id="vT"></h2></div>
+    <div class="ix-vmain">
+      <div class="st" id="vStage"></div>
+      <div class="ix-vside">
+        <dl id="vMeta"></dl>
+        <p id="vDesc"></p>
       </div>
     </div>
-    <div class="aw-lb-nav">
-      <button id="lbPrev">← Prev</button>
-      <button id="lbNext">Next →</button>
+    <div class="ix-bar">
+      <a class="go" id="vGo" href="../Artwork/index.html">→ Open in Artwork website</a>
+      <span class="sp"></span>
+      <span class="ix-pos" id="vPos"></span>
+      <button id="vPrev" type="button">← Prev</button>
+      <button id="vNext" type="button">Next →</button>
+      <button id="vClose" type="button">Close ✕</button>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="../assets/js/sketch.js"></script>
   <script src="../assets/js/audio.js"></script>
+  <!-- Data & visual diambil dari website Artwork, jadi cukup edit di satu tempat -->
+  <script src="../Artwork/assets/js/works-data.js"></script>
+  <script src="../Artwork/assets/js/art.js"></script>
   <script>
-    // ── ARTWORK DATA ────────────────────────────────────────────
-    // Replace src with your actual image paths (../assets/img/your-file.jpg)
-    // or external URLs. Leave src empty for placeholder slots.
-    const ARTWORKS = [
-      {
-        title: 'Noise Field #01',
-        sub: 'Generative · 2025',
-        tag: 'generative',
-        src: '', // replace with actual image
-      },
-      {
-        title: 'Type Study',
-        sub: 'UI / Visual · 2025',
-        tag: 'ui',
-        src: '',
-      },
-      {
-        title: 'Particle System',
-        sub: 'Generative · 2024',
-        tag: 'generative',
-        src: '',
-      },
-      {
-        title: 'Motion Loop 01',
-        sub: 'Motion · 2025',
-        tag: 'motion',
-        src: '',
-      },
-      {
-        title: 'Dark Interface',
-        sub: 'UI / Visual · 2024',
-        tag: 'ui',
-        src: '',
-      },
-      {
-        title: 'Glitch Study',
-        sub: 'Digital · 2025',
-        tag: 'digital',
-        src: '',
-      },
-      {
-        title: 'Flow Field #03',
-        sub: 'Generative · 2025',
-        tag: 'generative',
-        src: '',
-      },
-      {
-        title: 'Waveform Visual',
-        sub: 'Motion · 2024',
-        tag: 'motion',
-        src: '',
-      },
-    ];
+    const list = document.getElementById('ixList'), prev = document.getElementById('ixPrev');
+    const view = document.getElementById('ixView'), stage = document.getElementById('vStage');
+    const fine = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 901px)');
+    const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    document.getElementById('awCount').textContent = WORKS.length + (WORKS.length === 1 ? ' work' : ' works');
 
-    // ── RENDER GRID ─────────────────────────────────────────────
-    const grid     = document.getElementById('awGrid');
-    const countEl  = document.getElementById('awCount');
-    const lightbox = document.getElementById('awLightbox');
-    const lbImg    = document.getElementById('lbImg');
-    const lbTitle  = document.getElementById('lbTitle');
-    const lbSub    = document.getElementById('lbSub');
-
-    let currentFilter = 'all';
-    let currentIndex  = 0;
-    let filtered      = [...ARTWORKS];
-
-    function render(filter) {
-      currentFilter = filter;
-      filtered = filter === 'all'
-        ? [...ARTWORKS]
-        : ARTWORKS.filter(a => a.tag === filter);
-
-      countEl.textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
-      grid.innerHTML = '';
-
-      filtered.forEach((art, i) => {
-        const item = document.createElement('div');
-        item.className = 'aw-item';
-        item.style.animationDelay = (i * 0.05 + 0.05) + 's';
-
-        if (art.src) {
-          item.innerHTML = `
-            <img src="${art.src}" alt="${art.title}" loading="lazy">
-            <div class="aw-item-overlay">
-              <p class="aw-item-num">#${String(i + 1).padStart(2, '0')}</p>
-              <p class="aw-item-title">${art.title}</p>
-              <p class="aw-item-tag">${art.sub}</p>
-            </div>
-          `;
-        } else {
-          item.innerHTML = `
-            <div class="aw-placeholder">#${String(i + 1).padStart(2, '0')} — ${art.title}</div>
-            <div class="aw-item-overlay">
-              <p class="aw-item-num">#${String(i + 1).padStart(2, '0')}</p>
-              <p class="aw-item-title">${art.title}</p>
-              <p class="aw-item-tag">${art.sub}</p>
-            </div>
-          `;
-        }
-
-        item.addEventListener('click', () => openLightbox(i));
-        grid.appendChild(item);
-      });
-    }
-
-    // ── LIGHTBOX ────────────────────────────────────────────────
-    function openLightbox(index) {
-      currentIndex = index;
-      const art = filtered[index];
-      lbImg.src     = art.src || '';
-      lbImg.style.display = art.src ? 'block' : 'none';
-      lbTitle.textContent = art.title;
-      lbSub.textContent   = art.sub;
-      lightbox.classList.add('open');
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-    }
-
-    document.getElementById('lbClose').addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-
-    document.getElementById('lbPrev').addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + filtered.length) % filtered.length;
-      openLightbox(currentIndex);
+    // ── daftar + preview hover (satu panel per karya, digambar saat idle) ──
+    const pvs = [];
+    WORKS.forEach((w, i) => {
+      const li = document.createElement('li');
+      li.className = 'ix-row'; li.tabIndex = 0; li.dataset.i = i;
+      li.innerHTML = '<span class="n">' + esc(w.num || String(i + 1).padStart(2, '0')) + '</span>' +
+                     '<span class="t">' + esc(w.title) + '</span>' +
+                     '<span class="c">' + esc(w.category) + '</span>' +
+                     '<span class="y">' + esc(w.year) + '</span>';
+      list.appendChild(li);
+      const pv = document.createElement('div'); pv.className = 'pv'; prev.appendChild(pv);
+      pvs.push(pv); workVisual(pv, w, i, { lazy: true, q: .8 });
     });
-    document.getElementById('lbNext').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % filtered.length;
-      openLightbox(currentIndex);
-    });
+    const rows = [...list.children];
+    function hover(i) {
+      rows.forEach((r, n) => r.classList.toggle('on', n === i));
+      pvs.forEach((p, n) => p.classList.toggle('on', n === i));
+      list.classList.toggle('hovering', i >= 0);
+    }
+    list.addEventListener('mouseover', e => { if (!fine.matches) return; const r = e.target.closest('.ix-row'); if (r) hover(+r.dataset.i); });
+    list.addEventListener('mouseleave', () => hover(-1));
+    list.addEventListener('focusin', e => { if (fine.matches) { const r = e.target.closest('.ix-row'); if (r) hover(+r.dataset.i); } });
+    list.addEventListener('focusout', () => hover(-1));
 
-    // Keyboard navigation
+    // ── tampilan penuh ──
+    let cur = 0;
+    function show(i) {
+      cur = (i + WORKS.length) % WORKS.length;
+      const w = WORKS[cur];
+      document.getElementById('vK').textContent = [w.num, w.category, w.year].filter(Boolean).join(' · ');
+      document.getElementById('vT').textContent = w.title;
+      stage.innerHTML = ''; workVisual(stage, w, cur);
+      const meta = [['Role', w.role], ['Tools', w.tools], ['Status', w.status]].filter(m => m[1]);
+      document.getElementById('vMeta').innerHTML = meta.map(m => '<dt>' + m[0] + '</dt><dd>' + esc(m[1]) + '</dd>').join('');
+      document.getElementById('vDesc').textContent = w.desc || '';
+      document.getElementById('vGo').href = w.link || ('../Artwork/works/' + w.id + '.html');
+      document.getElementById('vPos').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(WORKS.length).padStart(2, '0');
+    }
+    function openView(i) {
+      show(i); hover(-1);
+      view.classList.add('open');
+      document.getElementById('vClose').focus({ preventScroll: true });
+    }
+    function closeView() { view.classList.remove('open'); rows[cur] && rows[cur].focus({ preventScroll: true }); }
+    list.addEventListener('click', e => { const r = e.target.closest('.ix-row'); if (r) openView(+r.dataset.i); });
+    list.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('ix-row')) { e.preventDefault(); openView(+e.target.dataset.i); } });
+    document.getElementById('vClose').addEventListener('click', closeView);
+    document.getElementById('vPrev').addEventListener('click', () => show(cur - 1));
+    document.getElementById('vNext').addEventListener('click', () => show(cur + 1));
     document.addEventListener('keydown', e => {
-      if (!lightbox.classList.contains('open')) return;
-      if (e.key === 'Escape')       closeLightbox();
-      if (e.key === 'ArrowLeft')    { currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; openLightbox(currentIndex); }
-      if (e.key === 'ArrowRight')   { currentIndex = (currentIndex + 1) % filtered.length; openLightbox(currentIndex); }
+      if (!view.classList.contains('open')) return;
+      if (e.key === 'Escape') closeView();
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
     });
-
-    // ── FILTER ──────────────────────────────────────────────────
-    document.querySelectorAll('.aw-tag').forEach(tag => {
-      tag.addEventListener('click', () => {
-        document.querySelectorAll('.aw-tag').forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-        render(tag.dataset.filter);
-      });
-    });
-
-    // ── INIT ────────────────────────────────────────────────────
-    render('all');
   </script>
   <script src="../assets/js/theme.js"></script>
 </body>
