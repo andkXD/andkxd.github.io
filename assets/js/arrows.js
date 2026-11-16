@@ -4,9 +4,9 @@
   const P = {
     '←': 'M15 11H7M10.5 7.5 7 11l3.5 3.5',
     '→': 'M7 11h8M11.5 7.5 15 11l-3.5 3.5',
-    '↗': 'M8 14 14 8M9 8h5v5'
+    '↗': 'M7 11h8M11.5 7.5 15 11l-3.5 3.5'   /* external links use the same horizontal arrow */
   };
-  const D = { '←': 'l', '→': 'r', '↗': 'u' };
+  const D = { '←': 'l', '→': 'r', '↗': 'r' };
 
   const css = `
 .ar{display:inline-block;width:1.7em;height:1.7em;vertical-align:-.5em;flex:none;align-self:center;color:inherit;line-height:0}
