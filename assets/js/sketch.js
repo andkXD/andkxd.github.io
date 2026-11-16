@@ -7,13 +7,13 @@ let cells = [];
 const LITE = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
 const starCount = () => LITE
   ? constrain(floor(windowWidth * windowHeight / 2600), 250, 600)
-  : constrain(floor(windowWidth * windowHeight / 1400), 500, 1700);
+  : constrain(floor(windowWidth * windowHeight / 1100), 500, 2500);   // laptop/PC: sama seperti desain asli
 
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
-  pixelDensity(LITE ? 1 : Math.min(window.devicePixelRatio || 1, 1.5));
+  if (LITE) pixelDensity(1);   // hanya HP/tablet yang diringankan; laptop/PC tetap tajam seperti asli
   canvas.parent('canvas-container');
-  frameRate(LITE ? 24 : 30);
+  frameRate(30);
   document.addEventListener('visibilitychange', () => document.hidden ? noLoop() : loop());
   initCells();
 }
