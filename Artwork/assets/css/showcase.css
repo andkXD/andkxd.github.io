@@ -117,3 +117,5 @@ body.sc-top { height: 100vh; overflow: hidden; background: #0a0a0a repeating-lin
   font: 400 .66rem 'DM Mono', monospace; letter-spacing: .3em; color: #8a8680; animation: scpulse 1.2s ease-in-out infinite; }
 #bigVis, .sc-list, .sc-grid { position: relative; } #bigVis:empty { min-height: 40vw; } .sc-list:empty { min-height: 40vh; } .sc-grid:empty { min-height: 30vh; }
 .sc-hero.ready::after { display: none; }
+/* kartu besar + kecil di halaman Top hanya preview, tidak bisa diklik */
+.sc-bigc, .sc-smallc { pointer-events: none; cursor: default; }

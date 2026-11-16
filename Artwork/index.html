@@ -20,11 +20,11 @@
   </nav>
   <div class="sc-tl">ARYA SATYA<br>ANDHIKA AKBAR<small>ARTWORK<br>© ARYA SATYA ANDHIKA AKBAR</small></div>
   <div class="sc-mq"><div class="sc-mq-in">ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA </div></div>
-  <a class="sc-bigc" id="big" href="works/index.html">
+  <div class="sc-bigc" id="big">
     <div class="sc-vis" id="bigVis"></div>
     <div class="sc-mq"><div class="sc-mq-in">ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA </div></div>
     <span class="sc-cap" id="cap"></span>
-  </a>
+  </div>
   <div class="sc-smallc"><div class="sc-intro" id="intro">ASAA</div><span class="sc-cap">Artwork intro — 2025</span></div>
 
   <script src="assets/js/works-data.js"></script>
@@ -43,7 +43,7 @@
     let cur = 0;
     function show(i) {
       const w = WORKS[i]; vis.classList.remove('glt'); void vis.offsetWidth; vis.classList.add('glt');
-      vis.innerHTML = ''; workVisual(vis, w, i); big.href = 'works/' + w.id + '.html'; scramble(cap, w.title);
+      vis.innerHTML = ''; workVisual(vis, w, i); scramble(cap, w.title);
     }
     show(0); setInterval(() => { cur = (cur + 1) % WORKS.length; show(cur); }, 4200);
     const intro = document.getElementById('intro'); scramble(intro, 'ASAA'); setInterval(() => scramble(intro, 'ASAA'), 6000);

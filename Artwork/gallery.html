@@ -150,7 +150,7 @@
       fl.appendChild(li);
     });
     WORKS.forEach((w, i) => {
-      const a = document.createElement('a'); a.className = 'sc-card'; a.href = 'works/' + w.id + '.html';
+      const a = document.createElement('a'); a.className = 'sc-card'; a.href = 'works/index.html#' + w.id;
       a.innerHTML = '<div class="sc-vis"></div>' + `<h3>${w.title}</h3><p>${w.category} · ${w.year}</p>`;
       workVisual(a.firstChild, w, i, { lazy: true, q: .75 }); grid.appendChild(a);
     });

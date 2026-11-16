@@ -348,8 +348,7 @@ body.theme-light .sidebar-visit:hover {
       const meta = [['Role', w.role], ['Tools', w.tools], ['Status', w.status]].filter(m => m[1]);
       document.getElementById('vMeta').innerHTML = meta.map(m => '<dt>' + m[0] + '</dt><dd>' + esc(m[1]) + '</dd>').join('');
       document.getElementById('vDesc').textContent = w.desc || '';
-      document.getElementById('vGo').href = w.link || ('../Artwork/works/' + w.id + '.html');
-      document.getElementById('vPos').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(WORKS.length).padStart(2, '0');
+            document.getElementById('vPos').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(WORKS.length).padStart(2, '0');
     }
     function openView(i) {
       show(i); hover(-1);
