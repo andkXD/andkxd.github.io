@@ -113,6 +113,24 @@
     .aw-tag:hover, .aw-tag.active { color: var(--white); }
     .aw-tag:hover::before, .aw-tag.active::before { background: var(--white); }
 
+    /* ── BOTTOM BAR (sama persis dengan halaman proyek lain) ── */
+    .aw-wrap { padding-bottom: 76px; }
+    .aw-sidebar::after { bottom: 0; }
+    .aw-bottombar {
+      position: fixed; left: 28px; right: 28px; bottom: 28px;
+      height: 48px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; border-top: 1px solid var(--border); z-index: 30;
+    }
+    .detail-copyright { font-size: 0.63rem; color: var(--muted); letter-spacing: 0.08em; }
+    .project-nav { display: flex; gap: 28px; }
+    .project-nav a { font-size: 0.68rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .project-nav a:hover { color: var(--white); }
+    @media (max-width: 900px) {
+      .aw-wrap { padding-bottom: 0; }
+      .aw-bottombar { position: sticky; left: auto; right: auto; bottom: 0; margin: 0 14px; padding: 0 16px; background: var(--black); }
+      .project-nav { gap: 18px; }
+    }
+
     /* ── RIGHT: INDEX LIST ──────────────────── */
     .aw-content {
       position: relative; z-index: 2;
@@ -267,9 +285,6 @@ body.theme-light .sidebar-visit:hover {
         <p class="aw-count" id="awCount">— works</p>
         <a href="../Artwork/index.html" class="aw-dir">Artwork →</a>
       </div>
-      <div class="aw-sidebar-bottom">
-        <nav class="aw-pager"><a href="project-portfolio.html">← Prev</a><a href="project-motion-study.html">Next →</a></nav>
-      </div>
     </aside>
 
     <!-- PREVIEW BESAR (muncul saat hover, di belakang daftar) -->
@@ -280,6 +295,16 @@ body.theme-light .sidebar-visit:hover {
       <div class="ix-head"><span>N.</span><span>Title</span><span>Category</span><span>Y.</span></div>
       <ol class="ix-list" id="ixList"></ol>
     </main>
+  </div>
+
+
+  <!-- BOTTOM BAR (sama seperti halaman proyek lain) -->
+  <div class="detail-bottombar aw-bottombar">
+    <span class="detail-copyright">© 2026</span>
+    <nav class="project-nav">
+      <a href="project-portfolio.html">← Prev</a>
+      <a href="project-motion-study.html">Next →</a>
+    </nav>
   </div>
 
   <!-- TAMPILAN PENUH (klik baris) -->
@@ -372,6 +397,7 @@ body.theme-light .sidebar-visit:hover {
       if (e.key === 'ArrowRight') show(cur + 1);
     });
   </script>
+  <script>document.querySelectorAll(".detail-copyright").forEach(function(e){e.textContent="© "+new Date().getFullYear()})</script>
   <script src="../assets/js/theme.js"></script>
 </body>
 </html>
