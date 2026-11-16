@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artwork — Arya Satya Andhika Akbar</title>
+  <title>ARYA | ARTWORK</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"></noscript>
@@ -21,13 +21,17 @@
 
     /* ── LEFT SIDEBAR ───────────────────────── */
     .aw-sidebar {
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 70px 0 64px 72px;
-      border-right: 1px solid var(--border);
       animation: fadeInUp 0.8s ease both;
     }
+
+    /* garis pemisah berhenti di dalam bingkai layar (tidak melewati batas kotak) */
+    .aw-sidebar::after { content: ''; position: absolute; right: 0; top: 28px; bottom: 28px; width: 1px; background: var(--border); pointer-events: none; }
+    @media (max-width: 900px) { .aw-sidebar::after { display: none; } }
 
     .aw-back {
       display: inline-flex;
@@ -257,7 +261,7 @@ body.theme-light .sidebar-visit:hover {
     <!-- SIDEBAR -->
     <aside class="aw-sidebar">
       <div>
-        <a href="projects.html#life-study" class="aw-back">← Projects</a>
+        <a href="projects.html#artwork" class="aw-back">← Projects</a>
         <p class="aw-label">Selected Works</p>
         <h1 class="aw-title">Artwork</h1>
         <p class="aw-count" id="awCount">— works</p>
