@@ -1,0 +1,44 @@
+{
+  "_catatan": "Edit teks di file ini saja. Jangan hapus tanda kutip, koma, atau kurung. Baris baru di judul ditulis \\n.",
+
+  "site": {
+    "title": "Arya Satya\nAndhika Akbar",
+    "role": "My Life Story, an unfinished personality"
+  },
+
+  "bio": [
+    "Born in 2005.",
+    "I believe every",
+    "blank canvas is",
+    "an unanswered",
+    "question, and",
+    "creating is a",
+    "means of self",
+    "enlightenment",
+    "leaving a trace",
+    "of who I was",
+    "in that moment"
+  ],
+
+  "info": [
+    { "label": "Name", "text": "Arya Satya Andhika Akbar" },
+    { "label": "Major", "text": "Information Systems, Angkatan 2024" },
+    { "label": "Interests", "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { "label": "Tools", "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { "label": "About", "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }
+  ],
+
+  "contact": [
+    { "label": "Email", "text": "arya.andhikaakbar@gmail.com", "url": "mailto:arya.andhikaakbar@gmail.com" },
+    { "label": "GitHub", "text": "github.com/andkXD", "url": "https://github.com/andkXD" },
+    { "label": "Instagram", "text": "@andhi.ndk", "url": "https://www.instagram.com/andhi.ndk/?hl=id" }
+  ],
+  "contactNote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+
+  "faq": [
+    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { "q": "What is this website for?", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }
+  ]
+}
