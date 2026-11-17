@@ -124,6 +124,10 @@
     .aw-tag:hover, .aw-tag.active { color: var(--white); }
     .aw-tag:hover::before, .aw-tag.active::before { background: var(--white); }
 
+    /* nomor halaman, sama seperti halaman proyek lain (03 | 05) */
+    .detail-page-id { position: fixed; top: 44px; right: 56px; z-index: 31; font-size: .65rem; color: var(--muted); letter-spacing: .15em; pointer-events: none; }
+    @media (max-width: 900px) { .detail-page-id { position: absolute; top: 20px; right: 22px; } }
+
     /* ── BOTTOM BAR (sama persis dengan halaman proyek lain) ── */
     .aw-wrap { padding-bottom: 76px; }
     .aw-sidebar::after { bottom: 0; }
@@ -285,6 +289,8 @@ body.theme-light .sidebar-visit:hover {
 <body data-page="life">
   <div id="canvas-container"></div>
   <div class="screen-border"></div>
+
+  <span class="detail-page-id">03 | 05</span>
 
   <div class="aw-wrap">
     <!-- SIDEBAR -->
