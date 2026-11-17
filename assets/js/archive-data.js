@@ -7,7 +7,30 @@
    Keep photos ~200 KB (webp) and videos ~5-10 MB (720p mp4, H.264). Paths always start at the site root.
    "All" shows every album plus the photos in ARCHIVE_UNSORTED (not yet put into an album). */
 window.ARCHIVE = [
-  { id: 'jepang',   name: 'Jepang',   items: [] },
+  { id: 'jepang', name: 'Jepang', items: [
+    { src: 'assets/archive/jepang/01.webp', w: 1700, h: 767 },
+    { src: 'assets/archive/jepang/02.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/03.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/04.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/05.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/06.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/07.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/08.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/09.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/10.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/11.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/12.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/13.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/14.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/15.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/16.webp', w: 810, h: 1800 },
+    { src: 'assets/archive/jepang/17.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/18.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/19.webp', w: 1700, h: 765 },
+    { src: 'assets/archive/jepang/20.webp', w: 1700, h: 1292 },
+    { src: 'assets/archive/jepang/21.webp', w: 1700, h: 765 },
+    { src: 'assets/img/portfolio/arc-04.webp', w: 1248, h: 562, caption: 'Shibuya' }
+  ] },
   { id: 'korea',    name: 'Korea',    items: [] },
   { id: 'malaysia', name: 'Malaysia', items: [] }
 ];
@@ -38,12 +61,6 @@ window.ARCHIVE_UNSORTED = [
     w: 960,
     h: 540,
     caption: "Korean palace"
-  },
-  {
-    src: "assets/img/portfolio/arc-04.webp",
-    w: 1248,
-    h: 562,
-    caption: "Shibuya"
   },
   {
     src: "assets/img/portfolio/arc-05.webp",
