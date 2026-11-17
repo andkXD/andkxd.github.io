@@ -124,9 +124,18 @@
     .aw-tag:hover, .aw-tag.active { color: var(--white); }
     .aw-tag:hover::before, .aw-tag.active::before { background: var(--white); }
 
-    /* nomor halaman, sama seperti halaman proyek lain (03 | 05) */
-    .detail-page-id { position: fixed; top: 44px; right: 56px; z-index: 31; font-size: .65rem; color: var(--muted); letter-spacing: .15em; pointer-events: none; }
-    @media (max-width: 900px) { .detail-page-id { position: absolute; top: 20px; right: 22px; } }
+    /* TOP BAR (sama persis dengan halaman proyek lain: ← Projects kiri, nomor halaman kanan) */
+    .aw-wrap { padding-top: 80px; }
+    .aw-topbar { position: fixed; top: 28px; left: 28px; right: 28px; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; border-bottom: 1px solid var(--border); z-index: 30; }
+    .detail-back { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; transition: color .2s; }
+    .detail-back:hover { color: var(--white); }
+    .detail-page-id { font-size: .65rem; color: var(--muted); letter-spacing: .15em; }
+    .aw-sidebar { padding-top: 40px; }
+    .aw-sidebar::after { top: 0; }
+    @media (max-width: 900px) {
+      .aw-wrap { padding-top: 0; }
+      .aw-topbar { position: sticky; left: auto; right: auto; top: 0; margin: 14px 14px 0; padding: 0 16px; background: var(--black); z-index: 40; }
+    }
 
     /* ── BOTTOM BAR (sama persis dengan halaman proyek lain) ── */
     .aw-wrap { padding-bottom: 76px; }
@@ -150,7 +159,7 @@
     .aw-content {
       position: relative; z-index: 2;
       overflow-y: auto; overflow-x: hidden;
-      padding: 70px 72px 80px 44px;
+      padding: 36px 72px 80px 44px;
       scrollbar-width: none;
       animation: fadeInUp 0.9s ease 0.1s both;
     }
@@ -290,13 +299,15 @@ body.theme-light .sidebar-visit:hover {
   <div id="canvas-container"></div>
   <div class="screen-border"></div>
 
-  <span class="detail-page-id">03 | 05</span>
+  <div class="detail-topbar aw-topbar">
+    <a href="projects.html#artwork" class="detail-back">← Projects</a>
+    <span class="detail-page-id">03 | 05</span>
+  </div>
 
   <div class="aw-wrap">
     <!-- SIDEBAR -->
     <aside class="aw-sidebar">
       <div>
-        <a href="projects.html#artwork" class="aw-back">← Projects</a>
         <p class="aw-label">Selected Works</p>
         <h1 class="aw-title">Artwork</h1>
         <p class="aw-count" id="awCount">— works</p>
