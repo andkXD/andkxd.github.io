@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARYA | ARCHIVE</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"></noscript>
+  <style>
+    body { overflow: hidden; }
+    .aw-wrap { position: fixed; inset: 0; display: grid; grid-template-columns: 260px 1fr; z-index: 10; padding-bottom: 76px; }
+    .aw-sidebar { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 70px 0 64px 72px; animation: fadeInUp .8s ease both; }
+    .aw-sidebar::after { content: ''; position: absolute; right: 0; top: 28px; bottom: 0; width: 1px; background: var(--border); pointer-events: none; }
+    @media (max-width: 900px) { .aw-sidebar::after { display: none; } }
+    .aw-back { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-size: .78rem; letter-spacing: .05em; transition: color .2s; margin-bottom: 32px; }
+    .aw-back:hover { color: var(--white); }
+    .aw-label { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .aw-title { font-size: clamp(1.6rem, 2.5vw, 2.3rem); font-weight: 300; letter-spacing: -2px; text-transform: uppercase; line-height: .95; margin-bottom: 28px; }
+    .aw-count { font-size: .7rem; color: var(--muted); letter-spacing: .1em; margin-bottom: 26px; }
+
+    /* album tabs */
+    .av-tabs { display: flex; flex-direction: column; border-top: 1px solid var(--border); margin-right: 40px; }
+    .av-tab { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 13px 2px; border: 0; border-bottom: 1px solid var(--border); background: none; color: var(--muted); font: inherit; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; text-align: left; transition: color .2s, padding .25s; }
+    .av-tab small { font-size: .65rem; color: var(--muted); letter-spacing: .06em; }
+    .av-tab:hover { color: var(--white); padding-left: 8px; }
+    .av-tab.on { color: var(--white); padding-left: 14px; }
+    .av-tab.on::before { content: ''; position: absolute; left: 0; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; background: var(--white); }
+    .av-hint { font-size: .65rem; color: var(--muted); line-height: 1.8; letter-spacing: .04em; padding-right: 30px; }
+
+    /* bottom bar (same as other project pages) */
+    .aw-bottombar { position: fixed; left: 28px; right: 28px; bottom: 28px; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; border-top: 1px solid var(--border); z-index: 30; }
+    .detail-copyright { font-size: .63rem; color: var(--muted); letter-spacing: .08em; }
+    .project-nav { display: flex; gap: 28px; }
+    .project-nav a { font-size: .68rem; color: var(--muted); text-decoration: none; letter-spacing: .08em; transition: color .2s; }
+    .project-nav a:hover { color: var(--white); }
+    @media (max-width: 900px) {
+      .aw-wrap { padding-bottom: 0; }
+      .aw-bottombar { position: sticky; left: auto; right: auto; bottom: 0; margin: 0 14px; padding: 0 16px; background: var(--black); }
+      .project-nav { gap: 18px; }
+    }
+
+    /* grid */
+    .aw-content { position: relative; z-index: 2; overflow-y: auto; overflow-x: hidden; padding: 70px 72px 80px 44px; scrollbar-width: none; animation: fadeInUp .9s ease .1s both; }
+    .aw-content::-webkit-scrollbar { display: none; }
+    .av-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 14px; margin-bottom: 20px; border-bottom: 1px solid var(--border); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .av-head b { color: var(--white); font-weight: 500; }
+    .av-grid { columns: 3 220px; column-gap: 10px; }
+    .av-it { position: relative; display: block; width: 100%; margin: 0 0 10px; padding: 0; break-inside: avoid; overflow: hidden; border: 1px solid var(--border); background: rgba(255,255,255,.03); cursor: zoom-in; color: inherit; font: inherit; text-align: left; -webkit-tap-highlight-color: transparent; }
+    .av-it img, .av-it video { display: block; width: 100%; height: auto; filter: grayscale(.5) brightness(.85); transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .3s; }
+    .av-it:hover img, .av-it:hover video, .av-it:focus-visible img, .av-it:focus-visible video { transform: scale(1.04); filter: none; }
+    .av-it .no { position: absolute; left: 9px; bottom: 7px; font-size: .6rem; letter-spacing: .12em; color: #fff; text-shadow: 0 0 6px #000; opacity: 0; transform: translateY(4px); transition: .25s; }
+    .av-it:hover .no, .av-it:focus-visible .no { opacity: 1; transform: none; }
+    .av-it .vid { position: absolute; right: 9px; top: 8px; font-size: .58rem; letter-spacing: .14em; color: #fff; border: 1px solid rgba(255,255,255,.7); padding: 2px 6px; background: rgba(0,0,0,.45); }
+    .av-it.ph { cursor: default; border-style: dashed; display: flex; align-items: center; justify-content: center; font-size: .62rem; letter-spacing: .2em; color: var(--muted); }
+    .av-empty { margin-top: 18px; font-size: .7rem; color: var(--muted); letter-spacing: .06em; line-height: 1.8; }
+
+    /* lightbox */
+    .av-lb { position: fixed; inset: 0; z-index: 500; background: rgba(5,5,5,.96); color: #fff; display: grid; grid-template-rows: auto minmax(0,1fr) auto; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+    .av-lb.open { opacity: 1; pointer-events: auto; }
+    .av-lbh { padding: 26px 40px 0; display: flex; justify-content: space-between; align-items: baseline; }
+    .av-lbh .k { font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .av-lbh .n { font-size: .7rem; letter-spacing: .12em; color: var(--muted); }
+    .av-stage { display: flex; align-items: center; justify-content: center; min-height: 0; padding: 18px 40px; }
+    .av-stage img, .av-stage video { max-width: 100%; max-height: 100%; object-fit: contain; display: block; border: 1px solid rgba(255,255,255,.18); }
+    .av-lbb { display: flex; align-items: center; gap: 22px; margin: 0 40px 28px; padding: 11px 14px; border: 1px solid rgba(255,255,255,.55); font-size: .72rem; letter-spacing: .1em; }
+    .av-lbb button { color: #fff; background: none; border: 0; font: inherit; letter-spacing: inherit; cursor: pointer; padding: 2px 0; transition: opacity .2s; }
+    .av-lbb button:hover { opacity: .6; }
+    .av-lbb .cap { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (max-width: 900px) {
+      .av-lbh { padding: 18px 20px 0; } .av-stage { padding: 14px 20px; }
+      .av-lbb { margin: 0 20px calc(18px + env(safe-area-inset-bottom, 0px)); gap: 14px; flex-wrap: wrap; }
+      .av-lbb .cap { flex: 1 0 100%; order: -1; }
+      .av-grid { columns: 2 140px; }
+    }
+
+    body.theme-light .av-lb { background: rgba(242,240,235,.97); color: #111; }
+    body.theme-light .av-lbb { border-color: rgba(0,0,0,.55); }
+    body.theme-light .av-lbb button { color: #111; }
+    body.theme-light .av-it .no, body.theme-light .av-it .vid { color: #fff; }
+  </style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body data-page="life">
+  <div id="canvas-container"></div>
+  <div class="screen-border"></div>
+
+  <div class="aw-wrap">
+    <aside class="aw-sidebar">
+      <div>
+        <a href="projects.html#archive" class="aw-back">← Projects</a>
+        <p class="aw-label">Experience</p>
+        <h1 class="aw-title">Visual<br>Archive</h1>
+        <p class="aw-count" id="avCount"></p>
+        <div class="av-tabs" id="avTabs"></div>
+      </div>
+      <p class="av-hint">Click a photo or video to open.<br>← → to browse · Esc to close</p>
+    </aside>
+
+    <main class="aw-content">
+      <div class="av-head"><span><b id="avName"></b></span><span id="avNum"></span></div>
+      <div class="av-grid" id="avGrid"></div>
+      <p class="av-empty" id="avEmpty" hidden>Photos and videos for this album are coming soon.</p>
+    </main>
+  </div>
+
+  <div class="detail-bottombar aw-bottombar">
+    <span class="detail-copyright">© 2026</span>
+    <nav class="project-nav">
+      <a href="project-type-lab.html">← Prev</a>
+      <a href="portfolio.html">Next →</a>
+    </nav>
+  </div>
+
+  <div class="av-lb" id="avLb" role="dialog" aria-modal="true" aria-label="Visual Archive">
+    <div class="av-lbh"><span class="k" id="lbK"></span><span class="n" id="lbN"></span></div>
+    <div class="av-stage" id="lbStage"></div>
+    <div class="av-lbb">
+      <span class="cap" id="lbCap"></span>
+      <button id="lbPrev" type="button">← Prev</button>
+      <button id="lbNext" type="button">Next →</button>
+      <button id="lbClose" type="button">Close ✕</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="../assets/js/sketch.js"></script>
+  <script src="../assets/js/arrows.js"></script>
+  <script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/archive-data.js"></script>
+  <script>
+    (function () {
+      const ALBUMS = (window.ARCHIVE || []).map(a => ({
+        id: a.id, name: a.name,
+        items: (a.items || []).map(it => {
+          const o = typeof it === 'string' ? { src: it } : it;
+          o.src = '../' + o.src.replace(/^\/+/, '');
+          if (o.poster) o.poster = '../' + o.poster.replace(/^\/+/, '');
+          o.video = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(o.src);
+          return o;
+        })
+      }));
+      const $ = id => document.getElementById(id), pad = n => String(n).padStart(2, '0');
+      const grid = $('avGrid'), tabs = $('avTabs'), lb = $('avLb'), stage = $('lbStage');
+      const fine = matchMedia('(hover: hover) and (pointer: fine)');
+      let cur = 0, idx = 0, lastFocus = null;
+
+      const total = ALBUMS.reduce((s, a) => s + a.items.length, 0);
+      $('avCount').textContent = (total ? total + ' items · ' : '') + ALBUMS.length + ' albums';
+
+      function drawTabs() {
+        tabs.innerHTML = '';
+        ALBUMS.forEach((a, i) => {
+          const b = document.createElement('button');
+          b.type = 'button'; b.className = 'av-tab' + (i === cur ? ' on' : '');
+          b.innerHTML = '<span>' + a.name + '</span><small>' + pad(a.items.length) + '</small>';
+          b.onclick = () => { cur = i; history.replaceState(null, '', '#' + a.id); show(); $('avGrid').parentElement.scrollTop = 0; };
+          tabs.appendChild(b);
+        });
+      }
+
+      function show() {
+        drawTabs();
+        const a = ALBUMS[cur]; if (!a) return;
+        $('avName').textContent = a.name;
+        $('avNum').textContent = a.items.length ? a.items.length + ' items' : '';
+        $('avEmpty').hidden = a.items.length > 0;
+        grid.innerHTML = '';
+        if (!a.items.length) {                                   // empty album: show quiet placeholder frames
+          [1.5, .75, 1, 1.33, .8, 1.2].forEach(r => {
+            const d = document.createElement('div'); d.className = 'av-it ph'; d.style.aspectRatio = r; d.textContent = 'COMING SOON'; grid.appendChild(d);
+          });
+          return;
+        }
+        a.items.forEach((it, i) => {
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'av-it';
+          b.setAttribute('aria-label', (it.caption || a.name) + ' ' + (i + 1));
+          if (it.w && it.h) b.style.aspectRatio = it.w + ' / ' + it.h;
+          let m;
+          if (it.video) {
+            m = document.createElement('video'); m.muted = true; m.loop = true; m.playsInline = true; m.preload = 'metadata';
+            m.src = it.src + '#t=0.1'; if (it.poster) m.poster = it.poster;
+            if (fine.matches) { b.onmouseenter = () => m.play().catch(() => {}); b.onmouseleave = () => { m.pause(); m.currentTime = 0.1; }; }
+            b.insertAdjacentHTML('beforeend', '<span class="vid">VIDEO</span>');
+          } else {
+            m = document.createElement('img'); m.src = it.src; m.alt = it.caption || (a.name + ' ' + (i + 1)); m.loading = 'lazy'; m.decoding = 'async';
+          }
+          b.prepend(m);
+          b.insertAdjacentHTML('beforeend', '<span class="no">' + pad(i + 1) + ' / ' + pad(a.items.length) + '</span>');
+          b.onclick = () => open(i);
+          grid.appendChild(b);
+        });
+      }
+
+      function open(i) {
+        const a = ALBUMS[cur], n = a.items.length; if (!n) return;
+        if (!lb.classList.contains('open')) lastFocus = document.activeElement;
+        idx = (i + n) % n;
+        const it = a.items[idx];
+        stage.innerHTML = '';
+        const m = document.createElement(it.video ? 'video' : 'img');
+        if (it.video) { m.controls = true; m.autoplay = true; m.playsInline = true; m.loop = true; if (it.poster) m.poster = it.poster; m.src = it.src; }
+        else { m.src = it.src; m.alt = it.caption || ''; }
+        stage.appendChild(m);
+        $('lbK').textContent = a.name;
+        $('lbN').textContent = pad(idx + 1) + ' / ' + pad(n);
+        $('lbCap').textContent = it.caption || '';
+        lb.classList.add('open'); document.body.style.overflow = 'hidden';
+        $('lbClose').focus({ preventScroll: true });
+        const nx = a.items[(idx + 1) % n]; if (nx && !nx.video) { const p = new Image(); p.src = nx.src; }
+      }
+      function close() {
+        lb.classList.remove('open'); stage.innerHTML = '';
+        document.body.style.overflow = matchMedia('(max-width: 900px)').matches ? '' : 'hidden';
+        if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      }
+      $('lbPrev').onclick = () => open(idx - 1); $('lbNext').onclick = () => open(idx + 1); $('lbClose').onclick = close;
+      lb.addEventListener('click', e => { if (e.target === lb || e.target === stage) close(); });
+      addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') open(idx + 1); else if (e.key === 'ArrowLeft') open(idx - 1);
+      });
+      let sx = null;                                              // swipe on phones
+      lb.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+      lb.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) open(idx + (dx < 0 ? 1 : -1)); }, { passive: true });
+
+      const h = location.hash.slice(1), k = ALBUMS.findIndex(a => a.id === h); if (k >= 0) cur = k;
+      show();
+    })();
+  </script>
+</body>
+</html>
