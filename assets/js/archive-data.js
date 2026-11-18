@@ -31,7 +31,28 @@ window.ARCHIVE = [
     { src: 'assets/archive/jepang/21.webp', w: 1700, h: 765 },
     { src: 'assets/img/portfolio/arc-04.webp', w: 1248, h: 562, caption: 'Shibuya' }
   ] },
-  { id: 'korea',    name: 'Korea',    items: [] },
+  { id: 'korea', name: 'Korea', items: [
+    { src: 'assets/archive/korea/01.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/02.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/03.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/04.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/05.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/06.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/07.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/08.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/09.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/10.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/11.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/12.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/13.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/14.webp', w: 1700, h: 1275 },
+    { src: 'assets/archive/korea/15.webp', w: 1700, h: 956 },
+    { src: 'assets/archive/korea/16.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/17.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/18.webp', w: 1012, h: 1800 },
+    { src: 'assets/archive/korea/19.webp', w: 1012, h: 1800 },
+    { src: 'assets/img/portfolio/arc-08.webp', w: 960, h: 540 }
+  ] },
   { id: 'malaysia', name: 'Malaysia', items: [] }
 ];
 window.ARCHIVE_UNSORTED = [
@@ -55,12 +76,6 @@ window.ARCHIVE_UNSORTED = [
     src: "assets/img/portfolio/arc-07.webp",
     w: 562,
     h: 1248
-  },
-  {
-    src: "assets/img/portfolio/arc-08.webp",
-    w: 960,
-    h: 540,
-    caption: "Korean palace"
   },
   {
     src: "assets/img/portfolio/arc-05.webp",
