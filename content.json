@@ -22,7 +22,7 @@
 
   "info": [
     { "label": "Name", "text": "Arya Satya Andhika Akbar" },
-    { "label": "Major", "text": "Information Systems, Angkatan 2024" },
+    { "label": "Major", "text": "Information Systems, 2024" },
     { "label": "Interests", "text": "Art direction, mostly animation and illustration. I love Acoustic guitar. Space and whatever is out there beyond us. And the technology that supports it." },
     { "label": "Tools", "text": "Plain HTML, CSS and JavaScript. p5.js for the stars, Three.js for the moon, GSAP for the motion, Google Fonts for the type. Hosted on GitHub Pages." },
     { "label": "About", "text": "I'm an Information Systems student who keeps drifting between code and art. This site is where those two sides meet. It's unfinished on purpose, I keep changing it as I change." }
