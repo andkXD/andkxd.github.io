@@ -164,12 +164,12 @@ body.theme-light .av-it { border-color: rgba(0,0,0,.15); }
 .project-nav a:hover { color: var(--white); }
 body.theme-light .detail-visit { color: #111; border-color: rgba(0,0,0,.3); }
 body.theme-light .detail-visit:hover { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.7); }
-body.theme-light .pf-photo, body.theme-light 
+body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf-grid img { border-color: rgba(0,0,0,.15); }
 /* phone / tablet: the page scrolls normally (responsive.css makes .project-detail static) */
 @media (max-width: 900px) {
   .pf-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; padding: 0 0 40px; }
   .pf-tabs { padding: 18px 0 12px; }
-  .pf-intro { grid-template-columns: 110px 1fr; gap: 16px; }
+  .pf-intro { grid-template-columns: 1fr; gap: 20px; } .pf-photo { max-width: 240px; } .pf-sec { padding-top: 32px; } .xw-stage { touch-action: pan-y; }
   .pf-grid { columns: 2 120px; }
   .pf-lb { padding: 14px; }
   .av-grid { columns: 2 120px; }
@@ -492,7 +492,7 @@ body.theme-light .pf-photo, body.theme-light
     draw();
     if (dragging || tw || Math.abs(vel) > .04) requestAnimationFrame(loop); else running = false;
   }
-  stage.addEventListener('pointerdown', e => { dragging = true; moved = 0; lastY = e.clientY; lastT = performance.now(); vel = 0; tw = null; stage.classList.add('drag'); stage.setPointerCapture(e.pointerId); kick(); });
+  stage.addEventListener('pointerdown', e => { dragging = true; moved = 0; lastY = e.clientY; lastT = performance.now(); vel = 0; tw = null; stage.classList.add('drag'); if (e.pointerType !== 'touch') stage.setPointerCapture(e.pointerId); kick(); });
   stage.addEventListener('pointermove', e => {
     if (!dragging) return;
     const dy = e.clientY - lastY, now = performance.now(), dt = Math.max(1, now - lastT); moved += Math.abs(dy);
