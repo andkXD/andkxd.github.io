@@ -144,9 +144,9 @@
     .project-slide::before {
       content: ''; position: absolute; bottom: 0; left: 40px; right: 80px;
       height: 1px; background: var(--border); transform: scaleX(0);
-      transform-origin: left; transition: transform 0.6s ease;
+      transform-origin: left; transition: none;
     }
-    .project-slide.active::before { transform: scaleX(1); }
+    .project-slide.active::before { transform: scaleX(1); transition: transform 0.6s ease 0.8s; }
 
     .project-slide a {
       text-decoration: none; color: var(--white);
@@ -157,9 +157,9 @@
     .slide-accent {
       position: absolute; left: 0; top: 50%; transform: translateY(-50%);
       width: 0.5px; height: 0; background: var(--white);
-      transition: height 0.6s cubic-bezier(0.77,0,0.175,1);
+      transition: none;
     }
-    .project-slide.active .slide-accent { height: 50px; }
+    .project-slide.active .slide-accent { height: 50px; transition: height 0.6s cubic-bezier(0.77,0,0.175,1) 0.8s; }
 
     .slide-num {
       font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em;
