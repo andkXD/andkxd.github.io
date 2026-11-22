@@ -20,8 +20,10 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/showcase.css">
   <link rel="stylesheet" href="assets/css/mobile.css">
+  <link rel="stylesheet" href="assets/css/heron-cursor.css">
+  <link rel="stylesheet" href="assets/css/heron.css">
 </head>
-<body class="sc-top">
+<body class="sc-top hx2">
   <nav class="site-nav">
     <a href="../pages/project-artwork.html" class="site-nav-back">← Artwork</a>
     <a href="index.html" class="active">Top</a>
@@ -29,6 +31,15 @@
     <a href="works/index.html">Works</a>
     <a href="info.html">Info</a>
   </nav>
+  <div class="hv-frame"><i></i><i></i><i></i><i></i></div>
+  <div class="hv-load" id="load"><div class="ln"></div><div class="pct" id="pct">000%</div>
+    <div class="rd"><span>INITIALIZING ARTWORK SYSTEM</span><span>LOADING WORKS: <b id="ldN">00</b></span><span>CANVAS: <b>OK</b></span><span id="ldS">READY</span></div></div>
+  <div class="hv-hud" id="hud"><span id="hudS">01 — TOP</span><span id="hudP">000%</span></div>
+
+  <div class="hv-world" id="world"><div class="hv-stage" id="stage">
+
+    <!-- ── 00 HERO (your original layout) ── -->
+    <section class="hv-s" id="s-hero" data-r="0,1.35">
   <div class="sc-tl">ARYA SATYA<br>ANDHIKA AKBAR<small>ARTWORK<br>© ARYA SATYA ANDHIKA AKBAR</small></div>
   <div class="sc-mq"><div class="sc-mq-in">ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA ARTWORK ARYA SATYA </div></div>
   <div class="sc-bigc" id="big">
@@ -37,10 +48,90 @@
     <span class="sc-cap" id="cap"></span>
   </div>
   <div class="sc-smallc"><div class="sc-intro" id="intro">ASAA</div><span class="sc-cap">Artwork intro — 2025</span></div>
+      <div class="hx-cue"><span>Scroll</span><i></i></div>
+    </section>
+
+    <!-- ── 01 STATEMENT — words light up as you scroll. Everything marked .ph is a PLACEHOLDER ── -->
+    <section class="hv-s" id="s-st" data-r="1.05,4.2">
+      <div class="hv-lab"><b>[01]</b> Statement</div>
+      <h2 class="hv-st" id="stA" data-w="1.35,2.55">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+      <h2 class="hv-st" id="stB" data-w="2.95,3.75">Sed do eiusmod tempor incididunt ut labore et dolore.</h2>
+      <p class="hv-note" id="stNote">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+    </section>
+
+    <!-- ── 02 PLAN — loose pieces assemble as you scroll (swap the drawing for your own line art) ── -->
+    <section class="hv-s" id="s-plan" data-r="3.9,6.7">
+      <div class="hv-lab"><b>[02]</b> Composition</div>
+      <svg class="hv-plan" id="plan" viewBox="0 0 1000 620">
+        <g id="walls"><path class="wl" d="M100 100 H430"/><path class="wl" d="M500 100 H900"/><path class="wl" d="M900 100 V300"/><path class="wl" d="M900 370 V520"/><path class="wl" d="M900 520 H560"/><path class="wl" d="M490 520 H100"/><path class="wl" d="M100 520 V330"/><path class="wl" d="M100 260 V100"/><path class="wl" d="M100 300 H330"/><path class="wl" d="M330 300 V400"/><path class="wl" d="M330 450 V520"/><path class="wl" d="M560 100 V230"/><path class="wl" d="M560 230 H700"/><path class="wl" d="M700 230 V300"/><path class="wl" d="M620 520 V400"/><path class="wl" d="M620 400 H760"/></g>
+        <g id="dims"><path d="M100 70 H900 M100 62 V78 M900 62 V78 M500 62 V78"/><path d="M70 100 V520 M62 100 H78 M62 520 H78"/><path d="M130 560 H870" /></g>
+        <g id="dots"><rect x="426" y="96" width="10" height="10"/><rect x="556" y="226" width="10" height="10"/><rect x="326" y="396" width="10" height="10"/><rect x="896" y="296" width="10" height="10"/></g>
+      </svg>
+      <div class="hv-card" id="planCard"><b>Introduction</b><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p><small>[ scroll to continue ]</small></div>
+    </section>
+
+    <!-- ── 03 CELLS — move the pointer over a cell ── -->
+    <section class="hv-s" id="s-cells" data-r="6.4,8.9">
+      <div class="hv-cellhead"><div class="hv-lab"><b>[03]</b> What I make</div>
+        <h2>Lorem ipsum dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+      <div class="hv-cells" id="cells">
+        <article class="hv-cell"><div class="k"><i></i><span>Illustration</span><em>[01]</em></div>
+          <svg viewBox="0 0 200 160"><path class="hot" d="M44 124 L124 36 L156 68 L76 156"/><path d="M124 36 L138 22 L170 54 L156 68"/><path d="M44 124 L36 150 L76 144"/><line x1="150" y1="130" x2="192" y2="130"/></svg>
+          <h3>Lorem ipsum<br>dolor sit</h3><p>Lorem ipsum dolor sit amet.</p></article>
+        <article class="hv-cell"><div class="k"><i></i><span>Animation</span><em>[02]</em></div>
+          <svg viewBox="0 0 200 160"><rect x="22" y="36" width="156" height="92"/><path class="hot" d="M88 62 L122 82 L88 102 Z"/><line x1="22" y1="148" x2="178" y2="148"/><line class="hot" x1="22" y1="148" x2="96" y2="148"/></svg>
+          <h3>Amet elit<br>sed do</h3><p>Lorem ipsum dolor sit amet.</p></article>
+        <article class="hv-cell"><div class="k"><i></i><span>Creative code</span><em>[03]</em></div>
+          <svg viewBox="0 0 200 160"><path d="M72 34 Q52 34 52 54 L52 66 Q52 80 38 80 Q52 80 52 94 L52 106 Q52 126 72 126"/><path d="M128 34 Q148 34 148 54 L148 66 Q148 80 162 80 Q148 80 148 94 L148 106 Q148 126 128 126"/><circle class="hot" cx="100" cy="80" r="15"/><line x1="100" y1="34" x2="100" y2="65"/></svg>
+          <h3>Tempor ut<br>labore et</h3><p>Lorem ipsum dolor sit amet.</p></article>
+        <article class="hv-cell"><div class="k"><i></i><span>Music</span><em>[04]</em></div>
+          <svg viewBox="0 0 200 160"><path class="hot" d="M8 80 Q30 22 52 80 T96 80 T140 80 T184 80 T228 80"/><line x1="8" y1="80" x2="192" y2="80"/><circle cx="100" cy="80" r="46"/></svg>
+          <h3>Magna aliqua<br>enim minim</h3><p>Lorem ipsum dolor sit amet.</p></article>
+      </div>
+    </section>
+
+    <!-- ── 04 PROCESS — the bar crosses the screen, one stage per step ── -->
+    <section class="hv-s" id="s-proc" data-r="8.7,13.1">
+      <div class="hv-lab"><b>[04]</b> Process</div>
+      <h2 class="hv-ph2">Lorem ipsum<br>dolor sit amet</h2>
+      <p class="hv-note hv-note2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div class="hv-pf" id="pf"><div class="sc-vis" id="pfVis"></div><div class="hv-call" id="pfCall"><i></i><b id="pfFig">FIG. 01</b><span id="pfTxt">Lorem ipsum</span></div></div>
+      <div class="hv-hair" id="hair"></div>
+      <div class="hv-bar" id="bar"><b id="barK">SKETCH</b><span id="barV">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span><i></i></div>
+    </section>
+
+    <!-- ── 05 WORKS ── -->
+    <section class="hv-s" id="s-works" data-r="12.8,15.2">
+      <div class="hv-wpanel" id="wPanel"><div class="sc-vis" id="wVis"></div></div>
+      <div class="hv-wlist">
+        <div class="hv-lab"><b>[05]</b> Selected works</div>
+        <h2>Lorem ipsum<br>dolor sit amet</h2>
+        <div id="wRows"></div>
+      </div>
+    </section>
+
+    <!-- ── 06 END ── -->
+    <section class="hv-s" id="s-end" data-r="14.9,99">
+      <div class="hv-cta"><h2>Lorem ipsum<br>dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <a class="hv-btn px" href="works/index.html">All works →</a></div>
+      <footer class="hv-foot" id="foot">
+        <div class="hv-fg">
+          <div><small>Pages</small><a class="px" href="gallery.html">Gallery</a><a class="px" href="works/index.html">Works</a><a class="px" href="info.html">Info</a></div>
+          <div><small>Contact</small><span>lorem@ipsum.com</span><span>@loremipsum</span></div>
+          <div><small>Elsewhere</small><a class="px" href="../pages/project-artwork.html">← Projects</a><a class="px" href="https://github.com/andkXD" target="_blank" rel="noopener">GitHub</a></div>
+          <div class="so"><small>© <span id="yr">2025</span></small>Arya Satya Andhika Akbar</div>
+        </div>
+        <div class="hv-big" aria-hidden="true">ARYA SATYA</div>
+      </footer>
+    </section>
+  </div></div>
+  <div style="height:0"></div>
 
   <script src="assets/js/works-data.js"></script>
   <script src="assets/js/art.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/heron-cursor.js"></script>
+  <script src="assets/js/heron.js"></script>
   <script src="../assets/js/arrows.js"></script>
   <script src="../assets/js/audio.js"></script>
   <script>

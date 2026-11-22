@@ -1,0 +1,13 @@
+/* heron-cursor.css — red ball with a fading red tail. Loaded on every Artwork page. */
+body.hc, body.hc * { cursor: none !important; }
+body.hc .cursor { display: none !important; }
+.hc-trail { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9990; pointer-events: none; }
+.hc-sq { position: fixed; left: 0; top: 0; z-index: 9994; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--accent, #e8325a); pointer-events: none; will-change: transform; transition: width .25s, height .25s, margin .25s, background .25s; }
+body.hc-link .hc-sq { width: 34px; height: 34px; margin: -17px 0 0 -17px; background: transparent; border: 1px solid var(--accent, #e8325a); }
+body.hc-out .hc-sq, body.hc-out .hc-trail { opacity: 0; }
+/* pixel / dither hover on nav links and buttons */
+.px { position: relative; }
+.px::before { content: ''; position: absolute; inset: -4px -8px; pointer-events: none; opacity: 0; z-index: -1;
+  background: conic-gradient(var(--accent, #e8325a) 25%, transparent 0 50%, var(--accent, #e8325a) 0 75%, transparent 0) 0 0 / 8px 8px; }
+.px:hover::before { animation: pxIn .55s steps(5) forwards; }
+@keyframes pxIn { 0% { opacity: .9; } 100% { opacity: 0; } }
