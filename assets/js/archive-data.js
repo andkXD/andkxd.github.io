@@ -7,7 +7,7 @@
    Keep photos ~200 KB (webp) and videos ~5-10 MB (720p mp4, H.264). Paths always start at the site root.
    "All" shows every album plus the photos in ARCHIVE_UNSORTED (not yet put into an album). */
 window.ARCHIVE = [
-  { id: 'jepang', name: 'Jepang', items: [
+  { id: 'jepang', name: 'Japan', items: [
     { src: 'assets/archive/jepang/01.webp', w: 1700, h: 767 },
     { src: 'assets/archive/jepang/02.webp', w: 810, h: 1800 },
     { src: 'assets/archive/jepang/03.webp', w: 810, h: 1800 },
