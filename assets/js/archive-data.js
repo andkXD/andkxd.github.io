@@ -51,7 +51,8 @@ window.ARCHIVE = [
     { src: 'assets/archive/korea/17.webp', w: 1012, h: 1800 },
     { src: 'assets/archive/korea/18.webp', w: 1012, h: 1800 },
     { src: 'assets/archive/korea/19.webp', w: 1012, h: 1800 },
-    { src: 'assets/img/portfolio/arc-08.webp', w: 960, h: 540 }
+    { src: 'assets/img/portfolio/arc-08.webp', w: 960, h: 540 },
+    { src: 'assets/img/portfolio/exp-korea.webp', w: 870, h: 864, caption: 'Yonggang Middle School' }
   ] },
   { id: 'malaysia', name: 'Malaysia', items: [] }
 ];
@@ -91,5 +92,7 @@ window.ARCHIVE_UNSORTED = [
     src: "assets/img/portfolio/arc-09.webp",
     w: 640,
     h: 480
-  }
+  },
+  { src: 'assets/img/portfolio/exp-samsung.webp', w: 253, h: 274, caption: 'Samsung Innovation Campus' },
+  { src: 'assets/img/portfolio/exp-intel.webp', w: 640, h: 480, caption: 'Intel AI for Youth' }
 ];

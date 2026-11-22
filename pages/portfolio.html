@@ -78,17 +78,6 @@ body.theme-light .detail-quote::before { background: rgba(0,0,0,.35); }
 .pf-tags li { font-size: .66rem; letter-spacing: .06em; padding: 5px 10px; border: 1px solid var(--border); color: var(--off-white); }
 
 /* experience */
-.pf-xp { list-style: none; margin: 0; padding: 0; }
-.pf-xp li { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 16px 0; border-top: 1px solid var(--border); }
-.pf-xp li:last-child { border-bottom: 1px solid var(--border); }
-.pf-xp time { font-size: .62rem; letter-spacing: .14em; color: var(--muted); padding-top: 3px; }
-.pf-xp h4 { margin: 0 0 4px; font-size: .82rem; font-weight: 400; letter-spacing: .04em; color: var(--white); }
-.pf-xp p { margin: 0; font-size: .72rem; line-height: 1.7; color: var(--dim); }
-.pf-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 22px; }
-.pf-strip figure { margin: 0; }
-.pf-strip img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border: 1px solid var(--border); filter: grayscale(.85); transition: filter .4s; cursor: zoom-in; }
-.pf-strip img:hover { filter: none; }
-.pf-strip figcaption { margin-top: 6px; font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
 /* projects */
 .pf-proj { padding: 22px 0; border-top: 1px solid var(--border); }
@@ -105,6 +94,30 @@ body.theme-light .detail-quote::before { background: rgba(0,0,0,.35); }
 .pf-grid { columns: 3 150px; column-gap: 8px; }
 .pf-grid img { width: 100%; display: block; margin: 0 0 8px; break-inside: avoid; border: 1px solid var(--border); cursor: zoom-in; filter: grayscale(.7); transition: filter .4s; }
 .pf-grid img:hover { filter: none; }
+/* experience wheel */
+.xw-lead { margin: -8px 0 18px; font-size: .74rem; letter-spacing: .03em; color: var(--dim); }
+.xw { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 36px; align-items: center; border-top: 1px solid var(--border); padding-top: 6px; }
+.xw-stage { position: relative; height: 340px; perspective: 900px; overflow: hidden; cursor: grab; touch-action: none; outline: none; user-select: none; -webkit-user-select: none; }
+.xw-stage.drag { cursor: grabbing; }
+.xw-stage:focus-visible { outline: 1px dashed var(--muted); outline-offset: 4px; }
+.xw-wheel { position: absolute; left: 0; right: 0; top: 50%; height: 0; transform-style: preserve-3d; }
+.xw-it { position: absolute; left: 0; right: 0; top: -24px; height: 48px; display: flex; align-items: center; gap: 16px; padding: 0 6px; font-size: 1.1rem; letter-spacing: .01em; white-space: nowrap; color: var(--dim); backface-visibility: hidden; will-change: transform, opacity; }
+.xw-it.on { color: var(--white); }
+.xw-it i { font-style: normal; font-size: .6rem; color: var(--muted); width: 22px; letter-spacing: .1em; }
+.xw-sel { position: absolute; left: 0; right: 0; top: 50%; height: 52px; margin-top: -26px; border-top: 1px solid var(--dim); border-bottom: 1px solid var(--dim); pointer-events: none; }
+.xw-sel::before, .xw-sel::after { content: ''; position: absolute; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: var(--white); }
+.xw-sel::before { left: -3px; } .xw-sel::after { right: -3px; }
+.xw-det { min-height: 200px; display: flex; flex-direction: column; justify-content: center; }
+.xw-det .cat { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.xw-det h3 { margin: 0 0 14px; font-weight: 400; font-size: 1.4rem; line-height: 1.25; color: var(--white); }
+.xw-det p { margin: 0; max-width: 340px; font-size: .76rem; line-height: 1.8; color: var(--dim); }
+.xw-det .row { display: flex; align-items: center; gap: 22px; margin-top: 26px; font-size: .6rem; letter-spacing: .2em; color: var(--muted); }
+.xw-det .row button { background: none; border: 0; padding: 4px 0; font: inherit; font-size: .66rem; letter-spacing: .08em; color: var(--dim); cursor: pointer; transition: color .2s; }
+.xw-det .row button:hover { color: var(--white); }
+.xw-det.sw > * { animation: xwIn .45s cubic-bezier(.2,.7,.2,1) both; }
+.xw-det.sw > *:nth-child(2) { animation-delay: .04s; } .xw-det.sw > *:nth-child(3) { animation-delay: .08s; } .xw-det.sw > *:nth-child(4) { animation-delay: .12s; }
+@keyframes xwIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 900px) { .xw { grid-template-columns: 1fr; gap: 4px; } .xw-stage { height: 250px; } .xw-it { font-size: .98rem; } .xw-det { min-height: 190px; } }
 .pf-more { margin: 26px 0 0; font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
 .pf-cv { display: flex; justify-content: flex-start; padding-top: 30px; }
 
@@ -151,15 +164,12 @@ body.theme-light .av-it { border-color: rgba(0,0,0,.15); }
 .project-nav a:hover { color: var(--white); }
 body.theme-light .detail-visit { color: #111; border-color: rgba(0,0,0,.3); }
 body.theme-light .detail-visit:hover { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.7); }
-body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf-grid img { border-color: rgba(0,0,0,.15); }
-
+body.theme-light .pf-photo, body.theme-light 
 /* phone / tablet: the page scrolls normally (responsive.css makes .project-detail static) */
 @media (max-width: 900px) {
   .pf-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; padding: 0 0 40px; }
   .pf-tabs { padding: 18px 0 12px; }
   .pf-intro { grid-template-columns: 110px 1fr; gap: 16px; }
-  .pf-xp li { grid-template-columns: 1fr; gap: 4px; }
-  .pf-strip { grid-template-columns: repeat(2, 1fr); }
   .pf-grid { columns: 2 120px; }
   .pf-lb { padding: 14px; }
   .av-grid { columns: 2 120px; }
@@ -240,23 +250,11 @@ body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf
 
         <section class="pf-sec" id="experience">
           <h2 class="pf-h"><span>02</span><b>Experience</b></h2>
-          <ul class="pf-xp">
-            <li><time>2024 – NOW</time><div><h4>Universitas Airlangga</h4><p>S1 Information Systems.</p></div></li>
-            <li><time>—</time><div><h4>HIMSI UNAIR</h4><p>Part of Himpunan Mahasiswa Sistem Informasi.</p></div></li>
-            <li><time>2024 – 2025</time><div><h4>GDGoC UNAIR</h4><p>Google Developer Groups on Campus. Community experience in the field of education.</p></div></li>
-            <li><time>2025 – 2026</time><div><h4>Samsung Innovation Campus</h4><p>Bootcamp Batch 7.</p></div></li>
-            <li><time>2023</time><div><h4>Japan exchange</h4><p>CCU Program, exchange student.</p></div></li>
-            <li><time>2021</time><div><h4>Intel AI for Youth</h4><p>Social Distancing Monitor, JCI Prakarsa Muda.</p></div></li>
-            <li><time>2019</time><div><h4>Korea exchange</h4><p>Yonggang Middle School, exchange student program.</p></div></li>
-            <li><time>—</time><div><h4>SAIM Senior High</h4><p>Sekolah Alam Insan Mulia.</p></div></li>
-          </ul>
-          <div class="pf-strip">
-            <figure><img src="../assets/img/portfolio/exp-japan.webp" alt="Tokyo street during the Japan exchange" loading="lazy" decoding="async"><figcaption>Japan · 2023</figcaption></figure>
-            <figure><img src="../assets/img/portfolio/exp-korea.webp" alt="Selfie with classmates at Yonggang Middle School" loading="lazy" decoding="async"><figcaption>Korea · 2019</figcaption></figure>
-            <figure><img src="../assets/img/portfolio/exp-samsung.webp" alt="Samsung Innovation Campus team" loading="lazy" decoding="async"><figcaption>Samsung · 2025</figcaption></figure>
-            <figure><img src="../assets/img/portfolio/exp-intel.webp" alt="Intel AI for Youth team" loading="lazy" decoding="async"><figcaption>Intel · 2021</figcaption></figure>
+          <p class="xw-lead">In general, these are my experiences. Spin the wheel.</p>
+          <div class="xw">
+            <div class="xw-stage" id="xwStage" tabindex="0" aria-label="Experience wheel"><div class="xw-wheel" id="xwWheel"></div><div class="xw-sel"></div></div>
+            <div class="xw-det" id="xwDet" aria-live="polite"></div>
           </div>
-          <p class="pf-more">And so much more!</p>
         </section>
 
         <section class="pf-sec" id="projects">
@@ -368,7 +366,7 @@ body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf
 
   // lightbox for every photo
   const lb = document.getElementById('pfLb'), lbImg = lb.querySelector('img');
-  document.querySelectorAll('.pf-grid img, .pf-strip img, .pf-shots img').forEach(img => img.addEventListener('click', () => {
+  document.querySelectorAll('.pf-grid img, .pf-shots img').forEach(img => img.addEventListener('click', () => {
     lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt; lb.classList.add('on');
   }));
   const close = () => lb.classList.remove('on');
@@ -439,6 +437,89 @@ body.theme-light .pf-photo, body.theme-light .pf-strip img, body.theme-light .pf
     lb.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) open(idx + (dx < 0 ? 1 : -1)); }, { passive: true });
     show();
   })();
+})();
+</script>
+<script>
+// ── Experience wheel: drag, scroll (one step per notch), click, arrow keys ──
+(function () {
+  const DATA = [
+    ['Universitas Airlangga', 'Campus', 'S1 Information Systems. Where most of this site, and most of my learning, happens now.'],
+    ['HIMSI UNAIR', 'Campus', 'Part of Himpunan Mahasiswa Sistem Informasi, the Information Systems student association.'],
+    ['GDGoC UNAIR', 'Campus', 'Google Developer Groups on Campus. Community experience in the field of education.'],
+    ['Samsung Innovation Campus', 'Program', 'Bootcamp Batch 7.'],
+    ['Intel AI for Youth', 'Program', 'Social Distancing Monitor, with JCI Prakarsa Muda.'],
+    ['Japan exchange', 'Abroad', 'CCU Program, exchange student.'],
+    ['Korea exchange', 'Abroad', 'Yonggang Middle School, exchange student program.'],
+    ['SAIM Senior High', 'Before', 'Sekolah Alam Insan Mulia.']
+  ];
+  const stage = document.getElementById('xwStage'), wheel = document.getElementById('xwWheel'), det = document.getElementById('xwDet');
+  if (!stage) return;
+  const N = DATA.length, STEP = 26, MAX = (N - 1) * STEP, pad = n => String(n).padStart(2, '0');
+  let R = 130, rot = 0, vel = 0, tw = null, cur = 0, acc = 0, lockT = -1e4, accT = -1e4, dragging = false, lastY = 0, lastT = 0, moved = 0, active = -1, running = false;
+  const items = DATA.map((d, i) => { const e = document.createElement('div'); e.className = 'xw-it'; e.innerHTML = '<i>' + pad(i + 1) + '</i><span></span>'; e.lastChild.textContent = d[0]; wheel.appendChild(e); return e; });
+  const cl = v => Math.max(0, Math.min(N - 1, v)), ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function size() { R = Math.round((stage.clientHeight || 340) / 2.75); kick(); }
+  function draw() {
+    wheel.style.transform = 'translateZ(' + (-R) + 'px)';
+    let near = 0, best = 999;
+    items.forEach((e, i) => {
+      const a = i * STEP - rot, aa = Math.abs(a);
+      if (aa < best) { best = aa; near = i; }
+      if (aa > 100) { e.style.visibility = 'hidden'; return; }
+      e.style.visibility = 'visible';
+      e.style.transform = 'rotateX(' + (-a) + 'deg) translateZ(' + R + 'px)';
+      e.style.opacity = Math.max(0, 1 - aa / 84).toFixed(3);
+    });
+    if (near !== active) { active = near; items.forEach((e, i) => e.classList.toggle('on', i === near)); show(near); }
+  }
+  function show(i) {
+    const d = DATA[i];
+    det.innerHTML = '<div class="cat"></div><h3></h3><p></p><div class="row"><button type="button" data-d="-1">← Prev</button><span>' + pad(i + 1) + ' / ' + pad(N) + '</span><button type="button" data-d="1">Next →</button></div>';
+    det.children[0].textContent = d[1]; det.children[1].textContent = d[0]; det.children[2].textContent = d[2];
+    if (!reduce) { det.classList.remove('sw'); void det.offsetWidth; det.classList.add('sw'); }
+  }
+  function tween(to, dur) { if (reduce) { rot = to; tw = null; kick(); return; } tw = { from: rot, to: to, t0: performance.now(), dur: dur }; kick(); }
+  function goTo(i) { cur = cl(i); vel = 0; tween(cur * STEP, 720); }
+  function snap() { cur = cl(Math.round(rot / STEP)); tween(cur * STEP, 520); }
+  function kick() { if (!running) { running = true; requestAnimationFrame(loop); } }
+  function loop() {
+    if (!dragging) {
+      if (Math.abs(vel) > .04) { rot += vel; vel *= .92; if (rot < 0 || rot > MAX || Math.abs(vel) <= .04) { vel = 0; snap(); } }
+      else if (tw) { const p = Math.min(1, (performance.now() - tw.t0) / tw.dur); rot = tw.from + (tw.to - tw.from) * ease(p); if (p >= 1) tw = null; }
+    }
+    draw();
+    if (dragging || tw || Math.abs(vel) > .04) requestAnimationFrame(loop); else running = false;
+  }
+  stage.addEventListener('pointerdown', e => { dragging = true; moved = 0; lastY = e.clientY; lastT = performance.now(); vel = 0; tw = null; stage.classList.add('drag'); stage.setPointerCapture(e.pointerId); kick(); });
+  stage.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dy = e.clientY - lastY, now = performance.now(), dt = Math.max(1, now - lastT); moved += Math.abs(dy);
+    let dr = -dy * 180 / (Math.PI * R); if ((rot < 0 && dr < 0) || (rot > MAX && dr > 0)) dr *= .35;
+    rot += dr; vel = Math.max(-2.2, Math.min(2.2, vel * .6 + (dr / dt * 16) * .4)); lastY = e.clientY; lastT = now;
+  });
+  function up() { if (!dragging) return; dragging = false; stage.classList.remove('drag'); if (Math.abs(vel) < .3) { vel = 0; snap(); } kick(); }
+  stage.addEventListener('pointerup', e => {
+    const was = dragging; up();
+    if (was && moved <= 6) { const hit = document.elementsFromPoint(e.clientX, e.clientY).map(n => n.closest && n.closest('.xw-it')).find(Boolean); if (hit) goTo(items.indexOf(hit)); }
+  });
+  stage.addEventListener('pointercancel', up);
+  stage.addEventListener('wheel', e => {
+    const now = performance.now(), d = e.deltaY > 0 ? 1 : -1;
+    if (now - lockT < 760) { e.preventDefault(); return; }       // one step at a time
+    if (cl(cur + d) === cur) return;                              // at either end: let the page scroll
+    e.preventDefault();
+    if (now - accT > 200) acc = 0; accT = now; acc += e.deltaY;
+    if (Math.abs(acc) >= 28) { acc = 0; lockT = now; goTo(cur + d); }
+  }, { passive: false });
+  stage.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); goTo(cur + 1); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur - 1); }
+  });
+  det.addEventListener('click', e => { const b = e.target.closest('button[data-d]'); if (b) goTo(cur + Number(b.dataset.d)); });
+  addEventListener('resize', size);
+  size(); draw();
 })();
 </script>
 <script src="../assets/js/arrows.js"></script>
