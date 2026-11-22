@@ -36,9 +36,9 @@
   "contactNote": "Open for collaborations, internships and random art talk. Email is the fastest way to reach me.",
 
   "faq": [
-    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-    { "q": "What is this website for?", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-    { "q": "Lorem Ipsum", "a": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }
+    { "q": "What is this website?", "a": "A personal collection of what I make and learn, so I can see how I've changed over time. Mostly it's for me, but you're welcome to look around." },
+    { "q": "How long have you been making this website?", "a": "Since 2024, and I'm still working on it. It's an unfinished collection, so it keeps growing as I do." },
+    { "q": "Are there any websites that inspired you?", "a": "A few: gather.be-of-dao.com, v1.kentatoshikura.com, shutdown.gallery, infocusinc.com, production-hasu.work and p5aholic.me. I'm not copying them, I just borrow the feeling." },
+    { "q": "When did you start doing art?", "a": "Around 2014 or 2015, so it's been about ten years now." }
   ]
 }
