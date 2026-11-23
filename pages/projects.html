@@ -286,6 +286,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="../assets/js/sketch.js"></script>
 <script src="../assets/js/arrows.js"></script>
+<script src="../assets/js/encrypted-text.js"></script>
 <script src="../assets/js/audio.js"></script>
 
   <script>
@@ -336,6 +337,7 @@
       pipsNav.appendChild(pip);
     });
 
+    let etSeen = false;
     function pad(n) { return String(n + 1).padStart(2, '0'); }
 
     function goTo(index, opts = {}) {
@@ -356,6 +358,12 @@
       counter.textContent  = pad(current);
       progress.style.width = ((current / (TOTAL - 1)) * 100) + '%';
       if (current > 0) hint.classList.add('hidden');
+      // scramble → reveal the active slide's text every time the slide changes.
+      // The slide takes ~0.9s to slide in, so the reveal starts once it has (almost) arrived.
+      if (window.EncryptedText) { const sl = slides[current], w = etSeen ? 520 : 0; etSeen = true;
+        EncryptedText.run(sl.querySelector('.slide-num'), { delay: 40, start: w });
+        EncryptedText.run(sl.querySelector('.project-title'), { delay: 55, start: w });
+        EncryptedText.run(sl.querySelector('.project-meta'), { delay: 14, start: w + 300 }); }
     }
 
     // Restore the slide from the URL hash (so "← Projects" returns to the right project)
