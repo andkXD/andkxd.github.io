@@ -14,7 +14,9 @@
   const load = $('#load'), pct = $('#pct'), ln = $('.ln', load), ldN = $('#ldN'), ldS = $('#ldS');
   const N = (typeof WORKS !== 'undefined') ? WORKS.length : 0;
   (function () {
-    if (reduce) { load.classList.add('done'); return; }
+    // play the loader once per visit; coming back to Top (from Gallery, Works…) skips it
+    let seen = false; try { seen = !!sessionStorage.getItem('artTopSeen'); sessionStorage.setItem('artTopSeen', '1'); } catch (e) {}
+    if (reduce || seen) { load.classList.add('done'); load.style.display = 'none'; return; }
     const t0 = performance.now(), D = 1700;
     (function tick(now) {
       const p = clamp((now - t0) / D), e = ease(p);
