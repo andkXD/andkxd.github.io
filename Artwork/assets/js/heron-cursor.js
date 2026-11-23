@@ -2,6 +2,7 @@
 (function () {
   if (matchMedia('(hover: none)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const b = document.body; b.classList.add('hc');
+  document.querySelectorAll('.site-nav a').forEach(el => el.classList.add('px'));   // pixel hover on the menu, on every Artwork page
   const cv = document.createElement('canvas'); cv.className = 'hc-trail'; b.appendChild(cv);
   const ctx = cv.getContext('2d');
   const sq = document.createElement('div'); sq.className = 'hc-sq'; b.appendChild(sq);
