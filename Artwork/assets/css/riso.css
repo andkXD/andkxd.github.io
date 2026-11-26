@@ -1,0 +1,40 @@
+/* Riso UI kit for the Artwork pages: two-ink pink + blue, hard offset shadows, misregistration */
+:root { --rs-pink: #e8325a; --rs-blue: #4db8f5; --rs-ink: #06141d; }
+::selection { background: var(--rs-pink); color: #fff; }
+
+/* buttons */
+.hv-btn, .d-btn, .d-back {
+  border: 2px solid #f0ede8; border-radius: 0; background: #0a0a0a; color: #f0ede8;
+  box-shadow: 5px 5px 0 var(--rs-pink);
+  transition: transform .18s, box-shadow .18s, background .2s, color .2s;
+}
+.hv-btn { background: #f0ede8; color: #0a0a0a; font-weight: 700; }
+.hv-btn:hover, .d-btn:hover, .d-back:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--rs-blue); background: #0a0a0a; color: #f0ede8; }
+.hv-btn:hover { background: #f0ede8; color: #0a0a0a; }
+.hv-btn:active, .d-btn:active, .d-back:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--rs-pink); }
+span.d-btn { box-shadow: none; border-color: rgba(240,237,232,.3); }
+span.d-btn:hover { transform: none; box-shadow: none; }
+
+/* gallery filters */
+.sc-filters li:hover, .sc-filters li.on { background: var(--rs-blue); color: var(--rs-ink); box-shadow: inset 5px 0 0 var(--rs-pink); }
+.sc-filters li.on span, .sc-filters li:hover span { color: var(--rs-ink); }
+
+/* "All Works" bar */
+.sc-all:hover { background: var(--rs-pink); color: #fff; text-shadow: 3px 0 0 var(--rs-blue), -3px 0 0 #0a0a0a; }
+
+/* headings: slight two-ink misregistration */
+.sc-bar h1 { text-shadow: 3px 0 0 var(--rs-pink), -3px 0 0 var(--rs-blue); }
+
+/* scrollbar of the work detail panel */
+.sc-detail { scrollbar-width: thin; scrollbar-color: var(--rs-pink) transparent; }
+.sc-detail::-webkit-scrollbar { width: 9px; }
+.sc-detail::-webkit-scrollbar-track { background: transparent; border-left: 1px solid rgba(240,237,232,.18); }
+.sc-detail::-webkit-scrollbar-thumb { background: var(--rs-pink); border: 3px solid #0b0b0b; }
+
+/* touch: no hover shift, keep the press */
+@media (hover: none) {
+  .hv-btn:hover, .d-btn:hover, .d-back:hover { transform: none; box-shadow: 5px 5px 0 var(--rs-pink); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hv-btn, .d-btn, .d-back { transition: none; }
+}
